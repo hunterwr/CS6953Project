@@ -1,0 +1,16 @@
+import bpy
+
+def render_and_save(output_path):
+    
+    bpy.context.scene.render.filepath = output_path
+
+    # Set the image format (PNG, JPEG, etc.)
+    bpy.context.scene.render.image_settings.file_format = 'PNG'  # Change to any format as needed
+
+    # Render and save the image
+    bpy.ops.render.render(write_still=True)
+    
+# Change the output path 
+output_path = "path/snapshot.png"
+
+render_and_save(output_path)
