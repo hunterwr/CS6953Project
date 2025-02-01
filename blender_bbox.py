@@ -34,4 +34,4 @@ camera_name = "Camera" #currenrly default, change to actual camera name
 # Change the output path 
 output_path = "path/bbox.txt"
 
-save_bbox(object_name, camera_name, output_path)
+save_bbox_as_text(object_name, camera_name, output_path)
