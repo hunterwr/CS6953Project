@@ -9,8 +9,6 @@ def render_and_save(output_path):
 
     # Render and save the image
     bpy.ops.render.render(write_still=True)
-    
-# Change the output path 
-output_path = "path/snapshot.png"
 
-render_and_save(output_path)
+return
+    
