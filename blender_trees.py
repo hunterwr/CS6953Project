@@ -10,7 +10,7 @@ def create_oak_tree(position=(0, 0, 0), height=5, canopy_radius=3):
     """
     pass
 
-def create_pine_tree(name, position=(0, 0, 0), height=7, trunk_radius=0.2, seed=0):
+def create_pine_tree(name, target_directory, position=(0, 0, 0), height=7, trunk_radius=0.2, seed=0):
     """
     Creates a pine tree.
 
@@ -142,7 +142,7 @@ def create_pine_tree(name, position=(0, 0, 0), height=7, trunk_radius=0.2, seed=
         print("Tree1 object not found.")
 
     # Define the object name and texture file path
-    image_path = "C:\\Users\\Hunter Rogers\\Desktop\\Personal\\University of Utah\\DEep cap\\CS6953Project\\textures\\Trees\\fir_branch.png"  # Change this to your texture file path
+    image_path = target_directory + r'./textures\\Trees\\fir_branch.png'  # Change this to your texture file path
 
     if leaves_obj:
         # Create or get the material
@@ -214,7 +214,7 @@ def create_pine_tree(name, position=(0, 0, 0), height=7, trunk_radius=0.2, seed=
     else:
         print(f"Object 'leaves' not found!")
 
-    bark_texture_path = 'C:\\Users\\Hunter Rogers\\Desktop\\Personal\\University of Utah\\DEep cap\\CS6953Project\\textures\\Trees\\Bark014_8K-JPG\\Bark014_8K-JPG_Color.jpg'
+    bark_texture_path = target_directory + r'./textures\\Trees\\Bark014_8K-JPG\\Bark014_8K-JPG_Color.jpg'
     if tree_obj:
         bark_mat = bpy.data.materials.get("BarkMaterial")
         if not bark_mat:
@@ -349,18 +349,3 @@ def add_trees(tree_type="oak", count=10, area_size=(20, 20)):
     Note: The Grove 3D or Modular Tree Add-on could be used for hyper-realistic tree generation.
     """
     pass
-
-
-bpy.ops.object.select_all(action='SELECT')  # Select all objects
-bpy.ops.object.delete()  # Delete selected objects
-
-create_pine_tree("tree1", position=(2,0,0), seed=0) #
-create_pine_tree("tree2", position=(10,0,0), seed=2) #
-create_pine_tree("tree3", position=(20,0,0), seed=3) #
-
-bpy.context.scene.render.engine = 'CYCLES'
-
-
-
-
-#Hi

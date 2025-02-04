@@ -26,6 +26,7 @@ sys.path.append(os.getcwd())
 import blender_utils as utils
 import blender_signs as signs
 import blender_road as road 
+import blender_trees as trees
 
 
 #Reset and Clear the Scene
@@ -57,6 +58,11 @@ sign_obj = bpy.data.objects.get('Simple Sign')
 signs.add_sign_color(sign_obj,texture_path=target_directory+ r'./textures/Signs/exit_sign.PNG' )
 
 
+#Add some trees to the area
+trees.create_pine_tree("tree1", target_directory, position=(40,5,0), seed=0, ) #
+trees.create_pine_tree("tree2", target_directory, position=(50,20,0), seed=2) #
+trees.create_pine_tree("tree3", target_directory, position=(-10,-10,0), seed=5) # we will need to fix the file path
+trees.create_pine_tree("tree4", target_directory, position=(5,10,0), seed=10) #
 
 
 # Ensure an area with type 'VIEW_3D' exists
