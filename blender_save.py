@@ -10,5 +10,5 @@ def render_and_save(output_path):
     # Render and save the image
     bpy.ops.render.render(write_still=True)
 
-return
+    return
     
