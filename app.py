@@ -27,6 +27,10 @@ import blender_utils as utils
 import blender_signs as signs
 import blender_road as road 
 import blender_trees as trees
+import blender_camera as cam
+import blender_light_source as light
+import blender_save as snap
+import blender_bbox as bbox
 
 
 #Reset and Clear the Scene
@@ -63,6 +67,19 @@ trees.create_pine_tree("tree1", target_directory, position=(40,5,0), seed=0, ) #
 trees.create_pine_tree("tree2", target_directory, position=(50,20,0), seed=2) #
 trees.create_pine_tree("tree3", target_directory, position=(-10,-10,0), seed=5) # we will need to fix the file path
 trees.create_pine_tree("tree4", target_directory, position=(5,10,0), seed=10) #
+
+#adds a camera in front of the sign object
+cam.add_camera(location=(0.0, -19.409, 14.526), rotation=(69.127, 0.000008, 0.569964), scale=1.0)
+
+#adds a light source
+light.add_sunlight(location = (-28.398, 59.799, 19.12), power = 3.0, angle = 180)
+
+#renders the scene and saves a snap as png
+snap.render_and_save(target_directory + r'./output/sign.png')
+
+#draws a bounding box around the sign object and returns the coordinates in txt file
+bbox.save_bbox_as_text('Simple Sign', 'Camera', target_directory + r'./output/bbox.txt')
+
 
 
 # Ensure an area with type 'VIEW_3D' exists
