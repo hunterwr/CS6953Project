@@ -94,6 +94,9 @@ sky_texture.create_sky_texture()
 #draws a bounding box around the sign object and returns the coordinates in txt file
 #bbox.save_bbox_as_text('Simple Sign', 'Camera', target_directory + r'/output/bbox.txt')
 
+bpy.context.scene.render.engine = 'CYCLES'
+bpy.context.scene.cycles.device = 'GPU'
+
 
 
 # Ensure an area with type 'VIEW_3D' exists
