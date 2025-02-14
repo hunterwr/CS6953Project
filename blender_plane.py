@@ -1,8 +1,15 @@
 import bpy
+import os
 
-
-def create_material(target_directory, texture_type="snow_03"): # rocky_terrain, snow_03, rocky_trail
-    path = f"/textures/Surface/{texture_type}.blend/textures"
+def create_material(size, target_directory, texture_type="snow_03"): # rocky_terrain, snow_03, rocky_trail
+    path = f"{target_directory}/textures/Surface/{texture_type}/textures"
+    files = os.listdir(path)
+    
+    diff_file = path +"/" + next((f for f in files if "diff" in f), None)
+    rough_file = path +"/" + next((f for f in files if "rough" in f), None)
+    disp_file = path +"/" + next((f for f in files if "disp" in f), None)
+    nor_gl_file = path +"/" + next((f for f in files if "nor_gl" in f), None)
+    
     material = bpy.data.materials.new(name="GroundMaterial")
     material.use_nodes = True
     nodes = material.node_tree.nodes
@@ -12,6 +19,7 @@ def create_material(target_directory, texture_type="snow_03"): # rocky_terrain, 
         nodes.remove(node)
         
     tex_coord = nodes.new(type="ShaderNodeTexCoord")
+    voronoi_texture = nodes.new(type="ShaderNodeTexVoronoi")
     mapping = nodes.new(type="ShaderNodeMapping")
     base_color = nodes.new(type="ShaderNodeTexImage")
     roughness = nodes.new(type="ShaderNodeTexImage")
@@ -22,7 +30,9 @@ def create_material(target_directory, texture_type="snow_03"): # rocky_terrain, 
     principled_bsdf = nodes.new(type="ShaderNodeBsdfPrincipled")
     material_output = nodes.new(type="ShaderNodeOutputMaterial")
     
+    
     tex_coord.location = (-800, 300)
+    voronoi_texture.location = (-700, 300)
     mapping.location = (-600, 300)
     base_color.location = (-400, 400)
     roughness.location = (-400, 200)
@@ -34,10 +44,10 @@ def create_material(target_directory, texture_type="snow_03"): # rocky_terrain, 
     material_output.location = (400, 200)
 
     # Load and assign base color texture
-    base_color.image = bpy.data.images.load(f'{target_directory}{path}/{texture_type}_diff_4k.jpg')
-    roughness.image = bpy.data.images.load(f'{target_directory}{path}/{texture_type}_rough_4k.exr')
-    displacement.image = bpy.data.images.load(f'{target_directory}{path}/{texture_type}_disp_4k.png')
-    normal_tex.image = bpy.data.images.load(f'{target_directory}{path}/{texture_type}_nor_gl_4k.exr')
+    base_color.image = bpy.data.images.load(diff_file)
+    roughness.image = bpy.data.images.load(rough_file)
+    displacement.image = bpy.data.images.load(disp_file)
+    normal_tex.image = bpy.data.images.load(nor_gl_file)
     
     base_color.image.colorspace_settings.name = 'sRGB'
     roughness.image.colorspace_settings.name = 'Non-Color'
@@ -45,6 +55,12 @@ def create_material(target_directory, texture_type="snow_03"): # rocky_terrain, 
     normal_tex.image.colorspace_settings.name = 'Non-Color'
 
     links.new(tex_coord.outputs["Generated"], mapping.inputs["Vector"])
+    links.new(tex_coord.outputs["Generated"], voronoi_texture.inputs["Vector"])
+    voronoi_texture.inputs["Scale"].default_value = size * 0.2
+    links.new(voronoi_texture.outputs["Color"],mapping.inputs["Rotation"])
+    mapping.inputs["Scale"].default_value[0] = size * 0.04
+    mapping.inputs["Scale"].default_value[1] = size * 0.04
+    mapping.inputs["Scale"].default_value[2] = 1
     links.new(mapping.outputs["Vector"], base_color.inputs["Vector"])
     links.new(mapping.outputs["Vector"], roughness.inputs["Vector"])
     links.new(mapping.outputs["Vector"], displacement.inputs["Vector"])
@@ -120,7 +136,7 @@ def create_plane(size, target_directory, material="rocky_trail"): # rocky_terrai
         ground_plane.data.materials.append(mat)
         create_regular_grass(size=size)
     else:
-        mat = create_material(target_directory=target_directory, texture_type=material)
+        mat = create_material(size, target_directory=target_directory, texture_type=material)
         ground_plane.data.materials.append(mat)
     
     
