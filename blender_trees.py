@@ -142,7 +142,7 @@ def create_pine_tree(name, target_directory, position=(0, 0, 0), height=7, trunk
         print("Tree1 object not found.")
 
     # Define the object name and texture file path
-    image_path = target_directory + r'./textures\\Trees\\fir_branch.png'  # Change this to your texture file path
+    image_path = target_directory + '/textures/Trees/fir_branch.png'  # Change this to your texture file path
 
     if leaves_obj:
         # Create or get the material
@@ -214,7 +214,7 @@ def create_pine_tree(name, target_directory, position=(0, 0, 0), height=7, trunk
     else:
         print(f"Object 'leaves' not found!")
 
-    bark_texture_path = target_directory + r'./textures\\Trees\\Bark014_8K-JPG\\Bark014_8K-JPG_Color.jpg'
+    bark_texture_path = target_directory + '/textures/Trees/Bark014_8K-JPG/Bark014_8K-JPG_Color.jpg'
     if tree_obj:
         bark_mat = bpy.data.materials.get("BarkMaterial")
         if not bark_mat:

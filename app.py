@@ -31,6 +31,10 @@ import blender_camera as cam
 import blender_light_source as light
 import blender_save as snap
 import blender_bbox as bbox
+import blender_plane as plane
+
+import importlib
+importlib.reload(plane)
 
 
 #Reset and Clear the Scene
@@ -39,7 +43,7 @@ utils.clear_scene()
 
 #Place a Road
 road.create_spline_road(width = 15,length = 3,spline_start=(-15,-50,0),spline_end=(20,50,0),curvature_points = 3, 
-curvature_score = 20,texture_path = target_directory + r'./textures/Roads/Seamless-Road-Texture2.jpg',texture_scaling=6)   
+curvature_score = 20,texture_path = target_directory + r'/textures/Roads/Seamless-Road-Texture2.jpg',texture_scaling=6)   
 
 
 
@@ -51,7 +55,7 @@ pole_height= 5
 
 
 # Note that cylinder forms from center of 'Location', so we start at the halfway point of the desired pole. 
-pole_end_points = signs.create_pole(pole_radius,pole_height,location =(0,0,pole_height/2),texture_path = target_directory + r'./textures/Signs/sign_pole_al.PNG') 
+pole_end_points = signs.create_pole(pole_radius,pole_height,location =(0,0,pole_height/2),texture_path = target_directory + r'/textures/Signs/sign_pole_al.PNG') 
 
 #create a simple square sign 
 signs.create_sign_square(sign_width,sign_height,text=None,start_location = (-sign_width/2,
@@ -59,7 +63,7 @@ pole_end_points[1]-2.5*pole_radius,pole_end_points[2]-0.25), name='Simple Sign')
 
 #Add a sign texture. Optionally, add text. 
 sign_obj = bpy.data.objects.get('Simple Sign')
-signs.add_sign_color(sign_obj,texture_path=target_directory+ r'./textures/Signs/exit_sign.PNG' )
+signs.add_sign_color(sign_obj,texture_path=target_directory+ r'/textures/Signs/exit_sign.PNG' )
 
 
 #Add some trees to the area
@@ -74,11 +78,14 @@ cam.add_camera(location=(0.0, -19.409, 14.526), rotation=(69.127, 0.000008, 0.56
 #adds a light source
 light.add_sunlight(location = (-28.398, 59.799, 19.12), power = 3.0, angle = 180)
 
+#creates a plane for the ground surface
+plane.create_plane(size=500, target_directory=target_directory, material="rocky_trail")
+
 #renders the scene and saves a snap as png
-snap.render_and_save(target_directory + r'./output/sign.png')
+#snap.render_and_save(target_directory + r'/output/sign.png')
 
 #draws a bounding box around the sign object and returns the coordinates in txt file
-bbox.save_bbox_as_text('Simple Sign', 'Camera', target_directory + r'./output/bbox.txt')
+#bbox.save_bbox_as_text('Simple Sign', 'Camera', target_directory + r'/output/bbox.txt')
 
 
 
