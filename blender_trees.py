@@ -1,6 +1,24 @@
 import bpy
 
-def create_oak_tree(position=(0, 0, 0), height=5, canopy_radius=3):
+import sys
+import os
+
+script_name = bpy.context.space_data.text.name
+
+# Get the absolute path of the script
+script_filepath = bpy.data.texts[script_name].filepath
+
+script_directory = os.path.dirname(script_filepath)
+
+
+#### CHANGE TARGET DIRECTORY TO SHARED FOLDER LOCATION######
+target_directory = script_directory
+os.chdir(target_directory)
+
+sys.path.append(os.getcwd())
+import blender_utils as utils
+
+def create_oak_tree(name, target_directory, position=(0, 0, 0), height=7, trunk_radius=0.2, seed=0):
     """
     Creates an oak tree.
 
@@ -8,7 +26,131 @@ def create_oak_tree(position=(0, 0, 0), height=5, canopy_radius=3):
     :param height: Height of the tree.
     :param canopy_radius: Radius of the tree's canopy.
     """
-    pass
+    bpy.ops.curve.tree_add(
+    do_update=True, 
+    chooseSet='5', 
+    bevel=True, 
+    prune=False, 
+    showLeaves=True, 
+    useArm=False, 
+    seed=seed, 
+    handleType='0', 
+    levels=4, 
+    length=(1, 0.2, 0.55, 0.45), 
+    lengthV=(0, 0.1, 0.25, 0.25), 
+    taperCrown=0, 
+    branches=(0, 75, 16, 10), 
+    curveRes=(12, 4, 3, 2), 
+    curve=(0, 20, -10, 0), 
+    curveV=(40, 30, 15, 10), 
+    curveBack=(0, 0, 0, 0), 
+    baseSplits=0, 
+    segSplits=(0, 0.35, 0.6, 0), 
+    splitByLen=True, 
+    rMode='rotate', 
+    splitAngle=(0, 12, 18, 0), 
+    splitAngleV=(0, 0, 0, 0), 
+    scale=35, 
+    scaleV=15, 
+    attractUp=(0, 0.35, 0.25, 0.15), 
+    attractOut=(0, 0, 0, 0), 
+    shape='8', 
+    shapeS='7', 
+    customShape=(0.5, 1, 0.35, 0.1), 
+    branchDist=1.85, 
+    nrings=0, 
+    baseSize=0.33, 
+    baseSize_s=0.5, 
+    splitHeight=0.2, 
+    splitBias=0, 
+    ratio=0.015, 
+    minRadius=0.002, 
+    closeTip=True, 
+    rootFlare=1.3, 
+    autoTaper=True, 
+    taper=(1, 1, 1, 1), 
+    radiusTweak=(1, 1, 1, 1), 
+    ratioPower=1.2, 
+    downAngle=(90, 130, 45, 45), 
+    downAngleV=(0, 30, 10, 10), 
+    useOldDownAngle=False, 
+    useParentAngle=True, 
+    rotate=(99.5, 137.5, -45, -60), 
+    rotateV=(15, 0, 15, 45), 
+    scale0=1, 
+    scaleV0=0.1, 
+    pruneWidth=0.4, 
+    pruneBase=0.3, 
+    pruneWidthPeak=0.6, 
+    prunePowerHigh=0.5, 
+    prunePowerLow=0.001, 
+    pruneRatio=1, 
+    leaves=20, 
+    leafDownAngle=45, 
+    leafDownAngleV=10, 
+    leafRotate=137.5, 
+    leafRotateV=0, 
+    leafScale=1, 
+    leafScaleX=1, 
+    leafScaleT=0, 
+    leafScaleV=0, 
+    leafShape='rect', 
+    bend=0, 
+    leafangle=0, 
+    horzLeaves=True, 
+    leafDist='6', 
+    bevelRes=1, 
+    resU=4, 
+    armAnim=False, 
+    previewArm=False, 
+    leafAnim=False, 
+    frameRate=1, 
+    loopFrames=0, 
+    wind=1, 
+    gust=1, 
+    gustF=0.075, 
+    af1=1, 
+    af2=1, 
+    af3=4, 
+    makeMesh=False, 
+    armLevels=2, 
+    boneStep=(1, 1, 1, 1))
+    
+    bpy.data.objects["tree"].name = name
+    
+    select_object(name)
+    move_selected_object(position)
+    
+    # selecet the leaves
+    # Deselect everything first
+    bpy.ops.object.select_all(action='DESELECT')
+
+    # Get the new tree object
+    tree_obj = bpy.data.objects.get(name)
+
+    if tree_obj:
+        # Iterate through all objects and find the child named "leaves"
+        leaves_obj = None
+        for obj in bpy.data.objects:
+            if obj.parent == tree_obj and obj.name == "leaves":
+                leaves_obj = obj
+                leaves_obj.name = name + "_leaves"  # Rename the leaves object
+                break
+        else:
+            print(f"Leaves object not found under {name}.")
+    else:
+        print(f"{name} object not found.")
+        
+
+
+    # Example: Replace with a real asset ID from BlenderKit
+    utils.apply_blenderkit_material(name, "e6075cd1-22ef-471e-a6b3-5a65aab646fa")
+
+
+    
+#    add_leaf_material(leaves_obj.name, target_directory + r'./textures\\Trees\\fir_branch.png')
+#    add_bark_material(tree_obj.name, target_directory + r'./textures\\Trees\\Bark014_8K-JPG\\Bark014_8K-JPG_Color.jpg')
+
 
 def create_pine_tree(name, target_directory, position=(0, 0, 0), height=7, trunk_radius=0.2, seed=0):
     """
@@ -113,7 +255,6 @@ def create_pine_tree(name, target_directory, position=(0, 0, 0), height=7, trunk
     select_object(name)
     move_selected_object(position)
     
-    
     # selecet the leaves
     # Deselect everything first
     bpy.ops.object.select_all(action='DESELECT')
@@ -141,116 +282,211 @@ def create_pine_tree(name, target_directory, position=(0, 0, 0), height=7, trunk
     else:
         print("Tree1 object not found.")
 
-    # Define the object name and texture file path
-    image_path = target_directory + '/textures/Trees/fir_branch.png'  # Change this to your texture file path
 
-    if leaves_obj:
-        # Create or get the material
-        mat = bpy.data.materials.get("LeafMaterial")
-        if not mat:
-            mat = bpy.data.materials.new(name="LeafMaterial")
-        mat.use_nodes = True
+    add_leaf_material(leaves_obj.name, target_directory + r'./textures\\Trees\\fir_branch.png')
+    add_bark_material(tree_obj.name, target_directory + r'./textures\\Trees\\Bark014_8K-JPG\\Bark014_8K-JPG_Color.jpg')
 
-        # Assign material to object
-        if leaves_obj.data.materials:
-            leaves_obj.data.materials[0] = mat  # Replace first material
-        else:
-            leaves_obj.data.materials.append(mat)  # Add new material
+#    # Define the object name and texture file path
+#    image_path = target_directory + r'./textures\\Trees\\fir_branch.png'  # Change this to your texture file path
 
-        # Get the node tree
-        nodes = mat.node_tree.nodes
-        links = mat.node_tree.links
+#    if leaves_obj:
+#        # Create or get the material
+#        mat = bpy.data.materials.get("LeafMaterial")
+#        if not mat:
+#            mat = bpy.data.materials.new(name="LeafMaterial")
+#        mat.use_nodes = True
 
-        # Clear existing nodes
-        for node in nodes:
-            nodes.remove(node)
+#        # Assign material to object
+#        if leaves_obj.data.materials:
+#            leaves_obj.data.materials[0] = mat  # Replace first material
+#        else:
+#            leaves_obj.data.materials.append(mat)  # Add new material
 
-        # Add necessary nodes
-        principled = nodes.new(type="ShaderNodeBsdfPrincipled")
-        principled.location = (0, 0)
+#        # Get the node tree
+#        nodes = mat.node_tree.nodes
+#        links = mat.node_tree.links
 
-        texture_node = nodes.new(type="ShaderNodeTexImage")
-        texture_node.location = (-300, 0)
+#        # Clear existing nodes
+#        for node in nodes:
+#            nodes.remove(node)
 
-        output = nodes.new(type="ShaderNodeOutputMaterial")
-        output.location = (200, 0)
+#        # Add necessary nodes
+#        principled = nodes.new(type="ShaderNodeBsdfPrincipled")
+#        principled.location = (0, 0)
 
-        # Load image texture
-        texture_node.image = bpy.data.images.load(image_path)
+#        texture_node = nodes.new(type="ShaderNodeTexImage")
+#        texture_node.location = (-300, 0)
 
-        # Connect nodes
-        links.new(texture_node.outputs["Color"], principled.inputs["Base Color"])
-        links.new(principled.outputs["BSDF"], output.inputs["Surface"])
+#        output = nodes.new(type="ShaderNodeOutputMaterial")
+#        output.location = (200, 0)
 
-        # Enable transparency if the texture has an alpha channel
-        links.new(texture_node.outputs["Alpha"], principled.inputs["Alpha"])
-        mat.blend_method = 'HASHED'  # Use Alpha Hashed for transparency
-        mat.use_screen_refraction = True  # Helps with transparency rendering
-        mat.use_backface_culling = False  # Ensures both sides are visible if needed
-        mat.show_transparent_back = False  # Prevents weird backface transparency issues
-        mat.alpha_threshold = 0.5  # Adjust this if using Alpha Clip
+#        # Load image texture
+#        texture_node.image = bpy.data.images.load(image_path)
 
-        # --- NEW SECTION: Enable Partial Light Blocking ---
+#        # Connect nodes
+#        links.new(texture_node.outputs["Color"], principled.inputs["Base Color"])
+#        links.new(principled.outputs["BSDF"], output.inputs["Surface"])
+
+#        # Enable transparency if the texture has an alpha channel
+#        links.new(texture_node.outputs["Alpha"], principled.inputs["Alpha"])
+#        mat.blend_method = 'HASHED'  # Use Alpha Hashed for transparency
+#        mat.use_screen_refraction = True  # Helps with transparency rendering
+#        mat.use_backface_culling = False  # Ensures both sides are visible if needed
+#        mat.show_transparent_back = False  # Prevents weird backface transparency issues
+#        mat.alpha_threshold = 0.5  # Adjust this if using Alpha Clip
+
+#        # --- NEW SECTION: Enable Partial Light Blocking ---
+#        
+#        # Add Transparent BSDF and Mix Shader
+#        transparent = nodes.new(type="ShaderNodeBsdfTransparent")
+#        transparent.location = (-200, -100)
+
+#        mix_shader = nodes.new(type="ShaderNodeMixShader")
+#        mix_shader.location = (50, -50)
+
+#        # Connect Transparent BSDF to Mix Shader
+#        links.new(transparent.outputs["BSDF"], mix_shader.inputs[1])  # Transparent shader
+#        links.new(principled.outputs["BSDF"], mix_shader.inputs[2])  # Principled BSDF shader
+
+#        # Use Alpha from Texture to control transparency blending
+#        links.new(texture_node.outputs["Alpha"], mix_shader.inputs[0])  # Alpha as mix factor
+
+#        # Connect Mix Shader to Material Output
+#        links.new(mix_shader.outputs["Shader"], output.inputs["Surface"])
+
+#        print("Leaves material updated for partial light blocking.")
+
+#    else:
+#        print(f"Object 'leaves' not found!")
+
+#    bark_texture_path = target_directory + r'./textures\\Trees\\Bark014_8K-JPG\\Bark014_8K-JPG_Color.jpg'
+#    if tree_obj:
+#        bark_mat = bpy.data.materials.get("BarkMaterial")
+#        if not bark_mat:
+#            bark_mat = bpy.data.materials.new(name="BarkMaterial")
+#        bark_mat.use_nodes = True
+
+#        if tree_obj.data.materials:
+#            tree_obj.data.materials[0] = bark_mat
+#        else:
+#            tree_obj.data.materials.append(bark_mat)
+
+#        bark_nodes = bark_mat.node_tree.nodes
+#        bark_links = bark_mat.node_tree.links
+
+#        for node in bark_nodes:
+#            bark_nodes.remove(node)
+
+#        bark_principled = bark_nodes.new(type="ShaderNodeBsdfPrincipled")
+#        bark_principled.location = (0, 0)
+
+#        bark_texture_node = bark_nodes.new(type="ShaderNodeTexImage")
+#        bark_texture_node.location = (-300, 0)
+
+#        bark_output = bark_nodes.new(type="ShaderNodeOutputMaterial")
+#        bark_output.location = (200, 0)
+
+#        bark_texture_node.image = bpy.data.images.load(bark_texture_path)
+
+#        bark_links.new(bark_texture_node.outputs["Color"], bark_principled.inputs["Base Color"])
+#        bark_links.new(bark_principled.outputs["BSDF"], bark_output.inputs["Surface"])
+
+#        print("Bark material applied to tree!")
+
+#    else:
+#        print(f"{name} object not found!")
         
-        # Add Transparent BSDF and Mix Shader
-        transparent = nodes.new(type="ShaderNodeBsdfTransparent")
-        transparent.location = (-200, -100)
+def add_leaf_material(leaves_obj_name, image_path):
+    leaves_obj = bpy.data.objects.get(leaves_obj_name)
+    if not leaves_obj:
+        print(f"Object '{leaves_obj_name}' not found!")
+        return
 
-        mix_shader = nodes.new(type="ShaderNodeMixShader")
-        mix_shader.location = (50, -50)
+    mat = bpy.data.materials.get("LeafMaterial")
+    if not mat:
+        mat = bpy.data.materials.new(name="LeafMaterial")
+    mat.use_nodes = True
 
-        # Connect Transparent BSDF to Mix Shader
-        links.new(transparent.outputs["BSDF"], mix_shader.inputs[1])  # Transparent shader
-        links.new(principled.outputs["BSDF"], mix_shader.inputs[2])  # Principled BSDF shader
-
-        # Use Alpha from Texture to control transparency blending
-        links.new(texture_node.outputs["Alpha"], mix_shader.inputs[0])  # Alpha as mix factor
-
-        # Connect Mix Shader to Material Output
-        links.new(mix_shader.outputs["Shader"], output.inputs["Surface"])
-
-        print("Leaves material updated for partial light blocking.")
-
+    if leaves_obj.data.materials:
+        leaves_obj.data.materials[0] = mat
     else:
-        print(f"Object 'leaves' not found!")
+        leaves_obj.data.materials.append(mat)
 
-    bark_texture_path = target_directory + '/textures/Trees/Bark014_8K-JPG/Bark014_8K-JPG_Color.jpg'
-    if tree_obj:
-        bark_mat = bpy.data.materials.get("BarkMaterial")
-        if not bark_mat:
-            bark_mat = bpy.data.materials.new(name="BarkMaterial")
-        bark_mat.use_nodes = True
+    nodes = mat.node_tree.nodes
+    links = mat.node_tree.links
 
-        if tree_obj.data.materials:
-            tree_obj.data.materials[0] = bark_mat
-        else:
-            tree_obj.data.materials.append(bark_mat)
+    for node in nodes:
+        nodes.remove(node)
 
-        bark_nodes = bark_mat.node_tree.nodes
-        bark_links = bark_mat.node_tree.links
+    principled = nodes.new(type="ShaderNodeBsdfPrincipled")
+    principled.location = (0, 0)
 
-        for node in bark_nodes:
-            bark_nodes.remove(node)
+    texture_node = nodes.new(type="ShaderNodeTexImage")
+    texture_node.location = (-300, 0)
+    texture_node.image = bpy.data.images.load(image_path)
 
-        bark_principled = bark_nodes.new(type="ShaderNodeBsdfPrincipled")
-        bark_principled.location = (0, 0)
+    output = nodes.new(type="ShaderNodeOutputMaterial")
+    output.location = (200, 0)
 
-        bark_texture_node = bark_nodes.new(type="ShaderNodeTexImage")
-        bark_texture_node.location = (-300, 0)
+    links.new(texture_node.outputs["Color"], principled.inputs["Base Color"])
+    links.new(principled.outputs["BSDF"], output.inputs["Surface"])
+    links.new(texture_node.outputs["Alpha"], principled.inputs["Alpha"])
 
-        bark_output = bark_nodes.new(type="ShaderNodeOutputMaterial")
-        bark_output.location = (200, 0)
+    mat.blend_method = 'HASHED'
+    mat.use_screen_refraction = True
+    mat.use_backface_culling = False
+    mat.show_transparent_back = False
+    mat.alpha_threshold = 0.5
 
-        bark_texture_node.image = bpy.data.images.load(bark_texture_path)
+    transparent = nodes.new(type="ShaderNodeBsdfTransparent")
+    transparent.location = (-200, -100)
 
-        bark_links.new(bark_texture_node.outputs["Color"], bark_principled.inputs["Base Color"])
-        bark_links.new(bark_principled.outputs["BSDF"], bark_output.inputs["Surface"])
+    mix_shader = nodes.new(type="ShaderNodeMixShader")
+    mix_shader.location = (50, -50)
 
-        print("Bark material applied to tree!")
+    links.new(transparent.outputs["BSDF"], mix_shader.inputs[1])
+    links.new(principled.outputs["BSDF"], mix_shader.inputs[2])
+    links.new(texture_node.outputs["Alpha"], mix_shader.inputs[0])
+    links.new(mix_shader.outputs["Shader"], output.inputs["Surface"])
 
+    print("Leaves material updated for partial light blocking.")
+
+def add_bark_material(tree_obj_name, bark_texture_path):
+    tree_obj = bpy.data.objects.get(tree_obj_name)
+    if not tree_obj:
+        print(f"{tree_obj_name} object not found!")
+        return
+
+    bark_mat = bpy.data.materials.get("BarkMaterial")
+    if not bark_mat:
+        bark_mat = bpy.data.materials.new(name="BarkMaterial")
+    bark_mat.use_nodes = True
+
+    if tree_obj.data.materials:
+        tree_obj.data.materials[0] = bark_mat
     else:
-        print(f"{name} object not found!")
-        
+        tree_obj.data.materials.append(bark_mat)
+
+    bark_nodes = bark_mat.node_tree.nodes
+    bark_links = bark_mat.node_tree.links
+
+    for node in bark_nodes:
+        bark_nodes.remove(node)
+
+    bark_principled = bark_nodes.new(type="ShaderNodeBsdfPrincipled")
+    bark_principled.location = (0, 0)
+
+    bark_texture_node = bark_nodes.new(type="ShaderNodeTexImage")
+    bark_texture_node.location = (-300, 0)
+    bark_texture_node.image = bpy.data.images.load(bark_texture_path)
+
+    bark_output = bark_nodes.new(type="ShaderNodeOutputMaterial")
+    bark_output.location = (200, 0)
+
+    bark_links.new(bark_texture_node.outputs["Color"], bark_principled.inputs["Base Color"])
+    bark_links.new(bark_principled.outputs["BSDF"], bark_output.inputs["Surface"])
+
+    print("Bark material applied to tree!")
         
 
 def move_selected_object(position):
@@ -349,3 +585,5 @@ def add_trees(tree_type="oak", count=10, area_size=(20, 20)):
     Note: The Grove 3D or Modular Tree Add-on could be used for hyper-realistic tree generation.
     """
     pass
+
+create_oak_tree('tree1', target_directory, position=(0, 0, 0), height=7, trunk_radius=0.2, seed=0)

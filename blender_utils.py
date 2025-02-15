@@ -50,3 +50,16 @@ def clear_scene():
 def wipe_blender():
     bpy.ops.wm.read_factory_settings(use_empty=True)
     
+
+def apply_blenderkit_material(obj_name, asset_base_id):
+    obj = bpy.data.objects.get(obj_name)
+    if obj:
+        # Download and apply material using asset_base_id
+        bpy.ops.scene.blenderkit_download(asset_index=0, target_object=obj_name, material_target_slot=0, model_rotation=(0, 0, 0))
+        bpy.ops.view3d.blenderkit_download_gizmo_widget(asset_base_id=asset_base_id)
+
+
+        print(f"BlenderKit material {asset_base_id} applied to {obj_name}.")
+    else:
+        print(f"Object '{obj_name}' not found!")
+    
