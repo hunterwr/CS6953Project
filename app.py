@@ -36,7 +36,7 @@ import blender_car as car
 import blender_sky_texture as sky_texture
 
 import importlib
-importlib.reload(sky_texture)
+importlib.reload(cam)
 
 
 #Reset and Clear the Scene
@@ -75,13 +75,13 @@ trees.create_pine_tree("tree3", target_directory, position=(-10,-10,0), seed=5) 
 trees.create_pine_tree("tree4", target_directory, position=(5,10,0), seed=10) #
 
 #adds a camera in front of the sign object
-cam.add_camera(location=(0.3, -61.367, 6.6872), rotation=(91.527, 0.0000048, -13.83), scale=1.0)
+cam.add_camera(target_directory, location=(0.3, -61.367, 6.6872), rotation=(91.527, 0.0000048, -13.83), scale=1.0)
 
 #adds a light source
 light.add_sunlight(location = (-28.398, 59.799, 19.12), power = 3.0, angle = 180)
 
 #creates a plane for the ground surfacen
-plane.create_plane(size=1000, target_directory=target_directory, material="snow_03")
+plane.create_plane(size=1000, target_directory=target_directory, material="forrest_ground_01")
 
 #creates a car object downloaded as gltffile
 car.create_car(target_directory)
