@@ -29,6 +29,9 @@ import blender_camera as cam
 import blender_light_source as light
 import blender_save as snap
 import blender_bbox as bbox
+import blender_plane as plane
+import blender_car as car
+import blender_sky_texture as sky_texture
 
 def main(args):
     # Reset and Clear the Scene
@@ -82,6 +85,7 @@ def main(args):
     
     # Add a camera
     cam.add_camera(
+        target_directory, background=args.background,
         location=tuple(map(float, args.camera_location.split(','))),
         rotation=tuple(map(float, args.camera_rotation.split(','))),
         scale=args.camera_scale
@@ -93,6 +97,15 @@ def main(args):
         power=args.light_power,
         angle=args.light_angle
     )
+    
+    #creates a plane for the ground surfacen
+    plane.create_plane(size=args.ground_plane_size, target_directory=target_directory, material=args.ground_plane_material)
+
+    #creates a car object downloaded as gltffile
+    car.create_car(target_directory)
+
+    #adds sky texture
+    sky_texture.create_sky_texture()
     
     # Render and save the scene
     snap.render_and_save(os.path.join(target_directory, args.output_image))
@@ -139,6 +152,9 @@ if __name__ == '__main__':
     parser.add_argument('-light_location', type=str, default='-28.398,59.799,19.12')
     parser.add_argument('-light_power', type=float, default=3.0)
     parser.add_argument('-light_angle', type=int, default=180)
+    parser.add_argument('-ground_plane_size', type=int, default=1000)
+    parser.add_argument('-ground_plane_material', type=str, default="forrest_ground_01")
+    parser.add_argument('-background', type=str, default="sky_mountains")
     parser.add_argument('-output_image', type=str, default='output/sign.png')
     parser.add_argument('-output_bbox', type=str, default='output/bbox.txt')
     
