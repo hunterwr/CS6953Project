@@ -481,37 +481,3 @@ def add_trees(tree_type="oak", count=10, area_size=(20, 20)):
     """
     pass
 
-
-
-#create_birch_tree('tree12', target_directory)
-
-# BlenderKit material ID (replace with actual material ID)
-material_id = "e6075cd1-22ef-471e-a6b3-5a65aab646fa"
-
-# Object to apply material to
-object_name = "Cube"  # Change this to your object's name
-
-# Download and apply BlenderKit material using the ID
-bpy.ops.asset_bundle.download(asset_type='MATERIAL', asset_id=material_id)
-
-# Function to find and apply the material once downloaded
-def apply_downloaded_material(obj_name, material_id):
-    obj = bpy.data.objects.get(obj_name)
-    if obj is None:
-        print(f"Object '{obj_name}' not found.")
-        return
-    
-    # Wait for the material to appear in Blender's materials list
-    for mat in bpy.data.materials:
-        if material_id in mat.get("asset_data", {}).get("id", ""):
-            if obj.data.materials:
-                obj.data.materials[0] = mat  # Replace first material
-            else:
-                obj.data.materials.append(mat)  # Assign new material
-            print(f"Applied material '{mat.name}' to '{obj_name}'")
-            return
-    
-    print(f"Material with ID '{material_id}' not found in materials list.")
-
-# Apply material after download
-apply_downloaded_material(object_name, material_id)
