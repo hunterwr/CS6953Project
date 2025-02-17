@@ -51,10 +51,13 @@ def wipe_blender():
     bpy.ops.wm.read_factory_settings(use_empty=True)
     
 
-def apply_blenderkit_material(obj_name, asset_base_id):
+def apply_blenderkit_material(obj_name, asset_base_id, keyword):
     obj = bpy.data.objects.get(obj_name)
     if obj:
         # Download and apply material using asset_base_id
+        bpy.ops.view3d.blenderkit_disclaimer_widget(message="Use the 'S' key over the asset bar to search similar assets.", url="https://github.com/BlenderKit/blenderkit/wiki/BlenderKit-add-on-documentation#assetbar", fadeout_time=8, tip=True)
+        bpy.data.window_managers["WinMan"].blenderkitUI.asset_type = 'MATERIAL'
+        bpy.data.window_managers["WinMan"].blenderkit_mat.search_keywords = keyword
         bpy.ops.scene.blenderkit_download(asset_index=0, target_object=obj_name, material_target_slot=0, model_rotation=(0, 0, 0))
         bpy.ops.view3d.blenderkit_download_gizmo_widget(asset_base_id=asset_base_id)
 
