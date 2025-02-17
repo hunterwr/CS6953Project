@@ -5,19 +5,8 @@ import os
 import random
 from mathutils import Vector
 
-script_name = bpy.context.space_data.text.name
+module_dir = os.path.dirname(os.path.abspath(__file__))
 
-# Get the absolute path of the script
-script_filepath = bpy.data.texts[script_name].filepath
-
-script_directory = os.path.dirname(script_filepath)
-
-
-#### CHANGE TARGET DIRECTORY TO SHARED FOLDER LOCATION######
-target_directory = script_directory
-os.chdir(target_directory)
-
-sys.path.append(os.getcwd())
 import blender_utils as utils
 
 
@@ -445,6 +434,6 @@ def generate_forest(road_coords, forest_width=10, tree_density=0.2):
 
         # Apply tree density probability
         if random.random() < tree_density:
-            create_pine_tree("tree"+str(i), target_directory, position=(x, y, 0), seed=random.randint(1, 1000))
+            create_pine_tree("tree"+str(i), module_dir, position=(x, y, 0), seed=random.randint(1, 1000))
 
     print("Forest generation complete!")
