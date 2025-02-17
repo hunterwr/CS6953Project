@@ -2,15 +2,97 @@ import bpy
 
 
 
+import bpy
+import time 
 
-def create_straight_road(length=10, width=2):
-    """
-    Creates a straight road segment.
 
-    :param length: Length of the road.
-    :param width: Width of the road.
-    """
-    pass
+
+
+
+def apply_blenderkit_material(obj_name, asset_base_id):
+
+#    
+
+    obj = bpy.data.objects.get(obj_name)
+
+    bpy.data.window_managers["WinMan"].blenderkitUI.asset_type = 'MATERIAL'
+    bpy.data.window_managers["WinMan"].blenderkit_mat.search_keywords = '4k Wet Road 02'
+    bpy.ops.view3d.blenderkit_asset_bar_widget(do_search=False, keep_running=True)
+    
+    bpy.ops.scene.blenderkit_download(asset_index=0, target_object=obj_name, material_target_slot=0, model_rotation=(0, 0, 0),model_location =obj.location)
+
+    
+
+def unwrap_uv(obj):
+    bpy.context.view_layer.objects.active = obj
+    obj.select_set(True)
+
+    bpy.ops.object.mode_set(mode='EDIT')
+    bpy.ops.mesh.select_all(action='SELECT')
+    bpy.ops.uv.smart_project(angle_limit=66)  # Auto UV Unwrap
+    bpy.ops.object.mode_set(mode='OBJECT')
+    
+    
+
+def create_road_edges(road_width,road_height, road_length,left_edge_start = (0,0,0),name='Road_Edges',asset_base_id="4b99930c-2ebd-4fb3-9c5a-d3a61fece0c7"):
+    
+# Create a cube
+    
+    verts = [(0,0,0),(0,road_length,0),(road_width,road_length,0),(road_width,0,0),(0.15*road_width,0,road_height),
+            (0.15*road_width,road_length,road_height),(.85*road_width,road_length,road_height),(0.85*road_width,0,road_height)]
+    faces = [(0,1,2,3),(7,6,5,4),(0,4,5,1),(1,5,6,2),(2,6,7,3),(3,7,4,0)]
+    
+
+    mymesh = bpy.data.meshes.new(name)
+    myobject = bpy.data.objects.new(name, mymesh)
+    mymesh.from_pydata(verts, [], faces)
+    mymesh.update()
+    myobject.data.materials.clear()
+  
+    myobject.location = left_edge_start 
+    bpy.context.collection.objects.link(myobject)
+    bpy.context.view_layer.objects.active = myobject 
+    
+    bpy.ops.object.modifier_add(type='BEVEL')
+    bpy.context.object.modifiers["Bevel"].affect = 'EDGES'
+    bpy.context.object.modifiers["Bevel"].segments = 11
+    bpy.context.object.modifiers["Bevel"].angle_limit = 0.0802852
+    bpy.context.object.modifiers["Bevel"].width = 1.89
+#    
+    unwrap_uv(myobject)
+#    
+    length_width_ratio = road_length/road_width
+###    search_blenderkit_asset('4k Wet Road 02')
+#   try:
+#        apply_blenderkit_material(myobject.name,asset_base_id=asset_base_id)
+#   except:
+#        create_road_edges(road_width=road_width,road_height=road_height, road_length=road_length,left_edge_start = (0,0,0),name='Road_Edges',asset_base_id="4b99930c-2ebd-4fb3-9c5a-d3a61fece0c7")
+        
+    apply_blenderkit_material(myobject.name,asset_base_id=asset_base_id)
+    
+    # bpy.context.view_layer.update() 
+    # obj = bpy.data.objects.get(name)
+    # bpy.context.view_layer.objects.active = obj
+    
+    
+    if asset_base_id == "4b99930c-2ebd-4fb3-9c5a-d3a61fece0c7":
+        bpy.data.materials["4K Wet road 02"].node_tree.nodes["Mapping"].inputs['Rotation'].default_value[2] = 1.5708
+        bpy.data.materials["4K Wet road 02"].node_tree.nodes["Mapping"].inputs['Location'].default_value[0] = 1.3
+        bpy.data.materials["4K Wet road 02"].node_tree.nodes["Mapping"].inputs['Location'].default_value[1] = -.05
+        bpy.data.materials["4K Wet road 02"].node_tree.nodes["Mapping"].inputs['Scale'].default_value[0] = -1.6044*length_width_ratio-0.1581
+        bpy.data.materials["4K Wet road 02"].node_tree.nodes["Mapping"].inputs['Scale'].default_value[1] = 0.0175*road_length+1.2
+        
+        
+ 
+
+
+
+
+
+
+
+
+
 
 def create_spline_road(width,length,spline_start=(0,0,0),spline_end=(20,20,0), curvature_points = 2, curvature_score =1,texture_path = None,texture_scaling=1):
     
