@@ -123,16 +123,16 @@ def main(args):
     sky_texture.create_sky_texture()
     
     #arguments
-    num_steps = 10
-    step_size= 5.0
+    
+    
 
     #add at the end
     path = os.path.join(target_directory, args.output_image)
     # Create the output directory if it doesn't exist
     if not os.path.exists(os.path.dirname(path)):
         os.makedirs(os.path.dirname(path))
-    for step in range(num_steps):
-            camera.location.y += step_size
+    for step in range(args.num_steps):
+            camera.location.y += args.step_size
             # Render and save the scene
             snap.render_and_save(path+f"sign_step_{step}.png", samples=args.samples)
             print(f"Saved Image {step}")
@@ -175,13 +175,13 @@ if __name__ == '__main__':
     parser.add_argument('-light_power', type=float, default=3.0)
     parser.add_argument('-light_angle', type=int, default=180)
     parser.add_argument('-ground_plane_size', type=int, default=1000)
-    parser.add_argument('-ground_plane_material', type=str, default="snow_03")
-    parser.add_argument('-background', type=str, default="sky1")
-    parser.add_argument('-output_image', type=str, default='output/samples/')
+    parser.add_argument('-ground_plane_material', type=str, default="rocky_trail")
+    parser.add_argument('-background', type=str, default="burj_khalifa")
+    parser.add_argument('-output_image', type=str, default='output/samples4/')
     parser.add_argument('-output_bbox', type=str, default='output/bbox.txt')
     parser.add_argument('-min_tree_dist', type=int, default=3)
     parser.add_argument('-max_tree_dist', type=int, default=20)
-    parser.add_argument('-num_trees', type=int, default=30)
+    parser.add_argument('-num_trees', type=int, default=50)
     parser.add_argument('-samples', type=int, default=128)
     parser.add_argument('-num_steps', type=int, default=5)
     parser.add_argument('-step_size', type=int, default=5)
