@@ -8,8 +8,8 @@ def create_car(target_directory):
     
     car_object.name = "Porsche"
     car_object.scale = (510.0, 510.0, 510.0)
-    car_object.location = (23.5, -10.1, 0.0)
-    car_object.rotation_quaternion = (0.053, -0.053, -0.705, 0.705)
+    car_object.location = (7.16, -10.1, 0.8818)
+    car_object.rotation_quaternion = (0.006, -0.006, -0.707, 0.705)
     
     wheel_pivot = bpy.data.objects.get("Wheel1A_3D_35")
     wheel_pivot.rotation_quaternion = (1.0, 0.0, 0.0, 0.02)

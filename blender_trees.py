@@ -142,7 +142,7 @@ def create_birch_tree(name, target_directory, position=(0, 0, 0), height=7, trun
         print("Tree1 object not found.")
 
 
-    add_leaf_material(leaves_obj.name, target_directory + r'./textures\\Trees\\birch_leaf.png')
+    add_leaf_material(leaves_obj.name, target_directory + r'/textures/Trees/birch_leaf.png')
     utils.apply_blenderkit_material(name, "e6075cd1-22ef-471e-a6b3-5a65aab646fa", "birch bark")
 
 
@@ -277,8 +277,8 @@ def create_pine_tree(name, target_directory, position=(0, 0, 0), height=7, trunk
         print("Tree1 object not found.")
 
 
-    add_leaf_material(leaves_obj.name, target_directory + r'./textures\\Trees\\fir_branch.png')
-    add_bark_material(tree_obj.name, target_directory + r'./textures\\Trees\\Bark014_8K-JPG\\Bark014_8K-JPG_Color.jpg')
+    add_leaf_material(leaves_obj.name, target_directory + r'/textures/Trees/fir_branch.png')
+    add_bark_material(tree_obj.name, target_directory + r'/textures/Trees/Bark014_8K-JPG/Bark014_8K-JPG_Color.jpg')
 
 
         
@@ -408,7 +408,7 @@ def select_object(object_name):
 
 
 
-def generate_forest(road_width, road_length, min_dist=3, max_dist=50, num_trees=10):
+def generate_forest(road_width, road_length, min_dist=3, max_dist=50, num_trees=10, tree_type='pine'):
     """
     Generates a forest around a road, placing trees only on both sides with varying widths.
     
@@ -420,12 +420,15 @@ def generate_forest(road_width, road_length, min_dist=3, max_dist=50, num_trees=
           # Place trees on both sides of the road
           # Adjust tree count per segment based on width
             tree_x = random.uniform((road_width/2+min_dist), (road_width/2+min_dist)+max_dist) * random.choice([-1, 1])
-            tree_y = random.uniform(-50, road_length)  # Slight variation in position
+            tree_y = random.uniform(0, road_length)  # Slight variation in position
             
             # if random.random() < tree_density:
             #     trees.append((tree_x, tree_y))
             tree_name = 'tree'+str(i)
-            create_pine_tree(tree_name, module_dir, position=(tree_x, tree_y, 0), seed=random.randint(1, 1000))
+            if tree_type == 'pine':
+                create_pine_tree(tree_name, module_dir, position=(tree_x, tree_y, 0), seed=random.randint(1, 1000))
+            elif tree_type == 'birch':
+                create_birch_tree(tree_name, module_dir, position=(tree_x, tree_y, 0), seed=random.randint(1, 1000))
 
     print("Forest generation complete!")
 

@@ -99,7 +99,7 @@ def main(args):
 
     
     # Add a camera
-    cam.add_camera(
+    camera = cam.add_camera(
         target_directory, background=args.background,
         location=tuple(map(float, args.camera_location.split(','))),
         rotation=tuple(map(float, args.camera_rotation.split(','))),
@@ -122,8 +122,18 @@ def main(args):
     #adds sky texture
     sky_texture.create_sky_texture()
     
-    # Render and save the scene
-    snap.render_and_save(os.path.join(target_directory, args.output_image))
+    #arguments
+    num_steps = 10
+    step_size= 5.0
+
+    #add at the end
+    for step in range(num_steps):
+            camera.location.y += step_size
+            # Render and save the scene
+            snap.render_and_save(os.path.join(target_directory, args.output_image+f"_step_{step}.png"), samples=args.samples)
+            print(f"Saved Image {step}")
+    
+    
     
     # Save bounding box
     bbox.save_bbox_as_text(
@@ -154,8 +164,8 @@ if __name__ == '__main__':
     parser.add_argument('-sign_distance', type=int, default=100)
     parser.add_argument('-sign_texture', type=str, default='/exit_sign.PNG')
     parser.add_argument('-pole_texture', type=str, default='textures/Signs/sign_pole_al.PNG')
-    parser.add_argument('-camera_location', type=str, default='0.0,-19.409,14.526')
-    parser.add_argument('-camera_rotation', type=str, default='69.127,0.000008,0.569964')
+    parser.add_argument('-camera_location', type=str, default='12.5, -58, 6.68')
+    parser.add_argument('-camera_rotation', type=str, default='90, 0, 0')
     parser.add_argument('-camera_scale', type=float, default=1.0)
     parser.add_argument('-light_location', type=str, default='-28.398,59.799,19.12')
     parser.add_argument('-light_power', type=float, default=3.0)
@@ -163,10 +173,12 @@ if __name__ == '__main__':
     parser.add_argument('-ground_plane_size', type=int, default=1000)
     parser.add_argument('-ground_plane_material', type=str, default="forrest_ground_01")
     parser.add_argument('-background', type=str, default="sky_mountains")
-    parser.add_argument('-output_image', type=str, default='output/sign.png')
+    parser.add_argument('-output_image', type=str, default='output/sign')
     parser.add_argument('-output_bbox', type=str, default='output/bbox.txt')
     parser.add_argument('-min_tree_dist', type=int, default=3)
     parser.add_argument('-max_tree_dist', type=int, default=30)
     parser.add_argument('-num_trees', type=int, default=10)
+    parser.add_argument('-samples', type=int, default=256)
+    
     args = parser.parse_args(argv)  # Use stripped arguments
     main(args)
