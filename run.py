@@ -33,6 +33,13 @@ import blender_plane as plane
 import blender_car as car
 import blender_sky_texture as sky_texture
 
+# # Add-ons
+# addon_name = "Sapling Tree Gen"  # Replace with the actual add-on name
+# # Ensure the add-on is enabled
+# if addon_name not in bpy.context.preferences.addons:
+#     bpy.ops.preferences.addon_enable(module=addon_name)
+#     bpy.ops.wm.save_userpref()
+
 def main(args):
     # Reset and Clear the Scene
     utils.clear_scene()
@@ -160,6 +167,5 @@ if __name__ == '__main__':
     parser.add_argument('-min_tree_dist', type=int, default=3)
     parser.add_argument('-max_tree_dist', type=int, default=30)
     parser.add_argument('-num_trees', type=int, default=10)
-    
     args = parser.parse_args(argv)  # Use stripped arguments
     main(args)
