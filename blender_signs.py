@@ -1,10 +1,20 @@
 import bpy
 import texture_utils as textures
 
+def unwrap_uv(obj):
+    bpy.context.view_layer.objects.active = obj
+    obj.select_set(True)
+
+    bpy.ops.object.mode_set(mode='EDIT')
+    bpy.ops.mesh.select_all(action='SELECT')
+    bpy.ops.uv.smart_project(angle_limit=66)  # Auto UV Unwrap
+    bpy.ops.object.mode_set(mode='OBJECT')
+
+
 def create_sign_square(width,height,text=None,start_location = (0,0,0),name='Sign'):
     
 # Create a cube
-    thickness =0.01
+    thickness =0.1
     verts = [(0,0,0),(0,thickness,0),(width,thickness,0),(width,0,0),(0,0,height),(0,thickness,height),(width,thickness,height),(width,0,height)]
     faces = [(0,1,2,3),(7,6,5,4),(0,4,5,1),(1,5,6,2),(2,6,7,3),(3,7,4,0)]
     
@@ -46,6 +56,7 @@ def add_sign_color(object, target_directory, texture_path = None):
     bpy.context.view_layer.objects.active = object
     
     obj = object
+    unwrap_uv(obj)
     textures.apply_blenderkit_sign_jpg(obj,target_directory=target_directory,base_color_path=texture_path)
 
 #     mat = bpy.data.materials.new(name="SignMaterial")

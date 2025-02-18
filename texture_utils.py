@@ -962,9 +962,9 @@ def apply_blenderkit_sign_jpg(obj,target_directory,base_color_path = None,scratc
         #Location
         mapping_001.inputs[1].default_value = (0.0, 0.0, 0.0)
         #Rotation
-        mapping_001.inputs[2].default_value = (0.0, 0.0, 0.0)
+        mapping_001.inputs[2].default_value = (0.0, 0.0, -1.5708)
         #Scale
-        mapping_001.inputs[3].default_value = (1.0, 1.0, 1.0)
+        mapping_001.inputs[3].default_value = (2, 2, 1.0)
 
         #node Image Texture.003
         image_texture_003 = signmaterial.nodes.new("ShaderNodeTexImage")

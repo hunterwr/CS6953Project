@@ -65,7 +65,7 @@ signs.create_sign_square(
     5,
     text=None,
     start_location=(
-        (50/2) + (5 / 2),
+        pole_end_points[0]-5/2,
         pole_end_points[1] - 2.5 * 0.2,
         pole_end_points[2] - 0.25
     ),
