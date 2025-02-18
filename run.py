@@ -76,10 +76,10 @@ def main(args):
         args.sign_width,
         args.sign_height,
         text=None,
-        start_location=(
-            -args.sign_width / 2,
-            pole_end_points[1] - 2.5 * args.pole_radius,
-            pole_end_points[2] - 0.25
+         start_location=(
+        pole_end_points[0]-5/2,
+        pole_end_points[1] - 2.5 * 0.2,
+        pole_end_points[2] - 0.25
         ),
         name='Simple Sign'
     )
@@ -127,10 +127,14 @@ def main(args):
     step_size= 5.0
 
     #add at the end
+    path = os.path.join(target_directory, args.output_image)
+    # Create the output directory if it doesn't exist
+    if not os.path.exists(os.path.dirname(path)):
+        os.makedirs(os.path.dirname(path))
     for step in range(num_steps):
             camera.location.y += step_size
             # Render and save the scene
-            snap.render_and_save(os.path.join(target_directory, args.output_image+f"_step_{step}.png"), samples=args.samples)
+            snap.render_and_save(path+f"sign_step_{step}.png", samples=args.samples)
             print(f"Saved Image {step}")
     
     
@@ -171,14 +175,16 @@ if __name__ == '__main__':
     parser.add_argument('-light_power', type=float, default=3.0)
     parser.add_argument('-light_angle', type=int, default=180)
     parser.add_argument('-ground_plane_size', type=int, default=1000)
-    parser.add_argument('-ground_plane_material', type=str, default="forrest_ground_01")
-    parser.add_argument('-background', type=str, default="sky_mountains")
-    parser.add_argument('-output_image', type=str, default='output/sign')
+    parser.add_argument('-ground_plane_material', type=str, default="snow_03")
+    parser.add_argument('-background', type=str, default="sky1")
+    parser.add_argument('-output_image', type=str, default='output/samples/')
     parser.add_argument('-output_bbox', type=str, default='output/bbox.txt')
     parser.add_argument('-min_tree_dist', type=int, default=3)
-    parser.add_argument('-max_tree_dist', type=int, default=30)
-    parser.add_argument('-num_trees', type=int, default=10)
-    parser.add_argument('-samples', type=int, default=256)
-    
+    parser.add_argument('-max_tree_dist', type=int, default=20)
+    parser.add_argument('-num_trees', type=int, default=30)
+    parser.add_argument('-samples', type=int, default=128)
+    parser.add_argument('-num_steps', type=int, default=5)
+    parser.add_argument('-step_size', type=int, default=5)
+        
     args = parser.parse_args(argv)  # Use stripped arguments
     main(args)
