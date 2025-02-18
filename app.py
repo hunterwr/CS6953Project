@@ -92,7 +92,7 @@ trees.generate_forest(road_width, road_length, min_tree_dist, max_tree_dist, num
 # max_dist is the distance from the road to the farthest tree
 
 background = "sky1"
-camera_location= '10, 0, 6.682'
+camera_location= '12.5, -58, 6.68'
 camera_rotation = '90, 0, 0'
 camera_scale = 1.0
 

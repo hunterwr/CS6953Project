@@ -89,4 +89,6 @@ def add_camera(target_directory, background="dunes" , location=(0.0, -19.409, 14
     bpy.ops.uv.cube_project()
     bpy.ops.object.mode_set(mode='OBJECT')
     
-    return
+    
+        
+    return camera

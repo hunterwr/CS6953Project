@@ -142,7 +142,7 @@ def create_birch_tree(name, target_directory, position=(0, 0, 0), height=7, trun
         print("Tree1 object not found.")
 
 
-    add_leaf_material(leaves_obj.name, target_directory + r'./textures\\Trees\\birch_leaf.png')
+    add_leaf_material(leaves_obj.name, target_directory + r'/textures/Trees/birch_leaf.png')
     utils.apply_blenderkit_material(name, "e6075cd1-22ef-471e-a6b3-5a65aab646fa", "birch bark")
 
 
@@ -277,8 +277,8 @@ def create_pine_tree(name, target_directory, position=(0, 0, 0), height=7, trunk
         print("Tree1 object not found.")
 
 
-    add_leaf_material(leaves_obj.name, target_directory + r'./textures\\Trees\\fir_branch.png')
-    add_bark_material(tree_obj.name, target_directory + r'./textures\\Trees\\Bark014_8K-JPG\\Bark014_8K-JPG_Color.jpg')
+    add_leaf_material(leaves_obj.name, target_directory + r'/textures/Trees/fir_branch.png')
+    add_bark_material(tree_obj.name, target_directory + r'/textures/Trees/Bark014_8K-JPG/Bark014_8K-JPG_Color.jpg')
 
 
         
