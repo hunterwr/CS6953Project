@@ -1,5 +1,5 @@
 import bpy
-
+import texture_utils as textures
 
 def create_sign_square(width,height,text=None,start_location = (0,0,0),name='Sign'):
     
@@ -40,50 +40,52 @@ def create_sign_square(width,height,text=None,start_location = (0,0,0),name='Sig
 
 
 
-def add_sign_color(object, color = (.5,.5,.5,.5), texture_path = None):
+def add_sign_color(object, target_directory, texture_path = None):
     bpy.ops.object.mode_set(mode='OBJECT')
     
     bpy.context.view_layer.objects.active = object
     
     obj = object
-    mat = bpy.data.materials.new(name="SignMaterial")
-#    obj.data.materials.append(mat) 
+    textures.apply_blenderkit_sign_jpg(obj,target_directory=target_directory,base_color_path=texture_path)
+
+#     mat = bpy.data.materials.new(name="SignMaterial")
+# #    obj.data.materials.append(mat) 
     
-    if obj.data.materials:
-        obj.data.materials[0] = mat  # Replace first material slot
-    else:
-        obj.data.materials.append(mat)  # Add the material if none exists
+#     if obj.data.materials:
+#         obj.data.materials[0] = mat  # Replace first material slot
+#     else:
+#         obj.data.materials.append(mat)  # Add the material if none exists
     
-    mat.use_nodes = True
-    nodes = mat.node_tree.nodes
-    links = mat.node_tree.links
-    nodes.clear()
+#     mat.use_nodes = True
+#     nodes = mat.node_tree.nodes
+#     links = mat.node_tree.links
+#     nodes.clear()
 
     
-    # Create the Principled BSDF shader
-    bsdf = nodes.new(type="ShaderNodeBsdfPrincipled")
-    bsdf.inputs['Base Color'].default_value = color  # Default is white
+#     # Create the Principled BSDF shader
+#     bsdf = nodes.new(type="ShaderNodeBsdfPrincipled")
+#     bsdf.inputs['Base Color'].default_value = color  # Default is white
       
-    bsdf.location = (0, 0)
-    bsdf.inputs['Metallic'].default_value = 0.2  
-    bsdf.inputs['Roughness'].default_value = 0.8  
-#    
-    bpy.ops.object.mode_set(mode='EDIT')
-    bpy.ops.mesh.select_all(action='SELECT')
-    bpy.ops.uv.cube_project()
-    bpy.ops.object.mode_set(mode='OBJECT')
+#     bsdf.location = (0, 0)
+#     bsdf.inputs['Metallic'].default_value = 0.2  
+#     bsdf.inputs['Roughness'].default_value = 0.8  
+# #    
+#     bpy.ops.object.mode_set(mode='EDIT')
+#     bpy.ops.mesh.select_all(action='SELECT')
+#     bpy.ops.uv.cube_project()
+#     bpy.ops.object.mode_set(mode='OBJECT')
     
-    tex_image = nodes.new(type="ShaderNodeTexImage")
-    tex_image.location = (-400, 0)
-    tex_image.image = bpy.data.images.load(texture_path)  
+#     tex_image = nodes.new(type="ShaderNodeTexImage")
+#     tex_image.location = (-400, 0)
+#     tex_image.image = bpy.data.images.load(texture_path)  
     
-    links.new(tex_image.outputs['Color'], bsdf.inputs['Base Color'])
+#     links.new(tex_image.outputs['Color'], bsdf.inputs['Base Color'])
     
     
-    output = nodes.new(type="ShaderNodeOutputMaterial")
-    output.location = (200, 0)
-    links.new(bsdf.outputs['BSDF'], output.inputs['Surface'])
-    bpy.ops.object.mode_set(mode='OBJECT')
+#     output = nodes.new(type="ShaderNodeOutputMaterial")
+#     output.location = (200, 0)
+#     links.new(bsdf.outputs['BSDF'], output.inputs['Surface'])
+#     bpy.ops.object.mode_set(mode='OBJECT')
 
 
 

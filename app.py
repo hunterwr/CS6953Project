@@ -44,9 +44,9 @@ utils.clear_scene()
 
 
 #Place a Road
-road.create_spline_road(width = 15,length = 3,spline_start=(-15,-50,0),spline_end=(20,50,0),curvature_points = 3, 
-curvature_score = 20,texture_path = target_directory + r'/textures/Roads/Seamless-Road-Texture2.jpg',texture_scaling=6)   
-
+# road.create_spline_road(width = 15,length = 3,spline_start=(-15,-50,0),spline_end=(20,50,0),curvature_points = 3, 
+# curvature_score = 20,texture_path = target_directory + r'/textures/Roads/Seamless-Road-Texture2.jpg',texture_scaling=6)   
+road.create_road_edges(road_width=5,road_height=0.25, road_length=20,left_edge_start = (0,0,0),name='Road_Edges',target_directory=target_directory,conditions='Dry')
 
 
 #Place a basic sign 
@@ -65,7 +65,7 @@ pole_end_points[1]-2.5*pole_radius,pole_end_points[2]-0.25), name='Simple Sign')
 
 #Add a sign texture. Optionally, add text. 
 sign_obj = bpy.data.objects.get('Simple Sign')
-signs.add_sign_color(sign_obj,texture_path=target_directory+ r'/textures/Signs/exit_sign.PNG' )
+signs.add_sign_color(sign_obj,target_directory=target_directory,texture_path= r'/textures/Signs/exit_sign.PNG' )
 
 
 #Add some trees to the area

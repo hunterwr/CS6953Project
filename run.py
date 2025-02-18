@@ -24,7 +24,7 @@ sys.path.append(target_directory)
 import blender_utils as utils
 import blender_signs as signs
 import blender_road as road
-import blender_trees as trees
+# import blender_trees as trees
 import blender_camera as cam
 import blender_light_source as light
 import blender_save as snap
@@ -77,11 +77,11 @@ def main(args):
         texture_path=os.path.join(target_directory, args.sign_texture)
     )
     
-    # Add trees
-    trees_positions = [tuple(map(float, pos.split(','))) for pos in args.trees_positions.split(';')]
-    tree_seeds = list(map(int, args.tree_seeds.split(',')))
-    for pos, seed in zip(trees_positions, tree_seeds):
-        trees.create_pine_tree(f"tree{seed}", target_directory, position=pos, seed=seed)
+    # # Add trees
+    # trees_positions = [tuple(map(float, pos.split(','))) for pos in args.trees_positions.split(';')]
+    # tree_seeds = list(map(int, args.tree_seeds.split(',')))
+    # for pos, seed in zip(trees_positions, tree_seeds):
+    #     trees.create_pine_tree(f"tree{seed}", target_directory, position=pos, seed=seed)
     
     # Add a camera
     cam.add_camera(
