@@ -408,32 +408,24 @@ def select_object(object_name):
 
 
 
-def generate_forest(road_coords, forest_width=10, tree_density=0.2):
+def generate_forest(road_width, road_length, min_dist=3, max_dist=50, num_trees=10):
     """
-    Generates a forest around a road.
+    Generates a forest around a road, placing trees only on both sides with varying widths.
     
-    road_coords: List of (x, y) tuples defining the road path.
-    forest_width: Distance from the road where trees can be placed.
+    road_coords: List of (x, y, width) tuples defining the road path and width at each point.
     tree_density: Probability of placing a tree per unit area.
     """
-    min_x = min(p[0] for p in road_coords) - forest_width
-    max_x = max(p[0] for p in road_coords) + forest_width
-    min_y = min(p[1] for p in road_coords) - forest_width
-    max_y = max(p[1] for p in road_coords) + forest_width
-
-    road_buffer = 2  # Minimum distance from the road
-    
-    # Generate trees within the forest bounds
-    for i in range(50):  # Max number of trees (adjustable)
-        x = random.uniform(min_x, max_x)
-        y = random.uniform(min_y, max_y)
-
-        # Check if the point is too close to the road
-        if any((Vector((x, y)) - Vector(p)).length < road_buffer for p in road_coords):
-            continue  # Skip placing a tree here
-
-        # Apply tree density probability
-        if random.random() < tree_density:
-            create_pine_tree("tree"+str(i), module_dir, position=(x, y, 0), seed=random.randint(1, 1000))
+      # Minimum distance from the road
+    for i in range(0, num_trees):
+          # Place trees on both sides of the road
+          # Adjust tree count per segment based on width
+            tree_x = random.uniform((road_width/2+min_dist), (road_width/2+min_dist)+max_dist) * random.choice([-1, 1])
+            tree_y = random.uniform(-50, road_length)  # Slight variation in position
+            
+            # if random.random() < tree_density:
+            #     trees.append((tree_x, tree_y))
+            tree_name = 'tree'+str(i)
+            create_pine_tree(tree_name, module_dir, position=(tree_x, tree_y, 0), seed=random.randint(1, 1000))
 
     print("Forest generation complete!")
+
