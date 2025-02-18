@@ -20,7 +20,7 @@ target_directory = script_directory
 
 os.chdir(target_directory)
 sys.path.append(target_directory)
-
+print(target_directory)
 import blender_utils as utils
 import blender_signs as signs
 import blender_road as road
@@ -38,16 +38,23 @@ def main(args):
     utils.clear_scene()
     
     # Place a Road
-    road.create_spline_road(
-        width=args.road_width,
-        length=args.road_length,
-        spline_start=tuple(map(float, args.spline_start.split(','))),
-        spline_end=tuple(map(float, args.spline_end.split(','))),
-        curvature_points=args.curvature_points,
-        curvature_score=args.curvature_score,
-        texture_path=os.path.join(target_directory, args.road_texture),
-        texture_scaling=args.road_texture_scaling
-    )
+    # road.create_spline_road(
+    #     width=args.road_width,
+    #     length=args.road_length,
+    #     spline_start=tuple(map(float, args.spline_start.split(','))),
+    #     spline_end=tuple(map(float, args.spline_end.split(','))),
+    #     curvature_points=args.curvature_points,
+    #     curvature_score=args.curvature_score,
+    #     texture_path=os.path.join(target_directory, args.road_texture),
+    #     texture_scaling=args.road_texture_scaling
+    # )
+    road.create_road_edges(
+        road_width=5,road_height=0.25, 
+        road_length=20,
+        left_edge_start = (0,0,0),
+        name='Road_Edges',
+        target_directory=target_directory,
+        conditions='Dry')
     
     # Create the pole
     pole_end_points = signs.create_pole(
@@ -74,7 +81,8 @@ def main(args):
     sign_obj = bpy.data.objects.get('Simple Sign')
     signs.add_sign_color(
         sign_obj,
-        texture_path=os.path.join(target_directory, args.sign_texture)
+        target_directory=target_directory,
+        texture_path=args.sign_texture
     )
     
     # # Add trees
@@ -142,7 +150,7 @@ if __name__ == '__main__':
     parser.add_argument('-sign_height', type=int, default=5)
     parser.add_argument('-pole_radius', type=float, default=0.2)
     parser.add_argument('-pole_height', type=int, default=5)
-    parser.add_argument('-sign_texture', type=str, default='textures/Signs/exit_sign.PNG')
+    parser.add_argument('-sign_texture', type=str, default='/exit_sign.PNG')
     parser.add_argument('-pole_texture', type=str, default='textures/Signs/sign_pole_al.PNG')
     parser.add_argument('-trees_positions', type=str, default='40,5,0;50,20,0;-10,-10,0;5,10,0')
     parser.add_argument('-tree_seeds', type=str, default='0,2,5,10')
