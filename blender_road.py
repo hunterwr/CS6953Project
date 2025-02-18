@@ -5,7 +5,7 @@ import bpy
 import bpy
 import time 
 
-
+import texture_utils as textures 
 
 
 
@@ -34,7 +34,7 @@ def unwrap_uv(obj):
     
     
 
-def create_road_edges(road_width,road_height, road_length,left_edge_start = (0,0,0),name='Road_Edges',asset_base_id="4b99930c-2ebd-4fb3-9c5a-d3a61fece0c7"):
+def create_road_edges(road_width,road_height, road_length,left_edge_start = (0,0,0),name='Road_Edges',target_directory = None, conditions = 'Dry'):
     
 # Create a cube
     
@@ -68,19 +68,26 @@ def create_road_edges(road_width,road_height, road_length,left_edge_start = (0,0
 #   except:
 #        create_road_edges(road_width=road_width,road_height=road_height, road_length=road_length,left_edge_start = (0,0,0),name='Road_Edges',asset_base_id="4b99930c-2ebd-4fb3-9c5a-d3a61fece0c7")
         
-    apply_blenderkit_material(myobject.name,asset_base_id=asset_base_id)
+    # apply_blenderkit_material(myobject.name,asset_base_id=asset_base_id)
     
     # bpy.context.view_layer.update() 
-    # obj = bpy.data.objects.get(name)
+    # obj = bpy.data.objects.get(name) 
     # bpy.context.view_layer.objects.active = obj
-    
-    
-    if asset_base_id == "4b99930c-2ebd-4fb3-9c5a-d3a61fece0c7":
+    if conditions == 'wet':
+        textures.apply_blenderkit_wetRoad(myobject,target_directory=target_directory)
         bpy.data.materials["4K Wet road 02"].node_tree.nodes["Mapping"].inputs['Rotation'].default_value[2] = 1.5708
         bpy.data.materials["4K Wet road 02"].node_tree.nodes["Mapping"].inputs['Location'].default_value[0] = 1.3
         bpy.data.materials["4K Wet road 02"].node_tree.nodes["Mapping"].inputs['Location'].default_value[1] = -.05
         bpy.data.materials["4K Wet road 02"].node_tree.nodes["Mapping"].inputs['Scale'].default_value[0] = -1.6044*length_width_ratio-0.1581
         bpy.data.materials["4K Wet road 02"].node_tree.nodes["Mapping"].inputs['Scale'].default_value[1] = 0.0175*road_length+1.2
+    else:
+        textures.apply_blenderkit_dryRoad(myobject,target_directory=target_directory)
+    
+        bpy.data.materials["Patched road 02"].node_tree.nodes["Mapping"].inputs['Rotation'].default_value[2] = 1.5708
+        bpy.data.materials["Patched road 02"].node_tree.nodes["Mapping"].inputs['Location'].default_value[0] = 1.3
+        bpy.data.materials["Patched road 02"].node_tree.nodes["Mapping"].inputs['Location'].default_value[1] = -.05
+        bpy.data.materials["Patched road 02"].node_tree.nodes["Mapping"].inputs['Scale'].default_value[0] = -1.6044*length_width_ratio-0.1581
+        bpy.data.materials["Patched road 02"].node_tree.nodes["Mapping"].inputs['Scale'].default_value[1] = 0.0175*road_length+1.2
         
         
  
