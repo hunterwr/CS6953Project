@@ -43,63 +43,104 @@ importlib.reload(cam)
 utils.clear_scene()
 
 
-#Place a Road
-# road.create_spline_road(width = 15,length = 3,spline_start=(-15,-50,0),spline_end=(20,50,0),curvature_points = 3, 
-# curvature_score = 20,texture_path = target_directory + r'/textures/Roads/Seamless-Road-Texture2.jpg',texture_scaling=6)   
-road.create_road_edges(road_width=5,road_height=0.25, road_length=20,left_edge_start = (0,0,0),name='Road_Edges',target_directory=target_directory,conditions='Dry')
+road.create_road_edges(
+        road_width=50,road_height=1, 
+        road_length=300,
+        left_edge_start = (-(50/2),-50,0),
+        name='Road_Edges',
+        target_directory=target_directory,
+        conditions='Dry')
+    
+# Create the pole
+pole_end_points = signs.create_pole(
+    0.2,
+    5,
+    location=((50/2) + 3, 50, 5 / 2),
+    texture_path=os.path.join(target_directory, 'textures/Signs/sign_pole_al.PNG')
+)
 
+# Create a simple square sign
+signs.create_sign_square(
+    5,
+    5,
+    text=None,
+    start_location=(
+        (50/2) + (5 / 2),
+        pole_end_points[1] - 2.5 * 0.2,
+        pole_end_points[2] - 0.25
+    ),
+    name='Simple Sign'
+)
 
-#Place a basic sign 
-sign_width = 5
-sign_height = 5
-pole_radius = 0.20
-pole_height= 5
-
-
-# Note that cylinder forms from center of 'Location', so we start at the halfway point of the desired pole. 
-pole_end_points = signs.create_pole(pole_radius,pole_height,location =(0,0,pole_height/2),texture_path = target_directory + r'/textures/Signs/sign_pole_al.PNG') 
-
-#create a simple square sign 
-signs.create_sign_square(sign_width,sign_height,text=None,start_location = (-sign_width/2,
-pole_end_points[1]-2.5*pole_radius,pole_end_points[2]-0.25), name='Simple Sign')
-
-#Add a sign texture. Optionally, add text. 
+# Add a sign texture
 sign_obj = bpy.data.objects.get('Simple Sign')
-signs.add_sign_color(sign_obj,target_directory=target_directory,texture_path= r'/textures/Signs/exit_sign.PNG' )
+signs.add_sign_color(
+    sign_obj,
+    target_directory=target_directory,
+    texture_path='/exit_sign.PNG'
+)
 
+road_width = 50
+road_length = 300
+min_tree_dist = 3
+max_tree_dist = 30
+num_trees = 10
 
-#Add some trees to the area
-trees.create_pine_tree("tree1", target_directory, position=(40,5,0), seed=0, ) #
-trees.create_pine_tree("tree2", target_directory, position=(50,20,0), seed=2) #
-trees.create_pine_tree("tree3", target_directory, position=(-10,-10,0), seed=5) # we will need to fix the file path
-trees.create_pine_tree("tree4", target_directory, position=(5,10,0), seed=10) #
+# Add trees 
+trees.generate_forest(road_width, road_length, min_tree_dist, max_tree_dist, num_trees)
+# min_dist is the distance from the road to the nearest tree
+# max_dist is the distance from the road to the farthest tree
 
-#adds a camera in front of the sign object
-cam.add_camera(target_directory, location=(0.3, -61.367, 6.6872), rotation=(91.527, 0.0000048, -13.83), scale=1.0)
+background = "sky1"
+camera_location= '10, 0, 6.682'
+camera_rotation = '90, 0, 0'
+camera_scale = 1.0
 
-#adds a light source
-light.add_sunlight(location = (-28.398, 59.799, 19.12), power = 3.0, angle = 180)
+# Add a camera
+cam.add_camera(
+    target_directory, background=background,
+    location=tuple(map(float, camera_location.split(','))),
+    rotation=tuple(map(float, camera_rotation.split(','))),
+    scale=camera_scale
+)
+
+light_location = '-28.398,59.799,19.12'
+light_angle = 180
+light_power = 3.0
+
+# Add a light source
+light.add_sunlight(
+    location=tuple(map(float, light_location.split(','))),
+    power=light_power,
+    angle=light_angle
+)
+
+ground_plane_size = 1000
+ground_plane_material = 'forrest_ground_01'
 
 #creates a plane for the ground surfacen
-plane.create_plane(size=1000, target_directory=target_directory, material="forrest_ground_01")
+plane.create_plane(size=ground_plane_size, target_directory=target_directory, material=ground_plane_material)
 
 #creates a car object downloaded as gltffile
 car.create_car(target_directory)
 
 #adds sky texture
 sky_texture.create_sky_texture()
-#renders the scene and saves a snap as png
-#snap.render_and_save(target_directory + r'/output/sign.png')
 
-#draws a bounding box around the sign object and returns the coordinates in txt file
-#bbox.save_bbox_as_text('Simple Sign', 'Camera', target_directory + r'/output/bbox.txt')
+# output_image = 'output/sign.png'
+# samples = 256
+# output_bbox = 'output/bbox.txt'
+# # Render and save the scene
+# snap.render_and_save(os.path.join(target_directory, output_image), samples=samples)
 
-bpy.context.scene.render.engine = 'CYCLES'
-bpy.context.scene.cycles.device = 'GPU'
+# # Save bounding box
+# bbox.save_bbox_as_text(
+#     'Simple Sign',
+#     'Camera',
+#     os.path.join(target_directory, output_bbox)
+# )
 
-
-
-# Ensure an area with type 'VIEW_3D' exists
+# Ensure proper shading mode
 for area in bpy.context.screen.areas:
     if area.type == 'VIEW_3D':
         for space in area.spaces:
