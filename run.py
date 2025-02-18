@@ -56,9 +56,9 @@ def main(args):
     #     texture_scaling=args.road_texture_scaling
     # )
     road.create_road_edges(
-        road_width=5,road_height=0.25, 
-        road_length=20,
-        left_edge_start = (0,0,0),
+        road_width=args.road_width,road_height=1, 
+        road_length=args.road_length,
+        left_edge_start = (-(args.road_width/2),-50,0),
         name='Road_Edges',
         target_directory=target_directory,
         conditions='Dry')
@@ -67,7 +67,7 @@ def main(args):
     pole_end_points = signs.create_pole(
         args.pole_radius,
         args.pole_height,
-        location=(0, 0, args.pole_height / 2),
+        location=((args.road_width/2) + 3, args.sign_distance, args.pole_height / 2),
         texture_path=os.path.join(target_directory, args.pole_texture)
     )
     
@@ -145,12 +145,13 @@ if __name__ == '__main__':
     argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
     
     parser = argparse.ArgumentParser(description='Blender Scene Generation Script')
-    parser.add_argument('-road_width', type=int, default=15)
-    parser.add_argument('-road_length', type=int, default=3)
+    parser.add_argument('-road_width', type=int, default=50)
+    parser.add_argument('-road_length', type=int, default=300)
     parser.add_argument('-sign_width', type=int, default=5)
     parser.add_argument('-sign_height', type=int, default=5)
     parser.add_argument('-pole_radius', type=float, default=0.2)
     parser.add_argument('-pole_height', type=int, default=5)
+    parser.add_argument('-sign_distance', type=int, default=100)
     parser.add_argument('-sign_texture', type=str, default='/exit_sign.PNG')
     parser.add_argument('-pole_texture', type=str, default='textures/Signs/sign_pole_al.PNG')
     parser.add_argument('-camera_location', type=str, default='0.0,-19.409,14.526')
