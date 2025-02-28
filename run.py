@@ -14,6 +14,18 @@ def get_script_directory():
         blend_filepath = bpy.data.filepath
         return os.path.dirname(blend_filepath) if blend_filepath else os.getcwd()
 
+def get_next_output_directory(base_dir):
+    """
+    Automatically increments the output directory name if it already exists.
+    Example: If "samples1" exists, create "samples2".
+    """
+    i = 1  
+    while os.path.exists(os.path.join(base_dir, f"samples{i}")):
+        i += 1
+    new_dir = os.path.join(base_dir, f"samples{i}")
+    os.makedirs(new_dir)
+    return new_dir
+
 # Determine target directory
 script_directory = get_script_directory()
 target_directory = script_directory
@@ -21,6 +33,7 @@ target_directory = script_directory
 os.chdir(target_directory)
 sys.path.append(target_directory)
 print(target_directory)
+
 import blender_utils as utils
 import blender_signs as signs
 import blender_road as road
@@ -33,35 +46,19 @@ import blender_plane as plane
 import blender_car as car
 import blender_sky_texture as sky_texture
 
-# # Add-ons
-# addon_name = "Sapling Tree Gen"  # Replace with the actual add-on name
-# # Ensure the add-on is enabled
-# if addon_name not in bpy.context.preferences.addons:
-#     bpy.ops.preferences.addon_enable(module=addon_name)
-#     bpy.ops.wm.save_userpref()
-
 def main(args):
     # Reset and Clear the Scene
     utils.clear_scene()
     
     # Place a Road
-    # road.create_spline_road(
-    #     width=args.road_width,
-    #     length=args.road_length,
-    #     spline_start=tuple(map(float, args.spline_start.split(','))),
-    #     spline_end=tuple(map(float, args.spline_end.split(','))),
-    #     curvature_points=args.curvature_points,
-    #     curvature_score=args.curvature_score,
-    #     texture_path=os.path.join(target_directory, args.road_texture),
-    #     texture_scaling=args.road_texture_scaling
-    # )
     road.create_road_edges(
-        road_width=args.road_width,road_height=1, 
+        road_width=args.road_width, road_height=1, 
         road_length=args.road_length,
         left_edge_start = (-(args.road_width/2),-50,0),
         name='Road_Edges',
         target_directory=target_directory,
-        conditions='Dry')
+        conditions='Dry'
+    )
     
     # Create the pole
     pole_end_points = signs.create_pole(
@@ -76,10 +73,10 @@ def main(args):
         args.sign_width,
         args.sign_height,
         text=None,
-         start_location=(
-        pole_end_points[0]-5/2,
-        pole_end_points[1] - 2.5 * 0.2,
-        pole_end_points[2] - 0.25
+        start_location=(
+            pole_end_points[0]-5/2,
+            pole_end_points[1] - 2.5 * 0.2,
+            pole_end_points[2] - 0.25
         ),
         name='Simple Sign'
     )
@@ -93,10 +90,7 @@ def main(args):
     )
     
     # Add trees 
-    trees.generate_forest(args.road_width, args.road_length, args.min_tree_dist, args.max_tree_dist, args.num_trees)
-    # min_dist is the distance from the road to the nearest tree
-    # max_dist is the distance from the road to the farthest tree
-
+    # trees.generate_forest(args.road_width, args.road_length, args.min_tree_dist, args.max_tree_dist, args.num_trees)
     
     # Add a camera
     camera = cam.add_camera(
@@ -113,37 +107,45 @@ def main(args):
         angle=args.light_angle
     )
     
-    #creates a plane for the ground surfacen
-    plane.create_plane(size=args.ground_plane_size, target_directory=target_directory, material=args.ground_plane_material)
+    # Create a plane for the ground surface
+    planes = {
+        "rock": "rocky_trail",
+        "snow": "snow_03",
+        "forrest": "forrest_ground_01",
+        "mud": "brown_mud_leaves_01"
+    }
+    
+    plane.create_plane(size=args.ground_plane_size, target_directory=target_directory, material=planes[args.plane])
 
-    #creates a car object downloaded as gltffile
+    # Create a car object downloaded as a glTF file
     car.create_car(target_directory)
 
-    #adds sky texture
+    # Add sky texture
     sky_texture.create_sky_texture()
     
-    #arguments
+    # Determine output directory
+    base_output_dir = os.path.join(target_directory, "output")
+    output_image_dir = get_next_output_directory(base_output_dir)
     
+    # Ensure the new directory exists
+    os.makedirs(output_image_dir, exist_ok=True)
     
-
-    #add at the end
-    path = os.path.join(target_directory, args.output_image)
-    # Create the output directory if it doesn't exist
-    if not os.path.exists(os.path.dirname(path)):
-        os.makedirs(os.path.dirname(path))
+    # Update output paths
+    output_image = os.path.join(output_image_dir, "sign_step_")
+    output_bbox = os.path.join(output_image_dir, "bbox.txt")
+    
+    # Render images
     for step in range(args.num_steps):
-            camera.location.y += args.step_size
-            # Render and save the scene
-            snap.render_and_save(path+f"sign_step_{step}.png", samples=args.samples)
-            print(f"Saved Image {step}")
-    
-    
+        camera.location.y += args.step_size
+        image_path = f"{output_image}{step}.png"
+        snap.render_and_save(image_path, samples=args.samples)
+        print(f"Saved Image {step} at {image_path}")
     
     # Save bounding box
     bbox.save_bbox_as_text(
         'Simple Sign',
         'Camera',
-        os.path.join(target_directory, args.output_bbox)
+        output_bbox
     )
     
     # Ensure proper shading mode
@@ -175,15 +177,13 @@ if __name__ == '__main__':
     parser.add_argument('-light_power', type=float, default=3.0)
     parser.add_argument('-light_angle', type=int, default=180)
     parser.add_argument('-ground_plane_size', type=int, default=1000)
-    parser.add_argument('-ground_plane_material', type=str, default="rocky_trail")
+    parser.add_argument('-plane', type=str, default="mud")
     parser.add_argument('-background', type=str, default="burj_khalifa")
-    parser.add_argument('-output_image', type=str, default='output/samples4/')
-    parser.add_argument('-output_bbox', type=str, default='output/bbox.txt')
     parser.add_argument('-min_tree_dist', type=int, default=3)
     parser.add_argument('-max_tree_dist', type=int, default=20)
     parser.add_argument('-num_trees', type=int, default=50)
     parser.add_argument('-samples', type=int, default=128)
-    parser.add_argument('-num_steps', type=int, default=5)
+    parser.add_argument('-num_steps', type=int, default=1)
     parser.add_argument('-step_size', type=int, default=5)
         
     args = parser.parse_args(argv)  # Use stripped arguments
