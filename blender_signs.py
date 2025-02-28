@@ -1,5 +1,7 @@
 import bpy
 import texture_utils as textures
+import math
+
 
 def unwrap_uv(obj):
     bpy.context.view_layer.objects.active = obj
@@ -181,19 +183,50 @@ def create_pole(radius,height, location = (0,0,0),texture_path = None):
     return [x_out,y_out,z_out]
 
 
+def create_round_sign(radius, center_location, texture_path=None,thickness = 0.2):
+    
+    bpy.ops.mesh.primitive_cylinder_add(radius=radius,depth=thickness, location=center_location, rotation=(1.5708,0,0))
+    
+    obj = bpy.context.object  # Get the created object
+    
+    obj.data.materials.clear()
+    
+    
 
 
 
-def create_stop_sign(position=(0, 0, 0), size=1, reflectiveness=1.0, angle=0):
-    """
-    Creates a stop sign.
 
-    :param position: Tuple of (x, y, z) coordinates for the sign's position.
-    :param size: Size multiplier for the sign.
-    :param reflectiveness: Reflectiveness of the sign material.
-    :param angle: Rotation angle of the sign in degrees.
-    """
-    pass
+def create_stop_sign(radius, center_location, texture_path=None,thickness = 0.2):
+    bpy.ops.mesh.primitive_cylinder_add(radius=radius,depth=thickness, location=center_location, rotation=(1.5708,.785,0),vertices=8)
+    
+   
+    # Get the created object
+    obj = bpy.context.object
+
+    # Switch to Edit Mode to modify the mesh
+    bpy.ops.object.mode_set(mode='EDIT')
+
+    # Select all vertices
+    bpy.ops.mesh.select_all(action='SELECT')
+
+    # Switch to Vertex Select mode
+    bpy.ops.mesh.select_mode(type='VERT')
+
+    # Calculate the angle between the vertices (45 degrees for an octagon)
+    angle = math.pi / 4  # 45 degrees in radians
+
+    # Loop through vertices and adjust their positions to form an octagon
+    bpy.ops.transform.resize(value=(1, 1, 1))  # Reset any accidental scaling
+
+    # Switch back to Object Mode
+    bpy.ops.object.mode_set(mode='OBJECT')
+    bpy.ops.transform.rotate(value=math.radians(23), orient_axis='Y')
+
+    # Optionally, apply transformations (location/rotation/scale)
+    bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
+    
+
+
 
 def create_speed_limit_sign(position=(0, 0, 0), size=1, speed=50, reflectiveness=1.0, angle=0):
     """
