@@ -34,6 +34,7 @@ import blender_bbox as bbox
 import blender_plane as plane
 import blender_car as car
 import blender_sky_texture as sky_texture
+import texture_utils as texutils
 
 import importlib
 importlib.reload(cam)
@@ -74,11 +75,11 @@ signs.create_sign_square(
 
 # Add a sign texture
 sign_obj = bpy.data.objects.get('Simple Sign')
-signs.add_sign_color(
-    sign_obj,
-    target_directory=target_directory,
-    texture_path='/exit_sign.PNG'
-)
+
+texutils.apply_sign_png(sign_obj,png_path = os.path.join(target_directory,'textures/Signs/Signs/PNGs/Loose Gravel.png'),
+                                    scratches_on =0.5, rust_minor_on = 0.0, rust_major_on = False,rivets_on=False,target_directory = target_directory)
+
+
 
 road_width = 50
 road_length = 300

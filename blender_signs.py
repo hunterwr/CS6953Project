@@ -1,7 +1,8 @@
 import bpy
 import texture_utils as textures
 import math
-
+import bmesh
+from mathutils import Vector
 
 def unwrap_uv(obj):
     bpy.context.view_layer.objects.active = obj
@@ -11,6 +12,46 @@ def unwrap_uv(obj):
     bpy.ops.mesh.select_all(action='SELECT')
     bpy.ops.uv.smart_project(angle_limit=66)  # Auto UV Unwrap
     bpy.ops.object.mode_set(mode='OBJECT')
+
+def square_unwrap(obj):
+    bpy.context.view_layer.objects.active = obj
+    obj.select_set(True)
+    bpy.ops.object.mode_set(mode='EDIT')
+    mesh = bmesh.from_edit_mesh(obj.data)
+    front_normal = Vector((0, -1, 0))
+    front_face = max(mesh.faces, key=lambda f: f.normal.dot(front_normal))
+    for face in mesh.faces:
+        face.select = (face == front_face)
+    bmesh.update_edit_mesh(obj.data)
+    
+
+    if not obj.data.uv_layers:
+            obj.data.uv_layers.new(name="UVMap")
+
+  
+    uv_layer = obj.data.uv_layers.active.data
+
+    
+    min_x = min(vert.co.x for vert in front_face.verts)
+    max_x = max(vert.co.x for vert in front_face.verts)
+    min_y = min(vert.co.z for vert in front_face.verts)  
+
+    
+    for loop in front_face.loops:
+        vert = loop.vert
+        loop_index = loop.index  
+        if loop_index >= len(uv_layer):  
+            print(f"Error: UV index {loop_index} out of range!")
+            continue
+        loop_uv = uv_layer[loop_index]
+        loop_uv.uv.x = (vert.co.x - min_x) / (max_x - min_x)
+        loop_uv.uv.y = (vert.co.z - min_y) / (max_x - min_x)  
+
+    bmesh.update_edit_mesh(obj.data)
+
+   
+    bpy.ops.object.mode_set(mode='OBJECT')
+
 
 
 def create_sign_square(width,height,text=None,start_location = (0,0,0),name='Sign'):
