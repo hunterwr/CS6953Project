@@ -37,7 +37,7 @@ import blender_sky_texture as sky_texture
 import texture_utils as texutils
 
 import importlib
-importlib.reload(cam)
+importlib.reload(sky_texture)
 
 
 #Reset and Clear the Scene
@@ -126,7 +126,7 @@ plane.create_plane(size=ground_plane_size, target_directory=target_directory, ma
 car.create_car(target_directory)
 
 #adds sky texture
-sky_texture.create_sky_texture()
+sky_texture.create_sky_texture(time_of_day="dusk")
 
 # output_image = 'output/sign.png'
 # samples = 256
