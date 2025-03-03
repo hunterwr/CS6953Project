@@ -121,7 +121,7 @@ def main(args):
     car.create_car(target_directory)
 
     # Add sky texture
-    sky_texture.create_sky_texture()
+    sky_texture.create_sky_texture(time_of_day=args.time_of_day)
     
     # Determine output directory
     base_output_dir = os.path.join(target_directory, "output")
@@ -176,6 +176,7 @@ if __name__ == '__main__':
     parser.add_argument('-light_location', type=str, default='-28.398,59.799,19.12')
     parser.add_argument('-light_power', type=float, default=3.0)
     parser.add_argument('-light_angle', type=int, default=180)
+    parser.add_argument('-time_of_day', type=str, default="midday")
     parser.add_argument('-ground_plane_size', type=int, default=1000)
     parser.add_argument('-plane', type=str, default="mud")
     parser.add_argument('-background', type=str, default="burj_khalifa")
