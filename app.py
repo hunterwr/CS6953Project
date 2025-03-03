@@ -76,8 +76,8 @@ signs.create_sign_square(
 # Add a sign texture
 sign_obj = bpy.data.objects.get('Simple Sign')
 
-texutils.apply_sign_png(sign_obj,png_path = os.path.join(target_directory,'textures/Signs/Signs/PNGs/Loose Gravel.png'),
-                                    scratches_on =0.5, rust_minor_on = 0.0, rust_major_on = False,rivets_on=False,target_directory = target_directory)
+texutils.apply_sign_png_conditions(sign_obj,png_path = os.path.join(target_directory,'textures/Signs/Signs/PNGs/Loose Gravel.png'),
+                                    scratches_on =0.5, rust_minor_on = 0.0, rust_major_on = False,rivets_on=False,snow=0.5,target_directory = target_directory)
 
 
 
