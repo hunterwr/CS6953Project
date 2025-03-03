@@ -1500,6 +1500,1117 @@ def apply_sign_png(obj,png_path,scratches_on =0.25, rust_minor_on = 0.25, rust_m
     obj.data.materials.append(mat)
 
 
+def apply_sign_png_conditions(obj,png_path,scratches_on =0.25, rust_minor_on = 0.25, rust_major_on = False,rivets_on=False,snow = 0.0, mud = 0.0, target_directory =None):
+    tex_path=r'/textures/Signs/'
+    if target_directory != None:
+        tex_path = target_directory+tex_path
+    rust_major = r'/rust.png'
+    rust_minor = r'/rust.jpg'
+    scratches = r'/scratches.jpg'
+    rivets = r'/metal_rivets_textures_2k/metal-23_normal.jpg'
+    rivets_rough = r'/metal_rivets_textures_2k/metal-23_roughness.jpg'
+
+
+
+    square_unwrap(obj=obj)
+        
+    mat = bpy.data.materials.new(name = "SignMaterial")
+    mat.use_nodes = True
+    #initialize SignMaterial node group
+    def signmaterial_node_group():
+
+        signmaterial = mat.node_tree
+        #start with a clean node tree
+        for node in signmaterial.nodes:
+            signmaterial.nodes.remove(node)
+        signmaterial.color_tag = 'NONE'
+        signmaterial.description = ""
+        signmaterial.default_group_node_width = 140
+        
+
+        #signmaterial interface
+
+        #initialize signmaterial nodes
+        #node Principled BSDF
+        principled_bsdf = signmaterial.nodes.new("ShaderNodeBsdfPrincipled")
+        principled_bsdf.name = "Principled BSDF"
+        principled_bsdf.distribution = 'MULTI_GGX'
+        principled_bsdf.subsurface_method = 'RANDOM_WALK'
+        #Metallic
+        principled_bsdf.inputs[1].default_value = 0.7363636493682861
+        #Roughness
+        principled_bsdf.inputs[2].default_value = 1.0
+        #IOR
+        principled_bsdf.inputs[3].default_value = 1.5
+        #Normal
+        principled_bsdf.inputs[5].default_value = (0.0, 0.0, 0.0)
+        #Diffuse Roughness
+        principled_bsdf.inputs[7].default_value = 0.0
+        #Subsurface Weight
+        principled_bsdf.inputs[8].default_value = 0.0
+        #Subsurface Radius
+        principled_bsdf.inputs[9].default_value = (1.0, 0.20000000298023224, 0.10000000149011612)
+        #Subsurface Scale
+        principled_bsdf.inputs[10].default_value = 0.05000000074505806
+        #Subsurface Anisotropy
+        principled_bsdf.inputs[12].default_value = 0.0
+        #Specular IOR Level
+        principled_bsdf.inputs[13].default_value = 0.5
+        #Specular Tint
+        principled_bsdf.inputs[14].default_value = (1.0, 1.0, 1.0, 1.0)
+        #Anisotropic
+        principled_bsdf.inputs[15].default_value = 0.0
+        #Anisotropic Rotation
+        principled_bsdf.inputs[16].default_value = 0.0
+        #Tangent
+        principled_bsdf.inputs[17].default_value = (0.0, 0.0, 0.0)
+        #Transmission Weight
+        principled_bsdf.inputs[18].default_value = 0.0
+        #Coat Weight
+        principled_bsdf.inputs[19].default_value = 0.0
+        #Coat Roughness
+        principled_bsdf.inputs[20].default_value = 0.029999999329447746
+        #Coat IOR
+        principled_bsdf.inputs[21].default_value = 1.5
+        #Coat Tint
+        principled_bsdf.inputs[22].default_value = (1.0, 1.0, 1.0, 1.0)
+        #Coat Normal
+        principled_bsdf.inputs[23].default_value = (0.0, 0.0, 0.0)
+        #Sheen Weight
+        principled_bsdf.inputs[24].default_value = 0.0
+        #Sheen Roughness
+        principled_bsdf.inputs[25].default_value = 0.5
+        #Sheen Tint
+        principled_bsdf.inputs[26].default_value = (1.0, 1.0, 1.0, 1.0)
+        #Emission Color
+        principled_bsdf.inputs[27].default_value = (1.0, 1.0, 1.0, 1.0)
+        #Emission Strength
+        principled_bsdf.inputs[28].default_value = 0.0
+        #Thin Film Thickness
+        principled_bsdf.inputs[29].default_value = 0.0
+        #Thin Film IOR
+        principled_bsdf.inputs[30].default_value = 1.3300000429153442
+
+        #node Image Texture
+        image_texture = signmaterial.nodes.new("ShaderNodeTexImage")
+        image_texture.name = "Image Texture"
+        image_texture.extension = 'REPEAT'
+        image_texture.image_user.frame_current = 0
+        image_texture.image_user.frame_duration = 100
+        image_texture.image_user.frame_offset = 0
+        image_texture.image_user.frame_start = 1
+        image_texture.image_user.tile = 0
+        image_texture.image_user.use_auto_refresh = False
+        image_texture.image_user.use_cyclic = False
+        image_texture.interpolation = 'Linear'
+        image_texture.projection = 'FLAT'
+        image_texture.projection_blend = 0.0
+        image_texture.image = bpy.data.images.load(png_path) 
+
+        #node Image Texture.001
+        image_texture_001 = signmaterial.nodes.new("ShaderNodeTexImage")
+        image_texture_001.label = "Scratches"
+        image_texture_001.name = "Image Texture.001"
+        image_texture_001.extension = 'REPEAT'
+        image_texture_001.image_user.frame_current = 0
+        image_texture_001.image_user.frame_duration = 1
+        image_texture_001.image_user.frame_offset = -1
+        image_texture_001.image_user.frame_start = 1
+        image_texture_001.image_user.tile = 0
+        image_texture_001.image_user.use_auto_refresh = False
+        image_texture_001.image_user.use_cyclic = False
+        image_texture_001.interpolation = 'Linear'
+        image_texture_001.projection = 'FLAT'
+        image_texture_001.projection_blend = 0.0
+        image_texture_001.image = bpy.data.images.load(tex_path+scratches) 
+
+        #node Mix
+        mix = signmaterial.nodes.new("ShaderNodeMix")
+        mix.name = "Mix"
+        mix.blend_type = 'MIX'
+        mix.clamp_factor = True
+        mix.clamp_result = False
+        mix.data_type = 'RGBA'
+        mix.factor_mode = 'UNIFORM'
+        #Factor_Float
+                #### THIS IS BASE IMAGE + SCRATCHES 
+        if scratches_on > 0:
+            mix.inputs[0].default_value = scratches_on
+        else:
+            mix.inputs[0].default_value = 0.0
+
+        #node Mix.001
+        mix_001 = signmaterial.nodes.new("ShaderNodeMix")
+        mix_001.name = "Mix.001"
+        mix_001.blend_type = 'MIX'
+        mix_001.clamp_factor = True
+        mix_001.clamp_result = False
+        mix_001.data_type = 'RGBA'
+        mix_001.factor_mode = 'UNIFORM'
+        #Factor_Float
+        #combines output with RUST MINOR
+        if rust_minor_on > 0:
+            mix_001.inputs[0].default_value = rust_minor_on
+        else:
+            mix_001.inputs[0].default_value = 0.0
+
+        #node Image Texture.002
+        image_texture_002 = signmaterial.nodes.new("ShaderNodeTexImage")
+        image_texture_002.label = "Rust Minor"
+        image_texture_002.name = "Image Texture.002"
+        image_texture_002.extension = 'REPEAT'
+        image_texture_002.image_user.frame_current = 0
+        image_texture_002.image_user.frame_duration = 1
+        image_texture_002.image_user.frame_offset = -1
+        image_texture_002.image_user.frame_start = 1
+        image_texture_002.image_user.tile = 0
+        image_texture_002.image_user.use_auto_refresh = False
+        image_texture_002.image_user.use_cyclic = False
+        image_texture_002.interpolation = 'Linear'
+        image_texture_002.projection = 'FLAT'
+        image_texture_002.projection_blend = 0.0
+        image_texture_002.image = bpy.data.images.load(tex_path+rust_minor) 
+        #Vector
+        image_texture_002.inputs[0].default_value = (0.0, 0.0, 0.0)
+
+        #node Texture Coordinate
+        texture_coordinate = signmaterial.nodes.new("ShaderNodeTexCoord")
+        texture_coordinate.name = "Texture Coordinate"
+        texture_coordinate.from_instancer = False
+
+        #node Mapping
+        mapping = signmaterial.nodes.new("ShaderNodeMapping")
+        mapping.name = "Mapping"
+        mapping.vector_type = 'POINT'
+        #Location
+        mapping.inputs[1].default_value = (0.9999999403953552, 0.5, 0.0)
+        #Rotation
+        rand_z_rotate = 6.28319*random.random()
+        mapping.inputs[2].default_value = (0.9267697930335999, 0.1745329350233078, rand_z_rotate)
+        #Scale
+        mapping.inputs[3].default_value = (1.0, 1.0, 1.0)
+
+        #node Mapping.001
+        mapping_001 = signmaterial.nodes.new("ShaderNodeMapping")
+        mapping_001.name = "Mapping.001"
+        mapping_001.vector_type = 'POINT'
+        #Location
+        mapping_001.inputs[1].default_value = (0.0, 0.0, 0.0)
+        #Rotation
+        mapping_001.inputs[2].default_value = (0.0, 0.0, 1.5707999467849731)
+        #Scale
+        mapping_001.inputs[3].default_value = (1.0, 1.0, 1.0)
+
+        #node Image Texture.003
+        image_texture_003 = signmaterial.nodes.new("ShaderNodeTexImage")
+        image_texture_003.label = "Rust Major"
+        image_texture_003.name = "Image Texture.003"
+        image_texture_003.extension = 'REPEAT'
+        image_texture_003.image_user.frame_current = 0
+        image_texture_003.image_user.frame_duration = 1
+        image_texture_003.image_user.frame_offset = -1
+        image_texture_003.image_user.frame_start = 1
+        image_texture_003.image_user.tile = 0
+        image_texture_003.image_user.use_auto_refresh = False
+        image_texture_003.image_user.use_cyclic = False
+        image_texture_003.interpolation = 'Linear'
+        image_texture_003.projection = 'FLAT'
+        image_texture_003.projection_blend = 0.0
+        image_texture_003.image = bpy.data.images.load(tex_path+rust_major) 
+        #Vector
+        image_texture_003.inputs[0].default_value = (0.0, 0.0, 0.0)
+
+         ### THIS NODE CONTROLS MAJOR RUST. COME BACK LATER ### 
+        #node Mix.002
+        mix_002 = signmaterial.nodes.new("ShaderNodeMix")
+        mix_002.name = "Mix.002"
+        mix_002.blend_type = 'MIX'
+        mix_002.clamp_factor = True
+        mix_002.clamp_result = False
+        mix_002.data_type = 'RGBA'
+        mix_002.factor_mode = 'UNIFORM'
+        #A_Color
+        mix_002.inputs[6].default_value = (0.5, 0.5, 0.5, 1.0)
+
+        #node Image Texture.004
+        image_texture_004 = signmaterial.nodes.new("ShaderNodeTexImage")
+        image_texture_004.label = "Rivets Normal"
+        image_texture_004.name = "Image Texture.004"
+        image_texture_004.extension = 'REPEAT'
+        image_texture_004.image_user.frame_current = 0
+        image_texture_004.image_user.frame_duration = 1
+        image_texture_004.image_user.frame_offset = 22
+        image_texture_004.image_user.frame_start = 1
+        image_texture_004.image_user.tile = 0
+        image_texture_004.image_user.use_auto_refresh = False
+        image_texture_004.image_user.use_cyclic = False
+        image_texture_004.interpolation = 'Linear'
+        image_texture_004.projection = 'FLAT'
+        image_texture_004.projection_blend = 0.0
+        image_texture_004.image = bpy.data.images.load(tex_path+rivets) 
+        #Vector
+        image_texture_004.inputs[0].default_value = (0.0, 0.0, 0.0)
+
+        #node Image Texture.005
+        image_texture_005 = signmaterial.nodes.new("ShaderNodeTexImage")
+        image_texture_005.label = "Rivets Roughness"
+        image_texture_005.name = "Image Texture.005"
+        image_texture_005.extension = 'REPEAT'
+        image_texture_005.image_user.frame_current = 0
+        image_texture_005.image_user.frame_duration = 1
+        image_texture_005.image_user.frame_offset = 22
+        image_texture_005.image_user.frame_start = 1
+        image_texture_005.image_user.tile = 0
+        image_texture_005.image_user.use_auto_refresh = False
+        image_texture_005.image_user.use_cyclic = False
+        image_texture_005.interpolation = 'Linear'
+        image_texture_005.projection = 'FLAT'
+        image_texture_005.projection_blend = 0.0
+        image_texture_005.image = bpy.data.images.load(tex_path+rivets_rough) 
+        #Vector
+        image_texture_005.inputs[0].default_value = (0.0, 0.0, 0.0)
+
+        #node Material Output.001
+        material_output_001 = signmaterial.nodes.new("ShaderNodeOutputMaterial")
+        material_output_001.name = "Material Output.001"
+        material_output_001.is_active_output = True
+        material_output_001.target = 'ALL'
+        #Thickness
+        material_output_001.inputs[3].default_value = 0.0
+
+        #node Voronoi Texture
+        voronoi_texture = signmaterial.nodes.new("ShaderNodeTexVoronoi")
+        voronoi_texture.name = "Voronoi Texture"
+        voronoi_texture.distance = 'EUCLIDEAN'
+        voronoi_texture.feature = 'F1'
+        voronoi_texture.normalize = False
+        voronoi_texture.voronoi_dimensions = '3D'
+        #Scale
+        voronoi_texture.inputs[2].default_value = 5.0
+        #Detail
+        voronoi_texture.inputs[3].default_value = 0.0
+        #Roughness
+        voronoi_texture.inputs[4].default_value = 0.5
+        #Lacunarity
+        voronoi_texture.inputs[5].default_value = 2.0
+        #Randomness
+        voronoi_texture.inputs[8].default_value = 1.0
+
+        #node Displacement
+        displacement = signmaterial.nodes.new("ShaderNodeDisplacement")
+        displacement.name = "Displacement"
+        displacement.space = 'OBJECT'
+        #Height
+        displacement.inputs[0].default_value = 0.5999999046325684
+        #Midlevel
+        displacement.inputs[1].default_value = 0.5
+        #Normal
+        displacement.inputs[3].default_value = (0.0, 0.0, 0.0)
+
+        #node ColorRamp.001
+        colorramp_001 = signmaterial.nodes.new("ShaderNodeValToRGB")
+        colorramp_001.name = "ColorRamp.001"
+        colorramp_001.color_ramp.color_mode = 'RGB'
+        colorramp_001.color_ramp.hue_interpolation = 'NEAR'
+        colorramp_001.color_ramp.interpolation = 'LINEAR'
+
+        #initialize color ramp elements
+        colorramp_001.color_ramp.elements.remove(colorramp_001.color_ramp.elements[0])
+        colorramp_001_cre_0 = colorramp_001.color_ramp.elements[0]
+        colorramp_001_cre_0.position = 0.0
+        colorramp_001_cre_0.alpha = 1.0
+        colorramp_001_cre_0.color = (0.07733254134654999, 0.059307511895895004, 0.1461154669523239, 1.0)
+
+        colorramp_001_cre_1 = colorramp_001.color_ramp.elements.new(0.8181818127632141)
+        colorramp_001_cre_1.alpha = 1.0
+        colorramp_001_cre_1.color = (0.9220297932624817, 1.0, 1.0, 1.0)
+
+
+        #node Principled BSDF.001
+        principled_bsdf_001 = signmaterial.nodes.new("ShaderNodeBsdfPrincipled")
+        principled_bsdf_001.name = "Principled BSDF.001"
+        principled_bsdf_001.distribution = 'GGX'
+        principled_bsdf_001.subsurface_method = 'RANDOM_WALK_SKIN'
+        #Metallic
+        principled_bsdf_001.inputs[1].default_value = 0.0
+        #IOR
+        principled_bsdf_001.inputs[3].default_value = 1.4500000476837158
+        #Alpha
+        principled_bsdf_001.inputs[4].default_value = 1.0
+        #Normal
+        principled_bsdf_001.inputs[5].default_value = (0.0, 0.0, 0.0)
+        #Diffuse Roughness
+        principled_bsdf_001.inputs[7].default_value = 0.0
+        #Subsurface Weight
+        principled_bsdf_001.inputs[8].default_value = 1.0
+        #Subsurface Radius
+        principled_bsdf_001.inputs[9].default_value = (1.0, 0.20000000298023224, 0.10000000149011612)
+        #Subsurface Scale
+        principled_bsdf_001.inputs[10].default_value = 0.10909092426300049
+        #Subsurface IOR
+        principled_bsdf_001.inputs[11].default_value = 1.399999976158142
+        #Subsurface Anisotropy
+        principled_bsdf_001.inputs[12].default_value = 0.0
+        #Specular IOR Level
+        principled_bsdf_001.inputs[13].default_value = 0.5
+        #Specular Tint
+        principled_bsdf_001.inputs[14].default_value = (1.0, 1.0, 1.0, 1.0)
+        #Anisotropic
+        principled_bsdf_001.inputs[15].default_value = 0.0
+        #Anisotropic Rotation
+        principled_bsdf_001.inputs[16].default_value = 0.0
+        #Tangent
+        principled_bsdf_001.inputs[17].default_value = (0.0, 0.0, 0.0)
+        #Transmission Weight
+        principled_bsdf_001.inputs[18].default_value = 0.0
+        #Coat Weight
+        principled_bsdf_001.inputs[19].default_value = 0.0
+        #Coat Roughness
+        principled_bsdf_001.inputs[20].default_value = 0.029999999329447746
+        #Coat IOR
+        principled_bsdf_001.inputs[21].default_value = 1.5
+        #Coat Tint
+        principled_bsdf_001.inputs[22].default_value = (1.0, 1.0, 1.0, 1.0)
+        #Coat Normal
+        principled_bsdf_001.inputs[23].default_value = (0.0, 0.0, 0.0)
+        #Sheen Weight
+        principled_bsdf_001.inputs[24].default_value = 0.0
+        #Sheen Roughness
+        principled_bsdf_001.inputs[25].default_value = 0.5
+        #Sheen Tint
+        principled_bsdf_001.inputs[26].default_value = (1.0, 1.0, 1.0, 1.0)
+        #Emission Color
+        principled_bsdf_001.inputs[27].default_value = (0.0, 0.0, 0.0, 1.0)
+        #Emission Strength
+        principled_bsdf_001.inputs[28].default_value = 0.19999992847442627
+        #Thin Film Thickness
+        principled_bsdf_001.inputs[29].default_value = 0.0
+        #Thin Film IOR
+        principled_bsdf_001.inputs[30].default_value = 1.3300000429153442
+
+        #node Mix.003
+        mix_003 = signmaterial.nodes.new("ShaderNodeMix")
+        mix_003.name = "Mix.003"
+        mix_003.blend_type = 'OVERLAY'
+        mix_003.clamp_factor = True
+        mix_003.clamp_result = False
+        mix_003.data_type = 'RGBA'
+        mix_003.factor_mode = 'UNIFORM'
+        #Factor_Float
+        mix_003.inputs[0].default_value = 1.0
+
+        #node ColorRamp.002
+        colorramp_002 = signmaterial.nodes.new("ShaderNodeValToRGB")
+        colorramp_002.name = "ColorRamp.002"
+        colorramp_002.color_ramp.color_mode = 'RGB'
+        colorramp_002.color_ramp.hue_interpolation = 'NEAR'
+        colorramp_002.color_ramp.interpolation = 'LINEAR'
+
+        #initialize color ramp elements
+        colorramp_002.color_ramp.elements.remove(colorramp_002.color_ramp.elements[0])
+        colorramp_002_cre_0 = colorramp_002.color_ramp.elements[0]
+        colorramp_002_cre_0.position = 0.472727507352829
+        colorramp_002_cre_0.alpha = 1.0
+        colorramp_002_cre_0.color = (0.0, 0.0, 0.0, 1.0)
+
+        colorramp_002_cre_1 = colorramp_002.color_ramp.elements.new(0.9863636493682861)
+        colorramp_002_cre_1.alpha = 1.0
+        colorramp_002_cre_1.color = (1.0, 1.0, 1.0, 1.0)
+
+
+        #node ColorRamp
+        colorramp = signmaterial.nodes.new("ShaderNodeValToRGB")
+        colorramp.name = "ColorRamp"
+        colorramp.color_ramp.color_mode = 'RGB'
+        colorramp.color_ramp.hue_interpolation = 'NEAR'
+        colorramp.color_ramp.interpolation = 'LINEAR'
+
+        #initialize color ramp elements
+        colorramp.color_ramp.elements.remove(colorramp.color_ramp.elements[0])
+        colorramp_cre_0 = colorramp.color_ramp.elements[0]
+        colorramp_cre_0.position = 0.48181840777397156
+        colorramp_cre_0.alpha = 1.0
+        colorramp_cre_0.color = (1.0, 0.9665863513946533, 0.940509021282196, 1.0)
+
+        colorramp_cre_1 = colorramp.color_ramp.elements.new(0.9863636493682861)
+        colorramp_cre_1.alpha = 1.0
+        colorramp_cre_1.color = (1.0, 1.0, 1.0, 1.0)
+
+
+        #node Mapping.002
+        mapping_002 = signmaterial.nodes.new("ShaderNodeMapping")
+        mapping_002.name = "Mapping.002"
+        mapping_002.vector_type = 'POINT'
+        #Location
+        mapping_002.inputs[1].default_value = (0.0, 0.0, 0.0)
+        #Rotation
+        mapping_002.inputs[2].default_value = (0.0, 0.0, 0.0)
+        #Scale
+        mapping_002.inputs[3].default_value = (1.0, 1.0, 1.0)
+
+        #node Texture Coordinate.001
+        texture_coordinate_001 = signmaterial.nodes.new("ShaderNodeTexCoord")
+        texture_coordinate_001.name = "Texture Coordinate.001"
+        texture_coordinate_001.from_instancer = False
+
+        #node Noise Texture
+        noise_texture = signmaterial.nodes.new("ShaderNodeTexNoise")
+        noise_texture.name = "Noise Texture"
+        noise_texture.noise_dimensions = '3D'
+        noise_texture.noise_type = 'FBM'
+        noise_texture.normalize = True
+        #Scale
+        noise_texture.inputs[2].default_value = 10.5
+        #Detail
+        noise_texture.inputs[3].default_value = 9.899999618530273
+        #Roughness
+        noise_texture.inputs[4].default_value = 0.5833332538604736
+        #Lacunarity
+        noise_texture.inputs[5].default_value = 2.0
+        #Distortion
+        noise_texture.inputs[8].default_value = 0.0
+
+        #node Mix.004
+        mix_004 = signmaterial.nodes.new("ShaderNodeMix")
+        mix_004.name = "Mix.004"
+        mix_004.blend_type = 'MIX'
+        mix_004.clamp_factor = True
+        mix_004.clamp_result = False
+        mix_004.data_type = 'RGBA'
+        mix_004.factor_mode = 'UNIFORM'
+        #Factor_Float
+        mix_004.inputs[0].default_value = 0.10909092426300049
+        #B_Color
+        mix_004.inputs[7].default_value = (0.800000011920929, 0.800000011920929, 0.800000011920929, 1.0)
+
+        #node Mix Shader
+        mix_shader = signmaterial.nodes.new("ShaderNodeMixShader")
+        mix_shader.name = "Mix Shader"
+
+        #node Noise Texture.001
+        noise_texture_001 = signmaterial.nodes.new("ShaderNodeTexNoise")
+        noise_texture_001.name = "Noise Texture.001"
+        noise_texture_001.noise_dimensions = '3D'
+        noise_texture_001.noise_type = 'FBM'
+        noise_texture_001.normalize = True
+        #Scale
+        noise_texture_001.inputs[2].default_value = 5.0
+        #Detail
+        noise_texture_001.inputs[3].default_value = 2.0
+        #Roughness
+        noise_texture_001.inputs[4].default_value = 0.5
+        #Lacunarity
+        noise_texture_001.inputs[5].default_value = 2.0
+        #Distortion
+        noise_texture_001.inputs[8].default_value = 0.0
+
+        #node Color Ramp
+        color_ramp = signmaterial.nodes.new("ShaderNodeValToRGB")
+        color_ramp.name = "Color Ramp"
+        color_ramp.color_ramp.color_mode = 'RGB'
+        color_ramp.color_ramp.hue_interpolation = 'NEAR'
+        color_ramp.color_ramp.interpolation = 'LINEAR'
+
+        #initialize color ramp elements
+
+        if mud> 0.0:
+            black_value = mud
+        elif snow>0.0:
+            black_value = snow
+
+
+        color_ramp.color_ramp.elements.remove(color_ramp.color_ramp.elements[0])
+        color_ramp_cre_0 = color_ramp.color_ramp.elements[0]
+        color_ramp_cre_0.position = black_value
+        color_ramp_cre_0.alpha = 1.0
+        color_ramp_cre_0.color = (0.0, 0.0, 0.0, 1.0)
+
+        color_ramp_cre_1 = color_ramp.color_ramp.elements.new(black_value-0.08)
+        color_ramp_cre_1.alpha = 1.0
+        color_ramp_cre_1.color = (1.0, 1.0, 1.0, 1.0)
+
+
+        #node Frame
+        frame = signmaterial.nodes.new("NodeFrame")
+        frame.name = "Frame"
+        frame.label_size = 20
+        frame.shrink = True
+
+        #node Principled BSDF.002
+        principled_bsdf_002 = signmaterial.nodes.new("ShaderNodeBsdfPrincipled")
+        principled_bsdf_002.name = "Principled BSDF.002"
+        principled_bsdf_002.distribution = 'MULTI_GGX'
+        principled_bsdf_002.subsurface_method = 'RANDOM_WALK'
+        #Metallic
+        principled_bsdf_002.inputs[1].default_value = 0.0
+        #IOR
+        principled_bsdf_002.inputs[3].default_value = 1.5
+        #Diffuse Roughness
+        principled_bsdf_002.inputs[7].default_value = 0.0
+        #Subsurface Weight
+        principled_bsdf_002.inputs[8].default_value = 0.0
+        #Subsurface Radius
+        principled_bsdf_002.inputs[9].default_value = (1.0, 0.20000000298023224, 0.10000000149011612)
+        #Subsurface Scale
+        principled_bsdf_002.inputs[10].default_value = 0.05000000074505806
+        #Subsurface Anisotropy
+        principled_bsdf_002.inputs[12].default_value = 0.0
+        #Specular IOR Level
+        principled_bsdf_002.inputs[13].default_value = 0.5
+        #Specular Tint
+        principled_bsdf_002.inputs[14].default_value = (1.0, 1.0, 1.0, 1.0)
+        #Anisotropic
+        principled_bsdf_002.inputs[15].default_value = 0.0
+        #Anisotropic Rotation
+        principled_bsdf_002.inputs[16].default_value = 0.0
+        #Tangent
+        principled_bsdf_002.inputs[17].default_value = (0.0, 0.0, 0.0)
+        #Transmission Weight
+        principled_bsdf_002.inputs[18].default_value = 0.0
+        #Coat Weight
+        principled_bsdf_002.inputs[19].default_value = 0.0
+        #Coat Roughness
+        principled_bsdf_002.inputs[20].default_value = 0.029999999329447746
+        #Coat IOR
+        principled_bsdf_002.inputs[21].default_value = 1.5
+        #Coat Tint
+        principled_bsdf_002.inputs[22].default_value = (1.0, 1.0, 1.0, 1.0)
+        #Coat Normal
+        principled_bsdf_002.inputs[23].default_value = (0.0, 0.0, 0.0)
+        #Sheen Weight
+        principled_bsdf_002.inputs[24].default_value = 0.0
+        #Sheen Roughness
+        principled_bsdf_002.inputs[25].default_value = 0.5
+        #Sheen Tint
+        principled_bsdf_002.inputs[26].default_value = (1.0, 1.0, 1.0, 1.0)
+        #Emission Color
+        principled_bsdf_002.inputs[27].default_value = (1.0, 1.0, 1.0, 1.0)
+        #Emission Strength
+        principled_bsdf_002.inputs[28].default_value = 0.0
+        #Thin Film Thickness
+        principled_bsdf_002.inputs[29].default_value = 0.0
+        #Thin Film IOR
+        principled_bsdf_002.inputs[30].default_value = 1.3300000429153442
+
+        #node Noise Texture.002
+        noise_texture_002 = signmaterial.nodes.new("ShaderNodeTexNoise")
+        noise_texture_002.name = "Noise Texture.002"
+        noise_texture_002.noise_dimensions = '3D'
+        noise_texture_002.noise_type = 'FBM'
+        noise_texture_002.normalize = True
+        #Scale
+        noise_texture_002.inputs[2].default_value = 13.0
+        #Detail
+        noise_texture_002.inputs[3].default_value = 15.0
+        #Roughness
+        noise_texture_002.inputs[4].default_value = 0.6000000238418579
+        #Lacunarity
+        noise_texture_002.inputs[5].default_value = 2.0
+        #Distortion
+        noise_texture_002.inputs[8].default_value = 0.0
+
+        #node Mapping.003
+        mapping_003 = signmaterial.nodes.new("ShaderNodeMapping")
+        mapping_003.name = "Mapping.003"
+        mapping_003.vector_type = 'POINT'
+        #Location
+        mapping_003.inputs[1].default_value = (0.0, 0.0, 0.0)
+        #Rotation
+        mapping_003.inputs[2].default_value = (0.0, 0.0, 0.0)
+        #Scale
+        mapping_003.inputs[3].default_value = (1.0, 1.0, 1.0)
+
+        #node Texture Coordinate.002
+        texture_coordinate_002 = signmaterial.nodes.new("ShaderNodeTexCoord")
+        texture_coordinate_002.name = "Texture Coordinate.002"
+        texture_coordinate_002.from_instancer = False
+
+        #node Color Ramp.001
+        color_ramp_001 = signmaterial.nodes.new("ShaderNodeValToRGB")
+        color_ramp_001.name = "Color Ramp.001"
+        color_ramp_001.color_ramp.color_mode = 'RGB'
+        color_ramp_001.color_ramp.hue_interpolation = 'NEAR'
+        color_ramp_001.color_ramp.interpolation = 'LINEAR'
+
+        #initialize color ramp elements
+        color_ramp_001.color_ramp.elements.remove(color_ramp_001.color_ramp.elements[0])
+        color_ramp_001_cre_0 = color_ramp_001.color_ramp.elements[0]
+        color_ramp_001_cre_0.position = 0.0
+        color_ramp_001_cre_0.alpha = 1.0
+        color_ramp_001_cre_0.color = (0.03189585357904434, 0.02217390388250351, 0.01161225326359272, 1.0)
+
+        color_ramp_001_cre_1 = color_ramp_001.color_ramp.elements.new(1.0)
+        color_ramp_001_cre_1.alpha = 1.0
+        color_ramp_001_cre_1.color = (0.08021937310695648, 0.05126950517296791, 0.03560134768486023, 1.0)
+
+
+        #node Color Ramp.002
+        color_ramp_002 = signmaterial.nodes.new("ShaderNodeValToRGB")
+        color_ramp_002.name = "Color Ramp.002"
+        color_ramp_002.color_ramp.color_mode = 'RGB'
+        color_ramp_002.color_ramp.hue_interpolation = 'NEAR'
+        color_ramp_002.color_ramp.interpolation = 'LINEAR'
+
+        #initialize color ramp elements
+        color_ramp_002.color_ramp.elements.remove(color_ramp_002.color_ramp.elements[0])
+        color_ramp_002_cre_0 = color_ramp_002.color_ramp.elements[0]
+        color_ramp_002_cre_0.position = 0.0
+        color_ramp_002_cre_0.alpha = 1.0
+        color_ramp_002_cre_0.color = (0.0, 0.0, 0.0, 1.0)
+
+        color_ramp_002_cre_1 = color_ramp_002.color_ramp.elements.new(1.0)
+        color_ramp_002_cre_1.alpha = 1.0
+        color_ramp_002_cre_1.color = (0.5647079944610596, 0.5647121667861938, 0.5647119283676147, 1.0)
+
+
+        #node Bump
+        bump = signmaterial.nodes.new("ShaderNodeBump")
+        bump.name = "Bump"
+        bump.invert = False
+        #Strength
+        bump.inputs[0].default_value = 0.20000000298023224
+        #Distance
+        bump.inputs[1].default_value = 1.0
+        #Normal
+        bump.inputs[3].default_value = (0.0, 0.0, 0.0)
+
+        #node Principled BSDF.003
+        principled_bsdf_003 = signmaterial.nodes.new("ShaderNodeBsdfPrincipled")
+        principled_bsdf_003.name = "Principled BSDF.003"
+        principled_bsdf_003.distribution = 'MULTI_GGX'
+        principled_bsdf_003.subsurface_method = 'RANDOM_WALK'
+        #Metallic
+        principled_bsdf_003.inputs[1].default_value = 0.0
+        #Roughness
+        principled_bsdf_003.inputs[2].default_value = 0.10000000149011612
+        #IOR
+        principled_bsdf_003.inputs[3].default_value = 1.5
+        #Diffuse Roughness
+        principled_bsdf_003.inputs[7].default_value = 0.0
+        #Subsurface Weight
+        principled_bsdf_003.inputs[8].default_value = 0.0
+        #Subsurface Radius
+        principled_bsdf_003.inputs[9].default_value = (1.0, 0.20000000298023224, 0.10000000149011612)
+        #Subsurface Scale
+        principled_bsdf_003.inputs[10].default_value = 0.05000000074505806
+        #Subsurface Anisotropy
+        principled_bsdf_003.inputs[12].default_value = 0.0
+        #Specular IOR Level
+        principled_bsdf_003.inputs[13].default_value = 0.5
+        #Specular Tint
+        principled_bsdf_003.inputs[14].default_value = (1.0, 1.0, 1.0, 1.0)
+        #Anisotropic
+        principled_bsdf_003.inputs[15].default_value = 0.0
+        #Anisotropic Rotation
+        principled_bsdf_003.inputs[16].default_value = 0.0
+        #Tangent
+        principled_bsdf_003.inputs[17].default_value = (0.0, 0.0, 0.0)
+        #Transmission Weight
+        principled_bsdf_003.inputs[18].default_value = 0.0
+        #Coat Weight
+        principled_bsdf_003.inputs[19].default_value = 0.0
+        #Coat Roughness
+        principled_bsdf_003.inputs[20].default_value = 0.029999999329447746
+        #Coat IOR
+        principled_bsdf_003.inputs[21].default_value = 1.5
+        #Coat Tint
+        principled_bsdf_003.inputs[22].default_value = (1.0, 1.0, 1.0, 1.0)
+        #Coat Normal
+        principled_bsdf_003.inputs[23].default_value = (0.0, 0.0, 0.0)
+        #Sheen Weight
+        principled_bsdf_003.inputs[24].default_value = 0.0
+        #Sheen Roughness
+        principled_bsdf_003.inputs[25].default_value = 0.5
+        #Sheen Tint
+        principled_bsdf_003.inputs[26].default_value = (1.0, 1.0, 1.0, 1.0)
+        #Emission Color
+        principled_bsdf_003.inputs[27].default_value = (1.0, 1.0, 1.0, 1.0)
+        #Emission Strength
+        principled_bsdf_003.inputs[28].default_value = 0.0
+        #Thin Film Thickness
+        principled_bsdf_003.inputs[29].default_value = 0.0
+        #Thin Film IOR
+        principled_bsdf_003.inputs[30].default_value = 1.3300000429153442
+
+        #node Noise Texture.003
+        noise_texture_003 = signmaterial.nodes.new("ShaderNodeTexNoise")
+        noise_texture_003.name = "Noise Texture.003"
+        noise_texture_003.noise_dimensions = '3D'
+        noise_texture_003.noise_type = 'FBM'
+        noise_texture_003.normalize = True
+        #Scale
+        noise_texture_003.inputs[2].default_value = 13.0
+        #Detail
+        noise_texture_003.inputs[3].default_value = 15.0
+        #Roughness
+        noise_texture_003.inputs[4].default_value = 0.699999988079071
+        #Lacunarity
+        noise_texture_003.inputs[5].default_value = 2.0
+        #Distortion
+        noise_texture_003.inputs[8].default_value = 1.0
+
+        #node Color Ramp.003
+        color_ramp_003 = signmaterial.nodes.new("ShaderNodeValToRGB")
+        color_ramp_003.name = "Color Ramp.003"
+        color_ramp_003.color_ramp.color_mode = 'RGB'
+        color_ramp_003.color_ramp.hue_interpolation = 'NEAR'
+        color_ramp_003.color_ramp.interpolation = 'LINEAR'
+
+        #initialize color ramp elements
+        color_ramp_003.color_ramp.elements.remove(color_ramp_003.color_ramp.elements[0])
+        color_ramp_003_cre_0 = color_ramp_003.color_ramp.elements[0]
+        color_ramp_003_cre_0.position = 0.0
+        color_ramp_003_cre_0.alpha = 1.0
+        color_ramp_003_cre_0.color = (0.03189585357904434, 0.02217390388250351, 0.01161225326359272, 1.0)
+
+        color_ramp_003_cre_1 = color_ramp_003.color_ramp.elements.new(1.0)
+        color_ramp_003_cre_1.alpha = 1.0
+        color_ramp_003_cre_1.color = (0.21222949028015137, 0.1412634402513504, 0.09084176272153854, 1.0)
+
+
+        #node Bump.001
+        bump_001 = signmaterial.nodes.new("ShaderNodeBump")
+        bump_001.name = "Bump.001"
+        bump_001.invert = False
+        #Strength
+        bump_001.inputs[0].default_value = 0.029999999329447746
+        #Distance
+        bump_001.inputs[1].default_value = 1.0
+        #Normal
+        bump_001.inputs[3].default_value = (0.0, 0.0, 0.0)
+
+        #node Mix Shader.001
+        mix_shader_001 = signmaterial.nodes.new("ShaderNodeMixShader")
+        mix_shader_001.name = "Mix Shader.001"
+
+        #node Noise Texture.004
+        noise_texture_004 = signmaterial.nodes.new("ShaderNodeTexNoise")
+        noise_texture_004.name = "Noise Texture.004"
+        noise_texture_004.noise_dimensions = '3D'
+        noise_texture_004.noise_type = 'FBM'
+        noise_texture_004.normalize = True
+        #Scale
+        noise_texture_004.inputs[2].default_value = 3.0
+        #Detail
+        noise_texture_004.inputs[3].default_value = 15.0
+        #Roughness
+        noise_texture_004.inputs[4].default_value = 0.5
+        #Lacunarity
+        noise_texture_004.inputs[5].default_value = 2.0
+        #Distortion
+        noise_texture_004.inputs[8].default_value = 0.0
+
+        #node Color Ramp.004
+        color_ramp_004 = signmaterial.nodes.new("ShaderNodeValToRGB")
+        color_ramp_004.name = "Color Ramp.004"
+        color_ramp_004.color_ramp.color_mode = 'RGB'
+        color_ramp_004.color_ramp.hue_interpolation = 'NEAR'
+        color_ramp_004.color_ramp.interpolation = 'LINEAR'
+
+        #initialize color ramp elements
+        color_ramp_004.color_ramp.elements.remove(color_ramp_004.color_ramp.elements[0])
+        color_ramp_004_cre_0 = color_ramp_004.color_ramp.elements[0]
+        color_ramp_004_cre_0.position = 0.39999985694885254
+        color_ramp_004_cre_0.alpha = 1.0
+        color_ramp_004_cre_0.color = (0.0, 0.0, 0.0, 1.0)
+
+        color_ramp_004_cre_1 = color_ramp_004.color_ramp.elements.new(0.4909094572067261)
+        color_ramp_004_cre_1.alpha = 1.0
+        color_ramp_004_cre_1.color = (1.0, 1.0, 1.0, 1.0)
+
+
+        #node Displacement.001
+        displacement_001 = signmaterial.nodes.new("ShaderNodeDisplacement")
+        displacement_001.name = "Displacement.001"
+        displacement_001.space = 'OBJECT'
+        #Midlevel
+        displacement_001.inputs[1].default_value = 0.0
+        #Scale
+        displacement_001.inputs[2].default_value = 0.03999999910593033
+        #Normal
+        displacement_001.inputs[3].default_value = (0.0, 0.0, 0.0)
+
+        #node Mix.005
+        mix_005 = signmaterial.nodes.new("ShaderNodeMix")
+        mix_005.name = "Mix.005"
+        mix_005.blend_type = 'MIX'
+        mix_005.clamp_factor = True
+        mix_005.clamp_result = False
+        mix_005.data_type = 'RGBA'
+        mix_005.factor_mode = 'UNIFORM'
+        #B_Color
+        mix_005.inputs[7].default_value = (0.0, 0.0, 0.0, 1.0)
+
+        #node Invert Color
+        invert_color = signmaterial.nodes.new("ShaderNodeInvert")
+        invert_color.name = "Invert Color"
+        #Fac
+        invert_color.inputs[0].default_value = 1.0
+
+        #node Frame.001
+        frame_001 = signmaterial.nodes.new("NodeFrame")
+        frame_001.name = "Frame.001"
+        frame_001.label_size = 20
+        frame_001.shrink = True
+
+
+        #Set locations
+        principled_bsdf.location = (510.5553283691406, -59.9542236328125)
+        image_texture.location = (-658.6177978515625, 66.822265625)
+        image_texture_001.location = (-663.31103515625, -260.9002380371094)
+        mix.location = (-373.9364929199219, 18.197063446044922)
+        mix_001.location = (-103.21905517578125, 15.489540100097656)
+        image_texture_002.location = (-738.0819091796875, -667.8732299804688)
+        texture_coordinate.location = (-1274.4552001953125, -27.621980667114258)
+        mapping.location = (-1028.459228515625, -457.97308349609375)
+        mapping_001.location = (-968.6342163085938, 63.104949951171875)
+        image_texture_003.location = (-283.27056884765625, -568.5834350585938)
+        mix_002.location = (74.1423568725586, -326.18988037109375)
+        image_texture_004.location = (102.3629150390625, -633.4000854492188)
+        image_texture_005.location = (419.182861328125, -666.4660034179688)
+        material_output_001.location = (1959.68359375, -975.3723754882812)
+        voronoi_texture.location = (-940.3441162109375, -1402.0634765625)
+        displacement.location = (789.5448608398438, -1730.8603515625)
+        colorramp_001.location = (-493.6947937011719, -1812.22265625)
+        principled_bsdf_001.location = (418.7927551269531, -1422.31787109375)
+        mix_003.location = (-708.8441162109375, -1151.271240234375)
+        colorramp_002.location = (-111.66281127929688, -1571.203857421875)
+        colorramp.location = (-368.0056457519531, -1261.1865234375)
+        mapping_002.location = (-1550.2725830078125, -1137.20263671875)
+        texture_coordinate_001.location = (-1730.2723388671875, -1137.20263671875)
+        noise_texture.location = (-952.6441650390625, -1056.30810546875)
+        mix_004.location = (248.79275512695312, -1542.31787109375)
+        mix_shader.location = (1569.85791015625, -764.6122436523438)
+        noise_texture_001.location = (1133.0177001953125, 103.29817199707031)
+        color_ramp.location = (1475.7100830078125, 1.5466625690460205)
+        frame.location = (-299.72802734375, -1494.472900390625)
+        principled_bsdf_002.location = (605.614013671875, 953.3546752929688)
+        noise_texture_002.location = (-160.20770263671875, 1132.1702880859375)
+        mapping_003.location = (-472.304443359375, 1658.639404296875)
+        texture_coordinate_002.location = (-658.140380859375, 1688.0921630859375)
+        color_ramp_001.location = (63.09385681152344, 1117.67724609375)
+        color_ramp_002.location = (62.693206787109375, 892.7188720703125)
+        bump.location = (81.29820251464844, 656.4393310546875)
+        principled_bsdf_003.location = (598.4451904296875, 1623.074951171875)
+        noise_texture_003.location = (-111.94149780273438, 1853.592529296875)
+        color_ramp_003.location = (108.19537353515625, 1845.7601318359375)
+        bump_001.location = (357.6639404296875, 1581.8834228515625)
+        mix_shader_001.location = (982.8507080078125, 1381.4736328125)
+        noise_texture_004.location = (-134.80438232421875, 1480.1810302734375)
+        color_ramp_004.location = (256.40106201171875, 1366.7816162109375)
+        displacement_001.location = (1015.9722900390625, 616.9949951171875)
+        mix_005.location = (661.4043579101562, 532.2132568359375)
+        invert_color.location = (491.7807922363281, 637.0462036132812)
+        frame_001.location = (440.9736328125, 1237.7647705078125)
+
+        #Set dimensions
+        principled_bsdf.width, principled_bsdf.height = 240.0, 100.0
+        image_texture.width, image_texture.height = 240.0, 100.0
+        image_texture_001.width, image_texture_001.height = 240.0, 100.0
+        mix.width, mix.height = 140.0, 100.0
+        mix_001.width, mix_001.height = 140.0, 100.0
+        image_texture_002.width, image_texture_002.height = 240.0, 100.0
+        texture_coordinate.width, texture_coordinate.height = 140.0, 100.0
+        mapping.width, mapping.height = 140.0, 100.0
+        mapping_001.width, mapping_001.height = 140.0, 100.0
+        image_texture_003.width, image_texture_003.height = 240.0, 100.0
+        mix_002.width, mix_002.height = 140.0, 100.0
+        image_texture_004.width, image_texture_004.height = 240.0, 100.0
+        image_texture_005.width, image_texture_005.height = 240.0, 100.0
+        material_output_001.width, material_output_001.height = 140.0, 100.0
+        voronoi_texture.width, voronoi_texture.height = 140.0, 100.0
+        displacement.width, displacement.height = 140.0, 100.0
+        colorramp_001.width, colorramp_001.height = 240.0, 100.0
+        principled_bsdf_001.width, principled_bsdf_001.height = 240.0, 100.0
+        mix_003.width, mix_003.height = 140.0, 100.0
+        colorramp_002.width, colorramp_002.height = 240.0, 100.0
+        colorramp.width, colorramp.height = 240.0, 100.0
+        mapping_002.width, mapping_002.height = 140.0, 100.0
+        texture_coordinate_001.width, texture_coordinate_001.height = 140.0, 100.0
+        noise_texture.width, noise_texture.height = 140.0, 100.0
+        mix_004.width, mix_004.height = 140.0, 100.0
+        mix_shader.width, mix_shader.height = 140.0, 100.0
+        noise_texture_001.width, noise_texture_001.height = 140.0, 100.0
+        color_ramp.width, color_ramp.height = 240.0, 100.0
+        frame.width, frame.height = 3310.129638671875, 1106.0250244140625
+        principled_bsdf_002.width, principled_bsdf_002.height = 240.0, 100.0
+        noise_texture_002.width, noise_texture_002.height = 164.716796875, 100.0
+        mapping_003.width, mapping_003.height = 140.0, 100.0
+        texture_coordinate_002.width, texture_coordinate_002.height = 140.0, 100.0
+        color_ramp_001.width, color_ramp_001.height = 240.0, 100.0
+        color_ramp_002.width, color_ramp_002.height = 240.0, 100.0
+        bump.width, bump.height = 140.0, 100.0
+        principled_bsdf_003.width, principled_bsdf_003.height = 240.0, 100.0
+        noise_texture_003.width, noise_texture_003.height = 140.0, 100.0
+        color_ramp_003.width, color_ramp_003.height = 240.0, 100.0
+        bump_001.width, bump_001.height = 140.0, 100.0
+        mix_shader_001.width, mix_shader_001.height = 140.0, 100.0
+        noise_texture_004.width, noise_texture_004.height = 140.0, 100.0
+        color_ramp_004.width, color_ramp_004.height = 240.0, 100.0
+        displacement_001.width, displacement_001.height = 140.0, 100.0
+        mix_005.width, mix_005.height = 140.0, 100.0
+        invert_color.width, invert_color.height = 140.0, 100.0
+        frame_001.width, frame_001.height = 3044.44970703125, 1855.811767578125
+
+        #initialize signmaterial links
+        #image_texture.Color -> mix.A
+        signmaterial.links.new(image_texture.outputs[0], mix.inputs[2])
+        #image_texture.Color -> mix.A
+        signmaterial.links.new(image_texture.outputs[0], mix.inputs[6])
+        #image_texture_001.Color -> mix.B
+        signmaterial.links.new(image_texture_001.outputs[0], mix.inputs[7])
+        #mix.Result -> mix_001.A
+        signmaterial.links.new(mix.outputs[2], mix_001.inputs[6])
+        #image_texture_002.Color -> mix_001.B
+        signmaterial.links.new(image_texture_002.outputs[0], mix_001.inputs[7])
+        #texture_coordinate.UV -> mapping.Vector
+        signmaterial.links.new(texture_coordinate.outputs[2], mapping.inputs[0])
+        #mapping.Vector -> image_texture_001.Vector
+        signmaterial.links.new(mapping.outputs[0], image_texture_001.inputs[0])
+        #texture_coordinate.UV -> mapping_001.Vector
+        signmaterial.links.new(texture_coordinate.outputs[2], mapping_001.inputs[0])
+        #mapping_001.Vector -> image_texture.Vector
+        signmaterial.links.new(mapping_001.outputs[0], image_texture.inputs[0])
+        #image_texture_003.Color -> mix_002.B
+        signmaterial.links.new(image_texture_003.outputs[0], mix_002.inputs[7])
+        #image_texture_003.Alpha -> mix_002.Factor
+        signmaterial.links.new(image_texture_003.outputs[1], mix_002.inputs[0])
+        #mix_001.Result -> principled_bsdf.Base Color
+        signmaterial.links.new(mix_001.outputs[2], principled_bsdf.inputs[0])
+        #image_texture.Alpha -> principled_bsdf.Alpha
+        signmaterial.links.new(image_texture.outputs[1], principled_bsdf.inputs[4])
+        #noise_texture.Fac -> mix_003.A
+        signmaterial.links.new(noise_texture.outputs[0], mix_003.inputs[6])
+        #voronoi_texture.Distance -> mix_003.B
+        signmaterial.links.new(voronoi_texture.outputs[0], mix_003.inputs[7])
+        #mix_003.Result -> colorramp.Fac
+        signmaterial.links.new(mix_003.outputs[2], colorramp.inputs[0])
+        #colorramp_001.Color -> displacement.Scale
+        signmaterial.links.new(colorramp_001.outputs[0], displacement.inputs[2])
+        #mix_003.Result -> colorramp_001.Fac
+        signmaterial.links.new(mix_003.outputs[2], colorramp_001.inputs[0])
+        #mix_003.Result -> colorramp_002.Fac
+        signmaterial.links.new(mix_003.outputs[2], colorramp_002.inputs[0])
+        #colorramp_002.Color -> principled_bsdf_001.Roughness
+        signmaterial.links.new(colorramp_002.outputs[0], principled_bsdf_001.inputs[2])
+        #mapping_002.Vector -> noise_texture.Vector
+        signmaterial.links.new(mapping_002.outputs[0], noise_texture.inputs[0])
+        #texture_coordinate_001.Generated -> mapping_002.Vector
+        signmaterial.links.new(texture_coordinate_001.outputs[0], mapping_002.inputs[0])
+        #mapping_002.Vector -> voronoi_texture.Vector
+        signmaterial.links.new(mapping_002.outputs[0], voronoi_texture.inputs[0])
+        #colorramp.Color -> mix_004.A
+        signmaterial.links.new(colorramp.outputs[0], mix_004.inputs[6])
+        #mix_004.Result -> principled_bsdf_001.Base Color
+        signmaterial.links.new(mix_004.outputs[2], principled_bsdf_001.inputs[0])
+        #principled_bsdf.BSDF -> mix_shader.Shader
+        signmaterial.links.new(principled_bsdf.outputs[0], mix_shader.inputs[1])
+        #mix_shader.Shader -> material_output_001.Surface
+        signmaterial.links.new(mix_shader.outputs[0], material_output_001.inputs[0])
+        #noise_texture_001.Color -> color_ramp.Fac
+        signmaterial.links.new(noise_texture_001.outputs[1], color_ramp.inputs[0])
+        #color_ramp.Color -> mix_shader.Fac
+        signmaterial.links.new(color_ramp.outputs[0], mix_shader.inputs[0])
+        #mapping.Vector -> noise_texture_001.Vector
+        signmaterial.links.new(mapping.outputs[0], noise_texture_001.inputs[0])
+        #mapping_003.Vector -> noise_texture_002.Vector
+        signmaterial.links.new(mapping_003.outputs[0], noise_texture_002.inputs[0])
+        #texture_coordinate_002.Object -> mapping_003.Vector
+        signmaterial.links.new(texture_coordinate_002.outputs[3], mapping_003.inputs[0])
+        #color_ramp_001.Color -> principled_bsdf_002.Base Color
+        signmaterial.links.new(color_ramp_001.outputs[0], principled_bsdf_002.inputs[0])
+        #noise_texture_002.Fac -> color_ramp_001.Fac
+        signmaterial.links.new(noise_texture_002.outputs[0], color_ramp_001.inputs[0])
+        #color_ramp_002.Color -> principled_bsdf_002.Roughness
+        signmaterial.links.new(color_ramp_002.outputs[0], principled_bsdf_002.inputs[2])
+        #noise_texture_002.Fac -> color_ramp_002.Fac
+        signmaterial.links.new(noise_texture_002.outputs[0], color_ramp_002.inputs[0])
+        #bump.Normal -> principled_bsdf_002.Normal
+        signmaterial.links.new(bump.outputs[0], principled_bsdf_002.inputs[5])
+        #noise_texture_002.Fac -> bump.Height
+        signmaterial.links.new(noise_texture_002.outputs[0], bump.inputs[2])
+        #mapping_003.Vector -> noise_texture_003.Vector
+        signmaterial.links.new(mapping_003.outputs[0], noise_texture_003.inputs[0])
+        #color_ramp_003.Color -> principled_bsdf_003.Base Color
+        signmaterial.links.new(color_ramp_003.outputs[0], principled_bsdf_003.inputs[0])
+        #noise_texture_003.Fac -> color_ramp_003.Fac
+        signmaterial.links.new(noise_texture_003.outputs[0], color_ramp_003.inputs[0])
+        #bump_001.Normal -> principled_bsdf_003.Normal
+        signmaterial.links.new(bump_001.outputs[0], principled_bsdf_003.inputs[5])
+        #color_ramp_003.Color -> bump_001.Height
+        signmaterial.links.new(color_ramp_003.outputs[0], bump_001.inputs[2])
+        #principled_bsdf_003.BSDF -> mix_shader_001.Shader
+        signmaterial.links.new(principled_bsdf_003.outputs[0], mix_shader_001.inputs[1])
+        #principled_bsdf_002.BSDF -> mix_shader_001.Shader
+        signmaterial.links.new(principled_bsdf_002.outputs[0], mix_shader_001.inputs[2])
+        #mapping_003.Vector -> noise_texture_004.Vector
+        signmaterial.links.new(mapping_003.outputs[0], noise_texture_004.inputs[0])
+        #noise_texture_004.Fac -> color_ramp_004.Fac
+        signmaterial.links.new(noise_texture_004.outputs[0], color_ramp_004.inputs[0])
+        #color_ramp_004.Color -> mix_shader_001.Fac
+        signmaterial.links.new(color_ramp_004.outputs[0], mix_shader_001.inputs[0])
+        #mix_005.Result -> displacement_001.Height
+        signmaterial.links.new(mix_005.outputs[2], displacement_001.inputs[0])
+        #noise_texture_002.Fac -> mix_005.A
+        signmaterial.links.new(noise_texture_002.outputs[0], mix_005.inputs[6])
+        #invert_color.Color -> mix_005.Factor
+        signmaterial.links.new(invert_color.outputs[0], mix_005.inputs[0])
+        #color_ramp_004.Color -> invert_color.Color
+        signmaterial.links.new(color_ramp_004.outputs[0], invert_color.inputs[1])
+
+
+        #image_texture.Alpha -> principled_bsdf_002.Alpha
+
+        
+
+        ### Conditional Linkages 
+        if rivets_on == True:
+            signmaterial.links.new(image_texture_004.outputs[0], principled_bsdf.inputs[5])
+        #image_texture_005.Color -> principled_bsdf.Diffuse Roughness
+            signmaterial.links.new(image_texture_005.outputs[0], principled_bsdf.inputs[7])
+        
+        if mud>0.0:
+            signmaterial.links.new(image_texture.outputs[1], principled_bsdf_002.inputs[4])
+            #image_texture.Alpha -> principled_bsdf_003.Alpha
+            signmaterial.links.new(image_texture.outputs[1], principled_bsdf_003.inputs[4])
+
+                    #mix_shader_001.Shader -> mix_shader.Shader
+            signmaterial.links.new(mix_shader_001.outputs[0], mix_shader.inputs[2])
+
+            #displacement_001.Displacement -> material_output_001.Displacement
+            signmaterial.links.new(displacement_001.outputs[0], material_output_001.inputs[2])
+
+        if snow >0.0:
+             #principled_bsdf_001.BSDF -> mix_shader.Shader
+            signmaterial.links.new(principled_bsdf_001.outputs[0], mix_shader.inputs[2])
+            #displacement.Displacement -> material_output_001.Displacement
+            signmaterial.links.new(displacement.outputs[0], material_output_001.inputs[2])
+            #image_texture.Alpha -> principled_bsdf_001.Alpha
+            signmaterial.links.new(image_texture.outputs[1], principled_bsdf_001.inputs[4])
+        return signmaterial
+
+    signmaterial = signmaterial_node_group()
+
+
+    obj.data.materials.append(mat)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 def apply_birch_tree_bark(obj):
 
     mat = bpy.data.materials.new(name = "Birch Tree bark")

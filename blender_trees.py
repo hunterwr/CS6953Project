@@ -4,26 +4,6 @@ import sys
 import os
 import random
 from mathutils import Vector
-
-print("SUP")
-
-script_name = bpy.context.space_data.text.name
-
-# Get the absolute path of the script
-script_filepath = bpy.data.texts[script_name].filepath
-
-script_directory = os.path.dirname(script_filepath)
-
-#### CHANGE TARGET DIRECTORY TO SHARED FOLDER LOCATION######
-target_directory = script_directory
-
-os.chdir(target_directory)
-
-sys.path.append(os.getcwd())
-
-print(os.listdir())
-print("YOOOOOOOOOOOOOOOO")
-
 import texture_utils as textures 
 
 
@@ -424,7 +404,7 @@ def select_object(object_name):
 
 
 
-def generate_forest(dir, road_width, road_length, min_dist=3, max_dist=50, num_trees=10, tree_type='pine'):
+def generate_forest(target_directory, road_width, road_length, min_dist=3, max_dist=50, num_trees=10, tree_type='pine'):
     """
     Generates a forest around a road, placing trees only on both sides with varying widths.
     
@@ -432,7 +412,7 @@ def generate_forest(dir, road_width, road_length, min_dist=3, max_dist=50, num_t
     tree_density: Probability of placing a tree per unit area.
     """
       # Minimum distance from the road
-    for i in range(0, num_trees):
+    for i in range(num_trees):
           # Place trees on both sides of the road
           # Adjust tree count per segment based on width
             tree_x = random.uniform((road_width/2+min_dist), (road_width/2+min_dist)+max_dist) * random.choice([-1, 1])
@@ -440,16 +420,16 @@ def generate_forest(dir, road_width, road_length, min_dist=3, max_dist=50, num_t
             
             # if random.random() < tree_density:
             #     trees.append((tree_x, tree_y))
-            tree_name = 'tree'+str(i)
+            tree_name = f'tree{i}'
             if tree_type == 'pine':
-                create_pine_tree(tree_name, dir, position=(tree_x, tree_y, 0), seed=random.randint(1, 1000))
+                create_pine_tree(tree_name, target_directory, position=(tree_x, tree_y, 0), seed=random.randint(1, 1000))
             elif tree_type == 'birch':
-                create_birch_tree(tree_name, dir, position=(tree_x, tree_y, 0), seed=random.randint(1, 1000))
+                create_birch_tree(tree_name, target_directory, position=(tree_x, tree_y, 0), seed=random.randint(1, 1000))
 
     print("Forest generation complete!")
     
     
-def generate_preset_forest(dir, road_width, road_length, density="some trees", distance_from_road="close", tree_type="pine"):
+def generate_preset_forest(target_directory, road_width, road_length, density="some trees", distance_from_road="close", tree_type="pine"):
     if density == "no trees":
         trees = 0
     elif density == "some trees":
@@ -462,52 +442,52 @@ def generate_preset_forest(dir, road_width, road_length, density="some trees", d
     elif distance_from_road == "far":
         min_dist = 15
         max_dist = 60
-    generate_forest(dir, road_width, road_length, min_dist=min_dist, max_dist=max_dist, num_trees=trees, tree_type=tree_type)
+    generate_forest(target_directory, road_width, road_length, min_dist=min_dist, max_dist=max_dist, num_trees=trees, tree_type=tree_type)
 
-def test_trees_script():
-    bpy.ops.object.select_all(action='SELECT')
+# def test_trees_script():
+#     bpy.ops.object.select_all(action='SELECT')
 
-    # Delete all selected objects
-    bpy.ops.object.delete()
+#     # Delete all selected objects
+#     bpy.ops.object.delete()
 
-    # Remove all collections except the default 'Collection'
-    for collection in bpy.data.collections:
-        if collection.name != "Collection":
-            bpy.data.collections.remove(collection)
+#     # Remove all collections except the default 'Collection'
+#     for collection in bpy.data.collections:
+#         if collection.name != "Collection":
+#             bpy.data.collections.remove(collection)
 
-    # Remove all materials
-    for material in bpy.data.materials:
-        bpy.data.materials.remove(material)
+#     # Remove all materials
+#     for material in bpy.data.materials:
+#         bpy.data.materials.remove(material)
 
-    # Remove all meshes
-    for mesh in bpy.data.meshes:
-        bpy.data.meshes.remove(mesh)
+#     # Remove all meshes
+#     for mesh in bpy.data.meshes:
+#         bpy.data.meshes.remove(mesh)
 
-    # Remove all cameras
-    for camera in bpy.data.cameras:
-        bpy.data.cameras.remove(camera)
+#     # Remove all cameras
+#     for camera in bpy.data.cameras:
+#         bpy.data.cameras.remove(camera)
 
-    # Remove all lights
-    for light in bpy.data.lights:
-        bpy.data.lights.remove(light)
+#     # Remove all lights
+#     for light in bpy.data.lights:
+#         bpy.data.lights.remove(light)
 
-    # Remove all curves
-    for curve in bpy.data.curves:
-        bpy.data.curves.remove(curve)
+#     # Remove all curves
+#     for curve in bpy.data.curves:
+#         bpy.data.curves.remove(curve)
 
-    # Remove all textures
-    for texture in bpy.data.textures:
-        bpy.data.textures.remove(texture)
+#     # Remove all textures
+#     for texture in bpy.data.textures:
+#         bpy.data.textures.remove(texture)
 
-    # Remove all images
-    for image in bpy.data.images:
-        bpy.data.images.remove(image)
+#     # Remove all images
+#     for image in bpy.data.images:
+#         bpy.data.images.remove(image)
 
-    # Remove all actions (animation data)
-    for action in bpy.data.actions:
-        bpy.data.actions.remove(action)
+#     # Remove all actions (animation data)
+#     for action in bpy.data.actions:
+#         bpy.data.actions.remove(action)
 
-    create_birch_tree("tree1", target_directory, position=(0, 0, 0))
+#     create_birch_tree("tree1", target_directory, position=(0, 0, 0))
 
 
-test_trees_script()
+# test_trees_script()
