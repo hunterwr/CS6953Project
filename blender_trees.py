@@ -5,10 +5,26 @@ import os
 import random
 from mathutils import Vector
 
-module_dir = os.path.dirname(os.path.abspath(__file__))
+print("SUP")
 
-import blender_utils as utils
+script_name = bpy.context.space_data.text.name
 
+# Get the absolute path of the script
+script_filepath = bpy.data.texts[script_name].filepath
+
+script_directory = os.path.dirname(script_filepath)
+
+#### CHANGE TARGET DIRECTORY TO SHARED FOLDER LOCATION######
+target_directory = script_directory
+
+os.chdir(target_directory)
+
+sys.path.append(os.getcwd())
+
+print(os.listdir())
+print("YOOOOOOOOOOOOOOOO")
+
+import texture_utils as textures 
 
 
 def create_birch_tree(name, target_directory, position=(0, 0, 0), height=7, trunk_radius=0.2, seed=0):
@@ -143,7 +159,7 @@ def create_birch_tree(name, target_directory, position=(0, 0, 0), height=7, trun
 
 
     add_leaf_material(leaves_obj.name, target_directory + r'/textures/Trees/birch_leaf.png')
-    utils.apply_blenderkit_material(name, "e6075cd1-22ef-471e-a6b3-5a65aab646fa", "birch bark")
+    textures.apply_birch_tree_bark(tree_obj)
 
 
 def create_pine_tree(name, target_directory, position=(0, 0, 0), height=7, trunk_radius=0.2, seed=0):
@@ -431,4 +447,67 @@ def generate_forest(road_width, road_length, min_dist=3, max_dist=50, num_trees=
                 create_birch_tree(tree_name, module_dir, position=(tree_x, tree_y, 0), seed=random.randint(1, 1000))
 
     print("Forest generation complete!")
+    
+    
+def generate_preset_forest(road_width, road_length, density="some trees", distance_from_road="close", tree_type="pine"):
+    if density == "no trees":
+        trees = 0
+    elif density == "some trees":
+        trees = 16
+    elif density == "many trees":
+        trees = 32
+    if distance == "close":
+        min_dist=3
+        max_dist=20
+    elif disance == "far":
+        min_dist = 15
+        max_dist = 60
+    generate_forest(road_width, road_length, min_dist=min_dist, max_dist=max_dist, num_trees=trees, tree_type=tree_type)
 
+def test_trees_script():
+    bpy.ops.object.select_all(action='SELECT')
+
+    # Delete all selected objects
+    bpy.ops.object.delete()
+
+    # Remove all collections except the default 'Collection'
+    for collection in bpy.data.collections:
+        if collection.name != "Collection":
+            bpy.data.collections.remove(collection)
+
+    # Remove all materials
+    for material in bpy.data.materials:
+        bpy.data.materials.remove(material)
+
+    # Remove all meshes
+    for mesh in bpy.data.meshes:
+        bpy.data.meshes.remove(mesh)
+
+    # Remove all cameras
+    for camera in bpy.data.cameras:
+        bpy.data.cameras.remove(camera)
+
+    # Remove all lights
+    for light in bpy.data.lights:
+        bpy.data.lights.remove(light)
+
+    # Remove all curves
+    for curve in bpy.data.curves:
+        bpy.data.curves.remove(curve)
+
+    # Remove all textures
+    for texture in bpy.data.textures:
+        bpy.data.textures.remove(texture)
+
+    # Remove all images
+    for image in bpy.data.images:
+        bpy.data.images.remove(image)
+
+    # Remove all actions (animation data)
+    for action in bpy.data.actions:
+        bpy.data.actions.remove(action)
+
+    create_birch_tree("tree1", target_directory, position=(0, 0, 0))
+
+
+test_trees_script()

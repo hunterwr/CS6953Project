@@ -1498,3 +1498,531 @@ def apply_sign_png(obj,png_path,scratches_on =0.25, rust_minor_on = 0.25, rust_m
 
     signmaterial = signmaterial_node_group()
     obj.data.materials.append(mat)
+
+
+def apply_birch_tree_bark(obj):
+
+    mat = bpy.data.materials.new(name = "Birch Tree bark")
+    mat.use_nodes = True
+    #initialize Birch Tree bark node group
+
+    birch_tree_bark = mat.node_tree
+    #start with a clean node tree
+    for node in birch_tree_bark.nodes:
+        birch_tree_bark.nodes.remove(node)
+    birch_tree_bark.color_tag = 'NONE'
+    birch_tree_bark.description = ""
+    birch_tree_bark.default_group_node_width = 140
+    
+
+    #birch_tree_bark interface
+
+    #initialize birch_tree_bark nodes
+    #node Noise Texture.003
+    noise_texture_003 = birch_tree_bark.nodes.new("ShaderNodeTexNoise")
+    noise_texture_003.name = "Noise Texture.003"
+    noise_texture_003.noise_dimensions = '3D'
+    noise_texture_003.noise_type = 'FBM'
+    noise_texture_003.normalize = True
+    #Scale
+    noise_texture_003.inputs[2].default_value = 4.0
+    #Detail
+    noise_texture_003.inputs[3].default_value = 15.0
+    #Roughness
+    noise_texture_003.inputs[4].default_value = 0.625
+    #Lacunarity
+    noise_texture_003.inputs[5].default_value = 2.0
+    #Distortion
+    noise_texture_003.inputs[8].default_value = 0.0
+
+    #node Bump
+    bump = birch_tree_bark.nodes.new("ShaderNodeBump")
+    bump.name = "Bump"
+    bump.invert = False
+    #Strength
+    bump.inputs[0].default_value = 0.5666666626930237
+    #Distance
+    bump.inputs[1].default_value = 1.0
+    #Normal
+    bump.inputs[3].default_value = (0.0, 0.0, 0.0)
+
+    #node Bump.001
+    bump_001 = birch_tree_bark.nodes.new("ShaderNodeBump")
+    bump_001.name = "Bump.001"
+    bump_001.invert = False
+    #Strength
+    bump_001.inputs[0].default_value = 0.38333332538604736
+    #Distance
+    bump_001.inputs[1].default_value = 1.0
+
+    #node Noise Texture.002
+    noise_texture_002 = birch_tree_bark.nodes.new("ShaderNodeTexNoise")
+    noise_texture_002.name = "Noise Texture.002"
+    noise_texture_002.noise_dimensions = '3D'
+    noise_texture_002.noise_type = 'FBM'
+    noise_texture_002.normalize = True
+    #Scale
+    noise_texture_002.inputs[2].default_value = 40.0
+    #Detail
+    noise_texture_002.inputs[3].default_value = 15.0
+    #Roughness
+    noise_texture_002.inputs[4].default_value = 0.6499999761581421
+    #Lacunarity
+    noise_texture_002.inputs[5].default_value = 2.0
+    #Distortion
+    noise_texture_002.inputs[8].default_value = 0.30000001192092896
+
+    #node ColorRamp.003
+    colorramp_003 = birch_tree_bark.nodes.new("ShaderNodeValToRGB")
+    colorramp_003.name = "ColorRamp.003"
+    colorramp_003.color_ramp.color_mode = 'RGB'
+    colorramp_003.color_ramp.hue_interpolation = 'NEAR'
+    colorramp_003.color_ramp.interpolation = 'LINEAR'
+
+    #initialize color ramp elements
+    colorramp_003.color_ramp.elements.remove(colorramp_003.color_ramp.elements[0])
+    colorramp_003_cre_0 = colorramp_003.color_ramp.elements[0]
+    colorramp_003_cre_0.position = 0.5772725343704224
+    colorramp_003_cre_0.alpha = 1.0
+    colorramp_003_cre_0.color = (0.0, 0.0, 0.0, 1.0)
+
+    colorramp_003_cre_1 = colorramp_003.color_ramp.elements.new(0.650000274181366)
+    colorramp_003_cre_1.alpha = 1.0
+    colorramp_003_cre_1.color = (1.0, 1.0, 1.0, 1.0)
+
+
+    #node Bump.002
+    bump_002 = birch_tree_bark.nodes.new("ShaderNodeBump")
+    bump_002.name = "Bump.002"
+    bump_002.invert = False
+    #Strength
+    bump_002.inputs[0].default_value = 0.5666666626930237
+    #Distance
+    bump_002.inputs[1].default_value = 1.0
+
+    #node Material Output
+    material_output = birch_tree_bark.nodes.new("ShaderNodeOutputMaterial")
+    material_output.name = "Material Output"
+    material_output.is_active_output = True
+    material_output.target = 'ALL'
+    #Thickness
+    material_output.inputs[3].default_value = 0.0
+
+    #node Displacement
+    displacement = birch_tree_bark.nodes.new("ShaderNodeDisplacement")
+    displacement.name = "Displacement"
+    displacement.space = 'OBJECT'
+    #Midlevel
+    displacement.inputs[1].default_value = 0.5
+    #Scale
+    displacement.inputs[2].default_value = 0.20000000298023224
+    #Normal
+    displacement.inputs[3].default_value = (0.0, 0.0, 0.0)
+
+    #node Principled BSDF
+    principled_bsdf = birch_tree_bark.nodes.new("ShaderNodeBsdfPrincipled")
+    principled_bsdf.name = "Principled BSDF"
+    principled_bsdf.distribution = 'GGX'
+    principled_bsdf.subsurface_method = 'RANDOM_WALK_SKIN'
+    #Metallic
+    principled_bsdf.inputs[1].default_value = 0.0
+    #IOR
+    principled_bsdf.inputs[3].default_value = 1.4500000476837158
+    #Alpha
+    principled_bsdf.inputs[4].default_value = 1.0
+    #Diffuse Roughness
+    principled_bsdf.inputs[7].default_value = 0.0
+    #Subsurface Weight
+    principled_bsdf.inputs[8].default_value = 0.0
+    #Subsurface Radius
+    principled_bsdf.inputs[9].default_value = (1.0, 0.20000000298023224, 0.10000000149011612)
+    #Subsurface Scale
+    principled_bsdf.inputs[10].default_value = 0.05000000074505806
+    #Subsurface IOR
+    principled_bsdf.inputs[11].default_value = 1.399999976158142
+    #Subsurface Anisotropy
+    principled_bsdf.inputs[12].default_value = 0.0
+    #Specular IOR Level
+    principled_bsdf.inputs[13].default_value = 0.5
+    #Specular Tint
+    principled_bsdf.inputs[14].default_value = (1.0, 1.0, 1.0, 1.0)
+    #Anisotropic
+    principled_bsdf.inputs[15].default_value = 0.0
+    #Anisotropic Rotation
+    principled_bsdf.inputs[16].default_value = 0.0
+    #Tangent
+    principled_bsdf.inputs[17].default_value = (0.0, 0.0, 0.0)
+    #Transmission Weight
+    principled_bsdf.inputs[18].default_value = 0.0
+    #Coat Weight
+    principled_bsdf.inputs[19].default_value = 0.0
+    #Coat Roughness
+    principled_bsdf.inputs[20].default_value = 0.029999999329447746
+    #Coat IOR
+    principled_bsdf.inputs[21].default_value = 1.5
+    #Coat Tint
+    principled_bsdf.inputs[22].default_value = (1.0, 1.0, 1.0, 1.0)
+    #Coat Normal
+    principled_bsdf.inputs[23].default_value = (0.0, 0.0, 0.0)
+    #Sheen Weight
+    principled_bsdf.inputs[24].default_value = 0.0
+    #Sheen Roughness
+    principled_bsdf.inputs[25].default_value = 0.5
+    #Sheen Tint
+    principled_bsdf.inputs[26].default_value = (1.0, 1.0, 1.0, 1.0)
+    #Emission Color
+    principled_bsdf.inputs[27].default_value = (0.0, 0.0, 0.0, 1.0)
+    #Emission Strength
+    principled_bsdf.inputs[28].default_value = 1.0
+    #Thin Film Thickness
+    principled_bsdf.inputs[29].default_value = 0.0
+    #Thin Film IOR
+    principled_bsdf.inputs[30].default_value = 1.3300000429153442
+
+    #node Mapping
+    mapping = birch_tree_bark.nodes.new("ShaderNodeMapping")
+    mapping.name = "Mapping"
+    mapping.vector_type = 'POINT'
+    #Location
+    mapping.inputs[1].default_value = (0.0, 0.0, 0.0)
+    #Rotation
+    mapping.inputs[2].default_value = (0.0, 0.0, 0.0)
+    #Scale
+    mapping.inputs[3].default_value = (1.0, 1.0, 0.20000000298023224)
+
+    #node ColorRamp.002
+    colorramp_002 = birch_tree_bark.nodes.new("ShaderNodeValToRGB")
+    colorramp_002.name = "ColorRamp.002"
+    colorramp_002.color_ramp.color_mode = 'RGB'
+    colorramp_002.color_ramp.hue_interpolation = 'NEAR'
+    colorramp_002.color_ramp.interpolation = 'LINEAR'
+
+    #initialize color ramp elements
+    colorramp_002.color_ramp.elements.remove(colorramp_002.color_ramp.elements[0])
+    colorramp_002_cre_0 = colorramp_002.color_ramp.elements[0]
+    colorramp_002_cre_0.position = 0.0
+    colorramp_002_cre_0.alpha = 1.0
+    colorramp_002_cre_0.color = (0.4780173897743225, 0.4780173897743225, 0.4780173897743225, 1.0)
+
+    colorramp_002_cre_1 = colorramp_002.color_ramp.elements.new(1.0)
+    colorramp_002_cre_1.alpha = 1.0
+    colorramp_002_cre_1.color = (0.8509905338287354, 0.8509905338287354, 0.8509905338287354, 1.0)
+
+
+    #node Noise Texture.004
+    noise_texture_004 = birch_tree_bark.nodes.new("ShaderNodeTexNoise")
+    noise_texture_004.name = "Noise Texture.004"
+    noise_texture_004.noise_dimensions = '3D'
+    noise_texture_004.noise_type = 'FBM'
+    noise_texture_004.normalize = True
+    #Scale
+    noise_texture_004.inputs[2].default_value = 5.0
+    #Detail
+    noise_texture_004.inputs[3].default_value = 2.0
+    #Roughness
+    noise_texture_004.inputs[4].default_value = 0.5
+    #Lacunarity
+    noise_texture_004.inputs[5].default_value = 2.0
+    #Distortion
+    noise_texture_004.inputs[8].default_value = 0.0
+
+    #node ColorRamp.004
+    colorramp_004 = birch_tree_bark.nodes.new("ShaderNodeValToRGB")
+    colorramp_004.name = "ColorRamp.004"
+    colorramp_004.color_ramp.color_mode = 'RGB'
+    colorramp_004.color_ramp.hue_interpolation = 'NEAR'
+    colorramp_004.color_ramp.interpolation = 'LINEAR'
+
+    #initialize color ramp elements
+    colorramp_004.color_ramp.elements.remove(colorramp_004.color_ramp.elements[0])
+    colorramp_004_cre_0 = colorramp_004.color_ramp.elements[0]
+    colorramp_004_cre_0.position = 0.5409091114997864
+    colorramp_004_cre_0.alpha = 1.0
+    colorramp_004_cre_0.color = (0.0, 0.0, 0.0, 1.0)
+
+    colorramp_004_cre_1 = colorramp_004.color_ramp.elements.new(1.0)
+    colorramp_004_cre_1.alpha = 1.0
+    colorramp_004_cre_1.color = (1.0, 1.0, 1.0, 1.0)
+
+
+    #node Mix.001
+    mix_001 = birch_tree_bark.nodes.new("ShaderNodeMix")
+    mix_001.name = "Mix.001"
+    mix_001.blend_type = 'MIX'
+    mix_001.clamp_factor = True
+    mix_001.clamp_result = False
+    mix_001.data_type = 'RGBA'
+    mix_001.factor_mode = 'UNIFORM'
+    #B_Color
+    mix_001.inputs[7].default_value = (0.0012143913190811872, 0.0019650054164230824, 0.0007245307206176221, 1.0)
+
+    #node Texture Coordinate
+    texture_coordinate = birch_tree_bark.nodes.new("ShaderNodeTexCoord")
+    texture_coordinate.name = "Texture Coordinate"
+    texture_coordinate.from_instancer = False
+
+    #node Noise Texture
+    noise_texture = birch_tree_bark.nodes.new("ShaderNodeTexNoise")
+    noise_texture.name = "Noise Texture"
+    noise_texture.noise_dimensions = '3D'
+    noise_texture.noise_type = 'FBM'
+    noise_texture.normalize = True
+    #Scale
+    noise_texture.inputs[2].default_value = 2.0
+    #Detail
+    noise_texture.inputs[3].default_value = 15.0
+    #Lacunarity
+    noise_texture.inputs[5].default_value = 2.0
+    #Distortion
+    noise_texture.inputs[8].default_value = 0.20000000298023224
+
+    #node Mapping.002
+    mapping_002 = birch_tree_bark.nodes.new("ShaderNodeMapping")
+    mapping_002.name = "Mapping.002"
+    mapping_002.vector_type = 'POINT'
+    #Location
+    mapping_002.inputs[1].default_value = (0.0, 0.0, 0.0)
+    #Rotation
+    mapping_002.inputs[2].default_value = (0.0, 0.0, 0.0)
+    #Scale
+    mapping_002.inputs[3].default_value = (0.800000011920929, 0.800000011920929, 7.299999713897705)
+
+    #node Noise Texture.001
+    noise_texture_001 = birch_tree_bark.nodes.new("ShaderNodeTexNoise")
+    noise_texture_001.name = "Noise Texture.001"
+    noise_texture_001.noise_dimensions = '3D'
+    noise_texture_001.noise_type = 'FBM'
+    noise_texture_001.normalize = True
+    #Scale
+    noise_texture_001.inputs[2].default_value = 3.0
+    #Detail
+    noise_texture_001.inputs[3].default_value = 15.0
+    #Roughness
+    noise_texture_001.inputs[4].default_value = 0.5916666984558105
+    #Lacunarity
+    noise_texture_001.inputs[5].default_value = 2.0
+    #Distortion
+    noise_texture_001.inputs[8].default_value = 0.0
+
+    #node Mapping.001
+    mapping_001 = birch_tree_bark.nodes.new("ShaderNodeMapping")
+    mapping_001.name = "Mapping.001"
+    mapping_001.vector_type = 'POINT'
+    #Location
+    mapping_001.inputs[1].default_value = (0.0, 0.0, 0.0)
+    #Rotation
+    mapping_001.inputs[2].default_value = (0.0, 0.0, 0.0)
+    #Scale
+    mapping_001.inputs[3].default_value = (1.0, 1.0, 6.0)
+
+    #node Voronoi Texture
+    voronoi_texture = birch_tree_bark.nodes.new("ShaderNodeTexVoronoi")
+    voronoi_texture.name = "Voronoi Texture"
+    voronoi_texture.distance = 'CHEBYCHEV'
+    voronoi_texture.feature = 'F1'
+    voronoi_texture.normalize = False
+    voronoi_texture.voronoi_dimensions = '3D'
+    #Scale
+    voronoi_texture.inputs[2].default_value = 1.0
+    #Detail
+    voronoi_texture.inputs[3].default_value = 0.0
+    #Roughness
+    voronoi_texture.inputs[4].default_value = 0.5
+    #Lacunarity
+    voronoi_texture.inputs[5].default_value = 2.0
+    #Randomness
+    voronoi_texture.inputs[8].default_value = 1.0
+
+    #node ColorRamp.001
+    colorramp_001 = birch_tree_bark.nodes.new("ShaderNodeValToRGB")
+    colorramp_001.name = "ColorRamp.001"
+    colorramp_001.color_ramp.color_mode = 'RGB'
+    colorramp_001.color_ramp.hue_interpolation = 'NEAR'
+    colorramp_001.color_ramp.interpolation = 'LINEAR'
+
+    #initialize color ramp elements
+    colorramp_001.color_ramp.elements.remove(colorramp_001.color_ramp.elements[0])
+    colorramp_001_cre_0 = colorramp_001.color_ramp.elements[0]
+    colorramp_001_cre_0.position = 0.0
+    colorramp_001_cre_0.alpha = 1.0
+    colorramp_001_cre_0.color = (0.008580949157476425, 0.008580949157476425, 0.008580949157476425, 1.0)
+
+    colorramp_001_cre_1 = colorramp_001.color_ramp.elements.new(0.3909090459346771)
+    colorramp_001_cre_1.alpha = 1.0
+    colorramp_001_cre_1.color = (0.9527517557144165, 0.9527517557144165, 0.9527517557144165, 1.0)
+
+    colorramp_001_cre_2 = colorramp_001.color_ramp.elements.new(0.49090898036956787)
+    colorramp_001_cre_2.alpha = 1.0
+    colorramp_001_cre_2.color = (0.008580949157476425, 0.008580949157476425, 0.008580949157476425, 1.0)
+
+
+    #node ColorRamp
+    colorramp = birch_tree_bark.nodes.new("ShaderNodeValToRGB")
+    colorramp.name = "ColorRamp"
+    colorramp.color_ramp.color_mode = 'RGB'
+    colorramp.color_ramp.hue_interpolation = 'NEAR'
+    colorramp.color_ramp.interpolation = 'LINEAR'
+
+    #initialize color ramp elements
+    colorramp.color_ramp.elements.remove(colorramp.color_ramp.elements[0])
+    colorramp_cre_0 = colorramp.color_ramp.elements[0]
+    colorramp_cre_0.position = 0.42272698879241943
+    colorramp_cre_0.alpha = 1.0
+    colorramp_cre_0.color = (0.00435684435069561, 0.00435684435069561, 0.00435684435069561, 1.0)
+
+    colorramp_cre_1 = colorramp.color_ramp.elements.new(0.6409092545509338)
+    colorramp_cre_1.alpha = 1.0
+    colorramp_cre_1.color = (0.812196671962738, 0.812196671962738, 0.812196671962738, 1.0)
+
+
+    #node Mix
+    mix = birch_tree_bark.nodes.new("ShaderNodeMix")
+    mix.name = "Mix"
+    mix.blend_type = 'LINEAR_LIGHT'
+    mix.clamp_factor = True
+    mix.clamp_result = False
+    mix.data_type = 'RGBA'
+    mix.factor_mode = 'UNIFORM'
+    #Factor_Float
+    mix.inputs[0].default_value = 0.1133333295583725
+
+    #node Clamp
+    clamp = birch_tree_bark.nodes.new("ShaderNodeClamp")
+    clamp.name = "Clamp"
+    clamp.hide = True
+    clamp.clamp_type = 'MINMAX'
+    #Min
+    clamp.inputs[1].default_value = 0.0
+    #Max
+    clamp.inputs[2].default_value = 1.0
+
+
+    #Set locations
+    noise_texture_003.location = (-267.8474426269531, -420.8607482910156)
+    bump.location = (320.62017822265625, -199.8921661376953)
+    bump_001.location = (525.1470336914062, -332.1177978515625)
+    noise_texture_002.location = (-969.1334228515625, 688.85400390625)
+    colorramp_003.location = (-742.66552734375, 681.3453369140625)
+    bump_002.location = (977.3782348632812, -182.11727905273438)
+    material_output.location = (2108.162109375, 330.31463623046875)
+    displacement.location = (1505.4908447265625, -537.0250854492188)
+    principled_bsdf.location = (1402.5858154296875, 312.6984558105469)
+    mapping.location = (-1003.658203125, 124.3302230834961)
+    colorramp_002.location = (760.3242797851562, 182.3679656982422)
+    noise_texture_004.location = (-808.5922241210938, 162.93765258789062)
+    colorramp_004.location = (-577.214111328125, 147.37506103515625)
+    mix_001.location = (831.5877075195312, 609.7543334960938)
+    texture_coordinate.location = (-2482.420654296875, 68.03762817382812)
+    noise_texture.location = (-1355.470458984375, -98.5422134399414)
+    mapping_002.location = (-1707.496337890625, 229.39263916015625)
+    noise_texture_001.location = (-1921.0780029296875, -228.92750549316406)
+    mapping_001.location = (-1205.7213134765625, 683.43505859375)
+    voronoi_texture.location = (-54.99856185913086, 109.7565689086914)
+    colorramp_001.location = (345.6084289550781, 388.8555908203125)
+    colorramp.location = (-1651.1910400390625, -300.04400634765625)
+    mix.location = (-1190.16845703125, 128.5996856689453)
+    clamp.location = (-1355.470458984375, -398.5422058105469)
+
+    #Set dimensions
+    noise_texture_003.width, noise_texture_003.height = 140.0, 100.0
+    bump.width, bump.height = 140.0, 100.0
+    bump_001.width, bump_001.height = 140.0, 100.0
+    noise_texture_002.width, noise_texture_002.height = 140.0, 100.0
+    colorramp_003.width, colorramp_003.height = 240.0, 100.0
+    bump_002.width, bump_002.height = 140.0, 100.0
+    material_output.width, material_output.height = 140.0, 100.0
+    displacement.width, displacement.height = 140.0, 100.0
+    principled_bsdf.width, principled_bsdf.height = 240.0, 100.0
+    mapping.width, mapping.height = 171.6392822265625, 100.0
+    colorramp_002.width, colorramp_002.height = 240.0, 100.0
+    noise_texture_004.width, noise_texture_004.height = 140.0, 100.0
+    colorramp_004.width, colorramp_004.height = 240.0, 100.0
+    mix_001.width, mix_001.height = 140.0, 100.0
+    texture_coordinate.width, texture_coordinate.height = 140.0, 100.0
+    noise_texture.width, noise_texture.height = 140.0, 100.0
+    mapping_002.width, mapping_002.height = 140.0, 100.0
+    noise_texture_001.width, noise_texture_001.height = 140.0, 100.0
+    mapping_001.width, mapping_001.height = 140.0, 100.0
+    voronoi_texture.width, voronoi_texture.height = 140.0, 100.0
+    colorramp_001.width, colorramp_001.height = 240.0, 100.0
+    colorramp.width, colorramp.height = 240.0, 100.0
+    mix.width, mix.height = 140.0, 100.0
+    clamp.width, clamp.height = 140.0, 100.0
+
+    #initialize birch_tree_bark links
+    #noise_texture.Color -> mix.A
+    birch_tree_bark.links.new(noise_texture.outputs[1], mix.inputs[2])
+    #mapping_002.Vector -> mix.A
+    birch_tree_bark.links.new(mapping_002.outputs[0], mix.inputs[6])
+    #noise_texture.Color -> mix.B
+    birch_tree_bark.links.new(noise_texture.outputs[1], mix.inputs[7])
+    #mix.Result -> mapping.Vector
+    birch_tree_bark.links.new(mix.outputs[2], mapping.inputs[0])
+    #noise_texture_001.Color -> colorramp.Fac
+    birch_tree_bark.links.new(noise_texture_001.outputs[1], colorramp.inputs[0])
+    #voronoi_texture.Distance -> colorramp_001.Fac
+    birch_tree_bark.links.new(voronoi_texture.outputs[0], colorramp_001.inputs[0])
+    #colorramp_002.Color -> principled_bsdf.Roughness
+    birch_tree_bark.links.new(colorramp_002.outputs[0], principled_bsdf.inputs[2])
+    #voronoi_texture.Distance -> colorramp_002.Fac
+    birch_tree_bark.links.new(voronoi_texture.outputs[0], colorramp_002.inputs[0])
+    #mapping_001.Vector -> noise_texture_002.Vector
+    birch_tree_bark.links.new(mapping_001.outputs[0], noise_texture_002.inputs[0])
+    #noise_texture_002.Fac -> colorramp_003.Fac
+    birch_tree_bark.links.new(noise_texture_002.outputs[0], colorramp_003.inputs[0])
+    #colorramp_003.Color -> mix_001.A
+    birch_tree_bark.links.new(colorramp_003.outputs[0], mix_001.inputs[2])
+    #colorramp_001.Color -> mix_001.B
+    birch_tree_bark.links.new(colorramp_001.outputs[0], mix_001.inputs[3])
+    #colorramp_003.Color -> mix_001.Factor
+    birch_tree_bark.links.new(colorramp_003.outputs[0], mix_001.inputs[0])
+    #colorramp_001.Color -> mix_001.A
+    birch_tree_bark.links.new(colorramp_001.outputs[0], mix_001.inputs[6])
+    #voronoi_texture.Distance -> bump.Height
+    birch_tree_bark.links.new(voronoi_texture.outputs[0], bump.inputs[2])
+    #texture_coordinate.Object -> noise_texture_003.Vector
+    birch_tree_bark.links.new(texture_coordinate.outputs[3], noise_texture_003.inputs[0])
+    #bump.Normal -> bump_001.Normal
+    birch_tree_bark.links.new(bump.outputs[0], bump_001.inputs[3])
+    #noise_texture_003.Fac -> bump_001.Height
+    birch_tree_bark.links.new(noise_texture_003.outputs[0], bump_001.inputs[2])
+    #bump_001.Normal -> bump_002.Normal
+    birch_tree_bark.links.new(bump_001.outputs[0], bump_002.inputs[3])
+    #colorramp_003.Color -> bump_002.Height
+    birch_tree_bark.links.new(colorramp_003.outputs[0], bump_002.inputs[2])
+    #displacement.Displacement -> material_output.Displacement
+    birch_tree_bark.links.new(displacement.outputs[0], material_output.inputs[2])
+    #bump_002.Normal -> principled_bsdf.Normal
+    birch_tree_bark.links.new(bump_002.outputs[0], principled_bsdf.inputs[5])
+    #texture_coordinate.Object -> mapping_001.Vector
+    birch_tree_bark.links.new(texture_coordinate.outputs[3], mapping_001.inputs[0])
+    #principled_bsdf.BSDF -> material_output.Surface
+    birch_tree_bark.links.new(principled_bsdf.outputs[0], material_output.inputs[0])
+    #voronoi_texture.Distance -> displacement.Height
+    birch_tree_bark.links.new(voronoi_texture.outputs[0], displacement.inputs[0])
+    #mapping.Vector -> noise_texture_004.Vector
+    birch_tree_bark.links.new(mapping.outputs[0], noise_texture_004.inputs[0])
+    #noise_texture_004.Color -> colorramp_004.Fac
+    birch_tree_bark.links.new(noise_texture_004.outputs[1], colorramp_004.inputs[0])
+    #colorramp_004.Color -> voronoi_texture.Vector
+    birch_tree_bark.links.new(colorramp_004.outputs[0], voronoi_texture.inputs[0])
+    #mix_001.Result -> principled_bsdf.Base Color
+    birch_tree_bark.links.new(mix_001.outputs[2], principled_bsdf.inputs[0])
+    #texture_coordinate.Object -> mapping_002.Vector
+    birch_tree_bark.links.new(texture_coordinate.outputs[3], mapping_002.inputs[0])
+    #mapping_002.Vector -> noise_texture.Vector
+    birch_tree_bark.links.new(mapping_002.outputs[0], noise_texture.inputs[0])
+    #mapping_002.Vector -> noise_texture_001.Vector
+    birch_tree_bark.links.new(mapping_002.outputs[0], noise_texture_001.inputs[0])
+    #colorramp.Color -> clamp.Value
+    birch_tree_bark.links.new(colorramp.outputs[0], clamp.inputs[0])
+    #clamp.Result -> noise_texture.Roughness
+    birch_tree_bark.links.new(clamp.outputs[0], noise_texture.inputs[4])
+
+    
+    if obj.data.materials:
+        obj.data.materials[0] = mat  # Replace existing material
+    else:
+        obj.data.materials.append(mat)  # Add new material
+    
+
