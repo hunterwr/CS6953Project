@@ -424,7 +424,7 @@ def select_object(object_name):
 
 
 
-def generate_forest(road_width, road_length, min_dist=3, max_dist=50, num_trees=10, tree_type='pine'):
+def generate_forest(dir, road_width, road_length, min_dist=3, max_dist=50, num_trees=10, tree_type='pine'):
     """
     Generates a forest around a road, placing trees only on both sides with varying widths.
     
@@ -442,14 +442,14 @@ def generate_forest(road_width, road_length, min_dist=3, max_dist=50, num_trees=
             #     trees.append((tree_x, tree_y))
             tree_name = 'tree'+str(i)
             if tree_type == 'pine':
-                create_pine_tree(tree_name, module_dir, position=(tree_x, tree_y, 0), seed=random.randint(1, 1000))
+                create_pine_tree(tree_name, dir, position=(tree_x, tree_y, 0), seed=random.randint(1, 1000))
             elif tree_type == 'birch':
-                create_birch_tree(tree_name, module_dir, position=(tree_x, tree_y, 0), seed=random.randint(1, 1000))
+                create_birch_tree(tree_name, dir, position=(tree_x, tree_y, 0), seed=random.randint(1, 1000))
 
     print("Forest generation complete!")
     
     
-def generate_preset_forest(road_width, road_length, density="some trees", distance_from_road="close", tree_type="pine"):
+def generate_preset_forest(dir, road_width, road_length, density="some trees", distance_from_road="close", tree_type="pine"):
     if density == "no trees":
         trees = 0
     elif density == "some trees":
@@ -462,7 +462,7 @@ def generate_preset_forest(road_width, road_length, density="some trees", distan
     elif distance_from_road == "far":
         min_dist = 15
         max_dist = 60
-    generate_forest(road_width, road_length, min_dist=min_dist, max_dist=max_dist, num_trees=trees, tree_type=tree_type)
+    generate_forest(dir, road_width, road_length, min_dist=min_dist, max_dist=max_dist, num_trees=trees, tree_type=tree_type)
 
 def test_trees_script():
     bpy.ops.object.select_all(action='SELECT')
