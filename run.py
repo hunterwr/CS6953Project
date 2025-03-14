@@ -2,6 +2,7 @@ import bpy
 import sys
 import os
 import argparse
+import random
 
 def get_script_directory():
     """
@@ -91,10 +92,17 @@ def main(args):
     
     # Add trees 
     # trees.generate_forest(args.road_width, args.road_length, args.min_tree_dist, args.max_tree_dist, args.num_trees)
+    trees.generate_preset_forest(target_directory, args.road_width, args.road_length, args.density, args.distance, args.tree_type)
     
+    backgrounds = {
+        "city": ["burj_khalifa"],
+        "sky" : ["salt_flats", "sky_mountains", "sky1", "sky2"],
+        "desert" : ["dunes"]
+    }
     # Add a camera
+    background = random.choice(backgrounds[args.background])
     camera = cam.add_camera(
-        target_directory, background=args.background,
+        target_directory, background=background,
         location=tuple(map(float, args.camera_location.split(','))),
         rotation=tuple(map(float, args.camera_rotation.split(','))),
         scale=args.camera_scale
@@ -178,11 +186,11 @@ if __name__ == '__main__':
     parser.add_argument('-light_angle', type=int, default=180)
     parser.add_argument('-time_of_day', type=str, default="midday")
     parser.add_argument('-ground_plane_size', type=int, default=1000)
-    parser.add_argument('-plane', type=str, default="mud")
-    parser.add_argument('-background', type=str, default="burj_khalifa")
-    parser.add_argument('-min_tree_dist', type=int, default=3)
-    parser.add_argument('-max_tree_dist', type=int, default=20)
-    parser.add_argument('-num_trees', type=int, default=50)
+    parser.add_argument('-plane', type=str, default="mud") # rock, snow, mud, forrest
+    parser.add_argument('-background', type=str, default="sky") # sky, desert, city
+    parser.add_argument('-density', type=str, default="some trees") # no trees, some trees, many trees
+    parser.add_argument('-distance', type=str, default="close") # close, far
+    parser.add_argument('-tree_type', type=str, default="pine")
     parser.add_argument('-samples', type=int, default=128)
     parser.add_argument('-num_steps', type=int, default=1)
     parser.add_argument('-step_size', type=int, default=5)

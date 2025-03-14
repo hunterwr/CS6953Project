@@ -94,7 +94,7 @@ max_tree_dist = 30
 num_trees = 10
 
 # Add trees 
-# trees.generate_forest(road_width, road_length, min_tree_dist, max_tree_dist, num_trees)
+trees.generate_preset_forest(target_directory, road_width, road_length, density='some trees', distance_from_road='close', tree_type='pine')
 # min_dist is the distance from the road to the nearest tree
 # max_dist is the distance from the road to the farthest tree
 
