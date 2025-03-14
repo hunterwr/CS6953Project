@@ -1,13 +1,210 @@
 import bpy
 
 
-
+import math
 import bpy
 import time 
 
 import texture_utils as textures 
 
+def road_presets(scene = 'Two Lane', conditions = 'Dry',target_directory = None):
+    if scene == 'Two Lane': 
+        create_road_edges(
+        road_width=50,road_height=1, 
+        road_length=300,
+        left_edge_start = (-(50/2),-50,0),
+        name='Road_Edges',
+        target_directory=target_directory,
+        conditions= conditions)
+        left_edge_start = (-(50/2),-50,0)
+        road_width = 50
+        road_length = 300 
+        left_edge_start_x, left_edge_start_y, left_edge_start_z = left_edge_start
+        left_edge_end = (left_edge_start_x, left_edge_start_y + road_length, left_edge_start_z)
+        right_edge_start = (left_edge_start_x + road_width, left_edge_start_y, left_edge_start_z)
+        right_edge_end = (right_edge_start[0], right_edge_start[1] + road_length, right_edge_start[2])
+        road_boundaries = [left_edge_start, left_edge_end, right_edge_start, right_edge_end]
+        lane_1 = (0.25*road_width +left_edge_start[0], left_edge_start[1],left_edge_start[2])
+        lane_2 = (0.75*road_width +left_edge_start[0], left_edge_start[1],left_edge_start[2])
+        lane_positions = [ lane_1,lane_2]
 
+
+
+    
+      
+
+        
+        
+    elif scene == 'Highway':
+        
+        ### Create the road ### 
+        width = 50
+                
+        create_road_edges(
+        road_width=width,road_height=1, 
+        road_length=300,
+        left_edge_start = (-(width/2),-50,0),
+        name='Road_Edges',
+        target_directory=target_directory,
+        conditions=conditions)
+        
+        start = width*0.6031 +0.3643
+        
+        obj = bpy.data.objects.get('Road_Edges')
+        bpy.context.view_layer.objects.active = obj
+        obj.select_set(True)
+
+        # Duplicate the object
+        bpy.ops.object.duplicate()
+
+        # Get the newly duplicated object (it will now be the active object)
+        obj2 = bpy.context.object  
+
+        # Move the duplicated object  
+        obj2.location.x = -(width / 2) + start
+
+       
+        
+        ### Pull in and place guardrails, lights, and barriers 
+        left_edge_start = (-(50/2),-50,0)
+        road_width = 50
+        road_length = 300 
+
+
+        left_edge_start_x, left_edge_start_y, left_edge_start_z = left_edge_start
+        offset  =  (-(width / 2) + start) - left_edge_start_x
+        
+        left_edge_end = (left_edge_start_x, left_edge_start_y + road_length, left_edge_start_z)
+        right_edge_start = (left_edge_start_x + road_width+ offset, left_edge_start_y, left_edge_start_z)
+        right_edge_end = (right_edge_start[0], right_edge_start[1] + road_length, right_edge_start[2])
+        road_boundaries = [left_edge_start, left_edge_end, right_edge_start, right_edge_end]
+        total_width = right_edge_start[0] - left_edge_start_x
+
+        lane_1 = (0.224*total_width + left_edge_start[0], left_edge_start[1],left_edge_start[2])
+        lane_2 = (0.415*total_width + left_edge_start[0], left_edge_start[1],left_edge_start[2])
+        lane_3 = (0.631*total_width + left_edge_start[0], left_edge_start[1],left_edge_start[2]) 
+        lane_4 = (0.8288*total_width + left_edge_start[0], left_edge_start[1],left_edge_start[2])
+        lane_positions = [ lane_1,lane_2,lane_3,lane_4]
+        
+        guardrails_path = target_directory+r'/textures/Roads/objects/traffic-barrier-_00a35510-614d-44ee-905b-25072de5c7da/traffic-barrier-guardrail-type-01_1K_0e77ca0d-9e51-4816-a7b3-2d26d9575f47.blend'
+        lights_path = target_directory+r'/textures/Roads/objects/street-light-pac_8356b020-1297-4647-9251-4585ccaa8b4a/street-light-pack_2K_98a43fe4-433c-488b-b1d6-e9929b3aff64.blend'
+        cement_barrier= target_directory+r'/textures/Roads/objects/concrete-blockad_629ae09d-4a37-4868-ba29-a60a83c2455d/concrete-blockade_1K_367f5d49-efce-41bb-9039-31072550d5b1.blend'
+
+
+
+
+        # bpy.ops.object.modifier_add(type='MIRROR')
+
+        ### Add Cement Barrier 
+        with bpy.data.libraries.load(cement_barrier, link=False) as (data_from, data_to):
+                    # Load all objects in the .blend file
+                    data_to.objects = data_from.objects 
+        #            obj = data_to.objects[0]
+        #            if obj is not None:
+        #                obj = bpy.data.objects.get(obj)   
+        #                bpy.context.collection.objects.link(obj)
+        #               
+        #                obj.scale = (6.0, 6.0, 6.0)
+        #                obj.location = (15, -40.0, 1.0) 
+        #                bpy.context.object.rotation_euler[2] = math.radians(90)
+
+                    
+        for obj in data_to.objects:
+            if obj is not None:
+                bpy.context.collection.objects.link(obj)
+                # Reset location (set to 0, 0, 0)
+        
+                obj.scale = (2.35, 2.35, 2.35)
+                obj.location = (15.0/2, -40.0/2, 1.0/2) 
+                
+                obj.rotation_euler[2] = math.radians(45)
+                obj.location = (-7, -21, 0) 
+                
+        obj = bpy.data.objects.get('RoadBlockade_02')        
+        array_modifier = obj.modifiers.new(name="Array", type='ARRAY')
+        array_modifier.count = 20  # Number of array copies
+        array_modifier.use_relative_offset = True  # Use constant offset (for linear array)
+        array_modifier.relative_offset_displace = (1.0, 0.0, 0.0)  # Offset along the X-axis
+
+
+        ###guardrails 
+        with bpy.data.libraries.load(guardrails_path, link=False) as (data_from, data_to):
+            # Load all objects in the .blend file
+            data_to.objects = data_from.objects 
+            
+        for obj in data_to.objects:
+            if obj is not None:
+                bpy.context.collection.objects.link(obj)
+                obj.scale = (2.5, 2.5, 2.5)
+                obj.rotation_euler.z+=math.radians(45)
+        
+                obj.location = (-12, -7.0, 1.0) 
+                obj.rotation_mode = 'XYZ' 
+        #        obj.rotation_euler = (math.radians(90),0,0)
+                
+        #        obj.rotation_euler.z+=math.radians(90)
+        obj = bpy.data.objects.get('Plane.001')        
+        array_modifier = obj.modifiers.new(name="Array", type='ARRAY')
+        array_modifier.count = 23  # Number of array copies
+        array_modifier.use_relative_offset = True  # Use constant offset (for linear array)
+        array_modifier.relative_offset_displace = (0.0, 1.0, 0.0)  # Offset along the X-axis
+
+
+        with bpy.data.libraries.load(guardrails_path, link=False) as (data_from, data_to):
+        # Load all objects in the .blend file
+            data_to.objects = data_from.objects 
+            
+        for obj in data_to.objects:
+            if obj is not None:
+                bpy.context.collection.objects.link(obj)
+                obj.scale = (2.5, 2.5, 2.5)
+                obj.rotation_euler.z+=math.radians(-45)
+        
+                obj.location = (22.5, -6.0, 1.0) 
+                obj.rotation_mode = 'XYZ' 
+        #        obj.rotation_euler = (math.radians(90),0,0)
+                
+        #        obj.rotation_euler.z+=math.radians(90)
+        obj = bpy.data.objects.get('Plane.002')        
+        array_modifier = obj.modifiers.new(name="Array", type='ARRAY')
+        array_modifier.count = 23  # Number of array copies
+        array_modifier.use_relative_offset = True  # Use constant offset (for linear array)
+        array_modifier.relative_offset_displace = (0.0, -1.0, 0.0)  # Offset along the X-axis
+
+        ### Add Overhead Lights ### 
+        with bpy.data.libraries.load(lights_path, link=False) as (data_from, data_to):
+        # Load all objects in the .blend file
+            data_to.objects = data_from.objects 
+            
+        for obj in data_to.objects:
+            if obj is not None and obj.name =='Street Light 1':
+                bpy.context.collection.objects.link(obj)
+                obj.scale = (5, 5, 5)
+                obj.rotation_euler.z+=math.radians(-90)
+
+                obj.location = (58.0, -45, 1.0) 
+                obj.rotation_mode = 'XYZ' 
+
+        obj = bpy.data.objects.get('Street Light 1')        
+        array_modifier = obj.modifiers.new(name="Array", type='ARRAY')
+        array_modifier.count =5 # Number of array copies
+        array_modifier.use_relative_offset = True  # Use constant offset (for linear array)
+        array_modifier.relative_offset_displace = (-40, 0.0, 0.0)  # Offset along the X-axis
+
+        bpy.context.view_layer.objects.active = obj
+        obj.select_set(True)
+
+        # Duplicate the object
+        bpy.ops.object.duplicate()
+
+        # Get the newly duplicated object (it will now be the active object)
+        obj2 = bpy.context.object  
+
+        # Move the duplicated object  
+        obj2.location= (-28.0, 200, 1.0) 
+        obj2.rotation_euler.z+=math.radians(180)
+
+    return road_boundaries,lane_positions
 
 def apply_blenderkit_material(obj_name, asset_base_id):
 
@@ -73,7 +270,7 @@ def create_road_edges(road_width,road_height, road_length,left_edge_start = (0,0
     # bpy.context.view_layer.update() 
     # obj = bpy.data.objects.get(name) 
     # bpy.context.view_layer.objects.active = obj
-    if conditions == 'wet':
+    if conditions == 'Wet':
         textures.apply_blenderkit_wetRoad(myobject,target_directory=target_directory)
         bpy.data.materials["4K Wet road 02"].node_tree.nodes["Mapping"].inputs['Rotation'].default_value[2] = 1.5708
         bpy.data.materials["4K Wet road 02"].node_tree.nodes["Mapping"].inputs['Location'].default_value[0] = 1.3

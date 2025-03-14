@@ -2,6 +2,7 @@
 # 
 #  
 import bpy
+import math
 
 import sys
 import os
@@ -26,7 +27,7 @@ sys.path.append(os.getcwd())
 import blender_utils as utils
 import blender_signs as signs
 import blender_road as road 
-import blender_trees as trees
+# import blender_trees as trees
 import blender_camera as cam
 import blender_light_source as light
 import blender_save as snap
@@ -44,40 +45,45 @@ importlib.reload(sky_texture)
 utils.clear_scene()
 
 
-road.create_road_edges(
-        road_width=50,road_height=1, 
-        road_length=300,
-        left_edge_start = (-(50/2),-50,0),
-        name='Road_Edges',
-        target_directory=target_directory,
-        conditions='Dry')
-    
-# Create the pole
-pole_end_points = signs.create_pole(
-    0.2,
-    5,
-    location=((50/2) + 3, 50, 5 / 2),
-    texture_path=os.path.join(target_directory, 'textures/Signs/sign_pole_al.PNG')
-)
+# road.create_road_edges(
+#         road_width=50,road_height=1, 
+#         road_length=300,
+#         left_edge_start = (-(50/2),-50,0),
+#         name='Road_Edges',
+#         target_directory=target_directory,
+#         conditions='Dry')
 
-# Create a simple square sign
-signs.create_sign_square(
-    5,
-    5,
-    text=None,
-    start_location=(
-        pole_end_points[0]-5/2,
-        pole_end_points[1] - 2.5 * 0.2,
-        pole_end_points[2] - 0.25
-    ),
-    name='Simple Sign'
-)
+road_boundaries, lane_positions = road.road_presets(scene = 'Highway', conditions = 'Dry',target_directory = target_directory)
+png_path = 'textures/Signs/Signs/PNGs/Loose Gravel.png'
+signs.generate_sign(road_boundaries,png_path,scratches =0.0, rust = 0.0,rivets=False,snow = 0.0,mud = 0.0, target_directory = target_directory )
 
-# Add a sign texture
-sign_obj = bpy.data.objects.get('Simple Sign')
 
-texutils.apply_sign_png_conditions(sign_obj,png_path = os.path.join(target_directory,'textures/Signs/Signs/PNGs/Loose Gravel.png'),
-                                    scratches_on =0.5, rust_minor_on = 0.0, rust_major_on = False,rivets_on=False,snow=0.5,target_directory = target_directory)
+# # Create the pole
+# pole_end_points = signs.create_pole(
+#     0.2,
+#     5,
+#     location=(road_boundaries[2][0] + 3, 50, 5 / 2),
+#     texture_path=os.path.join(target_directory, 'textures/Signs/sign_pole_al.PNG')
+# )
+
+# # Create a simple square sign
+# signs.create_sign_square(
+#     5,
+#     5,
+#     text=None,
+#     start_location=(
+#         pole_end_points[0]-5/2,
+#         pole_end_points[1] - 2.5 * 0.2,
+#         pole_end_points[2] - 0.25
+#     ),
+#     name='Simple Sign'
+# )
+
+# # Add a sign texture
+# sign_obj = bpy.data.objects.get('Simple Sign')
+
+# texutils.apply_sign_png_conditions(sign_obj,png_path = os.path.join(target_directory,'textures/Signs/Signs/PNGs/Loose Gravel.png'),
+#                                     scratches_on =0.5, rust_minor_on = 0.0, rust_major_on = False,rivets_on=False,snow=0.5,target_directory = target_directory)
 
 
 
@@ -88,7 +94,7 @@ max_tree_dist = 30
 num_trees = 10
 
 # Add trees 
-trees.generate_forest(road_width, road_length, min_tree_dist, max_tree_dist, num_trees)
+# trees.generate_forest(road_width, road_length, min_tree_dist, max_tree_dist, num_trees)
 # min_dist is the distance from the road to the nearest tree
 # max_dist is the distance from the road to the farthest tree
 
