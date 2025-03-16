@@ -1,4 +1,6 @@
 import bpy
+import math
+import mathutils
 
 def clear_scene():
     bpy.ops.mesh.primitive_cube_add(size=2, enter_editmode=False, align='WORLD', location=(0, 0, 0), scale=(1, 1, 1))
@@ -66,3 +68,31 @@ def apply_blenderkit_material(obj_name, asset_base_id, keyword):
     else:
         print(f"Object '{obj_name}' not found!")
     
+
+def rotate_objects(objects, angle, axis='Z', pivot_point=(0, 0, 0)):
+    """
+    Rotates multiple objects around a common pivot point.
+
+    Parameters:
+    - objects (list): List of objects to rotate.
+    - angle (float): Rotation angle in degrees.
+    - axis (str): Axis to rotate around ('X', 'Y', or 'Z').
+    - pivot_point (tuple): Coordinates of the pivot point (x, y, z).
+    """
+    # Convert angle to radians
+    angle_rad = math.radians(angle)
+
+    # Create rotation matrix
+    rotation_matrix = mathutils.Matrix.Rotation(angle_rad, 4, axis.upper())
+
+    # Pivot point as a vector
+    pivot_vector = mathutils.Vector(pivot_point)
+
+    # Rotate each object
+    for obj in objects:
+        obj.matrix_world = (
+            mathutils.Matrix.Translation(pivot_vector) @
+            rotation_matrix @
+            mathutils.Matrix.Translation(-pivot_vector) @
+            obj.matrix_world
+        )
