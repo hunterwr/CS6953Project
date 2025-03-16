@@ -3,6 +3,7 @@ import sys
 import os
 import argparse
 import random
+import json
 
 def get_script_directory():
     """
@@ -11,9 +12,9 @@ def get_script_directory():
     """
     if "__file__" in globals():
         return os.path.dirname(os.path.abspath(__file__))
-    else:
-        blend_filepath = bpy.data.filepath
-        return os.path.dirname(blend_filepath) if blend_filepath else os.getcwd()
+    
+    blend_filepath = bpy.data.filepath
+    return os.path.dirname(blend_filepath) if blend_filepath else os.getcwd()
 
 def get_next_output_directory(base_dir):
     """
@@ -119,7 +120,7 @@ def main(args):
     planes = {
         "rock": "rocky_trail",
         "snow": "snow_03",
-        "forrest": "forrest_ground_01",
+        "forest": "forrest_ground_01",
         "mud": "brown_mud_leaves_01"
     }
     
@@ -165,35 +166,46 @@ def main(args):
                     break
 
 if __name__ == '__main__':
-    # Strip Blender arguments
-    argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
+    # # Strip Blender arguments
+    # argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
     
-    parser = argparse.ArgumentParser(description='Blender Scene Generation Script')
-    parser.add_argument('-road_width', type=int, default=50)
-    parser.add_argument('-road_length', type=int, default=300)
-    parser.add_argument('-sign_width', type=int, default=5)
-    parser.add_argument('-sign_height', type=int, default=5)
-    parser.add_argument('-pole_radius', type=float, default=0.2)
-    parser.add_argument('-pole_height', type=int, default=5)
-    parser.add_argument('-sign_distance', type=int, default=100)
-    parser.add_argument('-sign_texture', type=str, default='/exit_sign.PNG')
-    parser.add_argument('-pole_texture', type=str, default='textures/Signs/sign_pole_al.PNG')
-    parser.add_argument('-camera_location', type=str, default='12.5, -58, 6.68')
-    parser.add_argument('-camera_rotation', type=str, default='90, 0, 0')
-    parser.add_argument('-camera_scale', type=float, default=1.0)
-    parser.add_argument('-light_location', type=str, default='-28.398,59.799,19.12')
-    parser.add_argument('-light_power', type=float, default=3.0)
-    parser.add_argument('-light_angle', type=int, default=180)
-    parser.add_argument('-time_of_day', type=str, default="midday")
-    parser.add_argument('-ground_plane_size', type=int, default=1000)
-    parser.add_argument('-plane', type=str, default="mud") # rock, snow, mud, forrest
-    parser.add_argument('-background', type=str, default="sky") # sky, desert, city
-    parser.add_argument('-density', type=str, default="some trees") # no trees, some trees, many trees
-    parser.add_argument('-distance', type=str, default="close") # close, far
-    parser.add_argument('-tree_type', type=str, default="pine")
-    parser.add_argument('-samples', type=int, default=128)
-    parser.add_argument('-num_steps', type=int, default=1)
-    parser.add_argument('-step_size', type=int, default=5)
+    # parser = argparse.ArgumentParser(description='Blender Scene Generation Script')
+    # parser.add_argument('-road_width', type=int, default=50)
+    # parser.add_argument('-road_length', type=int, default=300)
+    # parser.add_argument('-sign_width', type=int, default=5)
+    # parser.add_argument('-sign_height', type=int, default=5)
+    # parser.add_argument('-pole_radius', type=float, default=0.2)
+    # parser.add_argument('-pole_height', type=int, default=5)
+    # parser.add_argument('-sign_distance', type=int, default=100)
+    # parser.add_argument('-sign_texture', type=str, default='/exit_sign.PNG')
+    # parser.add_argument('-pole_texture', type=str, default='textures/Signs/sign_pole_al.PNG')
+    # parser.add_argument('-camera_location', type=str, default='12.5, -58, 6.68')
+    # parser.add_argument('-camera_rotation', type=str, default='90, 0, 0')
+    # parser.add_argument('-camera_scale', type=float, default=1.0)
+    # parser.add_argument('-light_location', type=str, default='-28.398,59.799,19.12')
+    # parser.add_argument('-light_power', type=float, default=3.0)
+    # parser.add_argument('-light_angle', type=int, default=180)
+    # parser.add_argument('-time_of_day', type=str, default="midday") # day, midday, dusk
+    # parser.add_argument('-ground_plane_size', type=int, default=1000)
+    # parser.add_argument('-plane', type=str, default="mud") # rock, snow, mud, forest
+    # parser.add_argument('-background', type=str, default="sky") # sky, desert, city
+    # parser.add_argument('-density', type=str, default="some trees") # no trees, some trees, many trees
+    # parser.add_argument('-distance', type=str, default="close") # close, far
+    # parser.add_argument('-tree_type', type=str, default="pine")
+    # parser.add_argument('-samples', type=int, default=128)
+    # parser.add_argument('-num_steps', type=int, default=1)
+    # parser.add_argument('-step_size', type=int, default=5)
         
-    args = parser.parse_args(argv)  # Use stripped arguments
+    # args = parser.parse_args(argv)  # Use stripped arguments
+    # Load arguments from JSON file
+    json_path = os.path.join(target_directory, "config.json") # JSON file path
+    with open(json_path, 'r') as f:
+        args_dict = json.load(f)
+
+    class Args:
+        def __init__(self, **entries):
+            self.__dict__.update(entries) # Not good because can't see which parameters got errors, but implicit.
+
+    args = Args(**args_dict)
+    
     main(args)
