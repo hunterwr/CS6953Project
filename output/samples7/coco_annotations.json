@@ -1,0 +1,136 @@
+{
+  "info": {
+    "description": "Synthetic traffic sign dataset",
+    "url": "",
+    "version": "1.0",
+    "year": 2025,
+    "contributor": "Blender Synthetic Data Generator",
+    "date_created": "2025-03-16 21:39:37"
+  },
+  "licenses": [
+    {
+      "id": 1,
+      "name": "Synthetic Data License",
+      "url": ""
+    }
+  ],
+  "categories": [
+    {
+      "id": 1,
+      "name": "traffic_sign",
+      "supercategory": "sign"
+    }
+  ],
+  "images": [
+    {
+      "id": 0,
+      "file_name": "image_0.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-16 21:40:09",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dusk",
+        "plane": "snow",
+        "background": "sky",
+        "density": "many trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 1,
+      "file_name": "image_1.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-16 21:40:41",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dusk",
+        "plane": "snow",
+        "background": "sky",
+        "density": "many trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    }
+  ],
+  "annotations": [
+    {
+      "id": 0,
+      "image_id": 0,
+      "category_id": 1,
+      "segmentation": [],
+      "area": 7569,
+      "bbox": [
+        1190,
+        486,
+        87,
+        87
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": 5,
+        "sign_height": 5,
+        "sign_texture": "exit_sign.PNG"
+      }
+    },
+    {
+      "id": 1,
+      "image_id": 1,
+      "category_id": 1,
+      "segmentation": [],
+      "area": 8100,
+      "bbox": [
+        1198,
+        484,
+        90,
+        90
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": 5,
+        "sign_height": 5,
+        "sign_texture": "exit_sign.PNG"
+      }
+    },
+    {
+      "id": 2,
+      "image_id": 0,
+      "category_id": 1,
+      "segmentation": [],
+      "area": 7569,
+      "bbox": [
+        1190,
+        486,
+        87,
+        87
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": 5,
+        "sign_height": 5,
+        "sign_texture": "exit_sign.PNG"
+      }
+    },
+    {
+      "id": 3,
+      "image_id": 1,
+      "category_id": 1,
+      "segmentation": [],
+      "area": 8100,
+      "bbox": [
+        1198,
+        484,
+        90,
+        90
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": 5,
+        "sign_height": 5,
+        "sign_texture": "exit_sign.PNG"
+      }
+    }
+  ]
+}

@@ -4,6 +4,7 @@ import os
 import argparse
 import random
 import json
+import glob
 
 def get_script_directory():
     """
@@ -47,6 +48,16 @@ import blender_bbox as bbox
 import blender_plane as plane
 import blender_car as car
 import blender_sky_texture as sky_texture
+
+# Import our new COCO annotations module
+from coco_annotations import COCOAnnotator
+
+def find_previous_annotations(base_output_dir):
+    annotation_path = os.path.join(base_output_dir, "coco_annotations.json")
+    if os.path.exists(annotation_path):
+        return annotation_path
+    
+    return None
 
 def main(args):
     # Reset and Clear the Scene
@@ -134,7 +145,7 @@ def main(args):
     
     # Determine output directory
     base_output_dir = os.path.join(target_directory, "output")
-    output_dir = get_next_output_directory(base_output_dir)
+    output_dir = os.path.join(base_output_dir, 'samples7') # get_next_output_directory(base_output_dir)
     
     # Ensure the new directory exists
     image_dir = os.path.join(output_dir, 'images')
@@ -142,6 +153,23 @@ def main(args):
     
     os.makedirs(image_dir, exist_ok=True)
     os.makedirs(labels_dir, exist_ok=True)
+    
+    # Look for previous annotations file to continue from
+    previous_annotations = find_previous_annotations(output_dir)
+    
+    try:
+        # Initialize COCO annotator with config and previous annotations if found
+        coco_annotator = COCOAnnotator(output_dir, args_dict, previous_annotations)
+        print(f"Successfully initialized COCO annotator" + 
+              (f" with previous file: {previous_annotations}" if previous_annotations else ""))
+    except ValueError as e:
+        print(f"ERROR: {str(e)}")
+        print("Cannot proceed with invalid previous annotations. Exiting.")
+        return
+    except FileNotFoundError as e:
+        print(f"WARNING: {str(e)}")
+        print("Creating new annotations file.")
+        coco_annotator = COCOAnnotator(output_dir, args_dict)
     
     # Update output paths
     for step in range(args.num_steps):
@@ -156,12 +184,22 @@ def main(args):
         snap.render_and_save(image_path, samples=args.samples)
         print(f"Saved Image {step} at {image_path}")
         
+        # Get image dimensions for COCO annotations
+        img_width, img_height = bbox.get_image_dimensions()
+        
         # Save bounding box with matching name
-        bbox.save_bbox_as_text(
+        bounding_box = bbox.save_bbox_as_text(
             'Simple Sign',
             'Camera',
             bbox_path
         )
+        
+        # Add to COCO annotations
+        image_id = coco_annotator.add_image(image_path, img_width, img_height)
+        coco_annotator.add_annotation(image_id, bounding_box)
+    
+    # Save the COCO annotations file
+    coco_annotator.save("coco_annotations.json")
     
     # Ensure proper shading mode
     for area in bpy.context.screen.areas:

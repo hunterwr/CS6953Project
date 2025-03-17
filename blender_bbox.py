@@ -1,5 +1,4 @@
 import bpy
-
 import bpy_extras
 
 def get_bounding_box(obj, cam):
@@ -34,4 +33,9 @@ def save_bbox_as_text(obj_name, cam_name, file_path):
 
     print(f"Saved: {file_path}")
 
-    return
+    return bbox
+
+def get_image_dimensions():
+    """Return the current render resolution as (width, height)"""
+    scene = bpy.context.scene
+    return scene.render.resolution_x, scene.render.resolution_y
