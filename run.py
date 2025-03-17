@@ -65,44 +65,51 @@ def main(args):
     # Reset and Clear the Scene
     utils.clear_scene()
     
-    # Place a Road
-    road.create_road_edges(
-        road_width=args.road_width, road_height=1, 
-        road_length=args.road_length,
-        left_edge_start = (-(args.road_width/2),-50,0),
-        name='Road_Edges',
-        target_directory=target_directory,
-        conditions='Dry'
-    )
+    # # Place a Road
+    # road.create_road_edges(
+    #     road_width=args.road_width, road_height=1, 
+    #     road_length=args.road_length,
+    #     left_edge_start = (-(args.road_width/2),-50,0),
+    #     name='Road_Edges',
+    #     target_directory=target_directory,
+    #     conditions='Dry'
+    # )
     
-    # Create the pole
-    pole_end_points = signs.create_pole(
-        args.pole_radius,
-        args.pole_height,
-        location=((args.road_width/2) + 3, args.sign_distance, args.pole_height / 2),
-        texture_path=os.path.join(target_directory, args.pole_texture)
-    )
+    # # Create the pole
+    # pole_end_points = signs.create_pole(
+    #     args.pole_radius,
+    #     args.pole_height,
+    #     location=((args.road_width/2) + 3, args.sign_distance, args.pole_height / 2),
+    #     texture_path=os.path.join(target_directory, args.pole_texture)
+    # )
     
-    # Create a simple square sign
-    signs.create_sign_square(
-        args.sign_width,
-        args.sign_height,
-        text=None,
-        start_location=(
-            pole_end_points[0]-5/2,
-            pole_end_points[1] - 2.5 * 0.2,
-            pole_end_points[2] - 0.25
-        ),
-        name='Simple Sign'
-    )
+    # # Create a simple square sign
+    # signs.create_sign_square(
+    #     args.sign_width,
+    #     args.sign_height,
+    #     text=None,
+    #     start_location=(
+    #         pole_end_points[0]-5/2,
+    #         pole_end_points[1] - 2.5 * 0.2,
+    #         pole_end_points[2] - 0.25
+    #     ),
+    #     name='Simple Sign'
+    # )
     
-    # Add a sign texture
-    sign_obj = bpy.data.objects.get('Simple Sign')
-    signs.add_sign_color(
-        sign_obj,
-        target_directory=target_directory,
-        texture_path=args.sign_texture
-    )
+    # # Add a sign texture
+    # sign_obj = bpy.data.objects.get('Simple Sign')
+    # signs.add_sign_color(
+    #     sign_obj,
+    #     target_directory=target_directory,
+    #     texture_path=args.sign_texture
+    # )
+    
+    # Place road and sign
+    road_boundaries, lane_positions = road.road_presets(scene = args.road_scene, conditions = args.road_conditions, target_directory = target_directory)
+    png_path = 'textures/Signs/Signs/PNGs/'
+    sign_path = png_path + args.sign
+    signs.generate_sign(road_boundaries,sign_path, scratches =0.0, rust = 0.0, rivets=False, snow = 0.0, mud = 0.0, target_directory = target_directory )
+
     
     # Add trees 
     # trees.generate_forest(args.road_width, args.road_length, args.min_tree_dist, args.max_tree_dist, args.num_trees)
@@ -147,14 +154,14 @@ def main(args):
     
     # Determine output directory
     base_output_dir = os.path.join(target_directory, "output")
-    output_dir = os.path.join(base_output_dir, 'samples8') # get_next_output_directory(base_output_dir)
+    output_dir = get_next_output_directory(base_output_dir)
     
     previous_annotations = find_previous_annotations(output_dir)
     
     try:
         # Initialize COCO annotator with config and previous annotations if found
         coco_annotator = COCOAnnotator(output_dir, args_dict, previous_annotations)
-        print(f"Successfully initialized COCO annotator" + 
+        print("Successfully initialized COCO annotator" + 
               (f" with previous file: {previous_annotations}" if previous_annotations else ""))
     except ValueError as e:
         print(f"ERROR: {str(e)}")
