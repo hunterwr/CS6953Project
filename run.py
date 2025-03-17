@@ -42,6 +42,7 @@ import blender_signs as signs
 import blender_road as road
 import blender_trees as trees
 import blender_camera as cam
+import blender_weather as weather
 import blender_light_source as light
 import blender_save as snap
 import blender_bbox as bbox
@@ -105,7 +106,7 @@ def main(args):
     # )
     
     # Place road and sign
-    road_boundaries, lane_positions = road.road_presets(scene = args.road_scene, conditions = args.road_conditions, target_directory = target_directory)
+    road_boundaries, lane_positions, road_width, road_length = road.road_presets(scene = args.road_scene, conditions = args.road_conditions, target_directory = target_directory)
     png_path = 'textures/Signs/Signs/PNGs/'
     sign_path = png_path + args.sign
     signs.generate_sign(road_boundaries,sign_path, scratches =0.0, rust = 0.0, rivets=False, snow = 0.0, mud = 0.0, target_directory = target_directory )
@@ -113,7 +114,7 @@ def main(args):
     
     # Add trees 
     # trees.generate_forest(args.road_width, args.road_length, args.min_tree_dist, args.max_tree_dist, args.num_trees)
-    trees.generate_preset_forest(target_directory, args.road_width, args.road_length, args.density, args.distance, args.tree_type)
+    trees.generate_preset_forest(target_directory, road_width, road_length, args.density, args.distance, args.tree_type)
     
     backgrounds = {
         "city": ["burj_khalifa"],
@@ -151,6 +152,9 @@ def main(args):
 
     # Add sky texture
     sky_texture.create_sky_texture(time_of_day=args.time_of_day)
+    
+    # Add particles
+    weather.add_snow(density=args.particle_density, start_frame=args.start_frame, end_frame=args.end_frame)
     
     # Determine output directory
     base_output_dir = os.path.join(target_directory, "output")
