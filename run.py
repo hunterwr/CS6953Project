@@ -134,28 +134,34 @@ def main(args):
     
     # Determine output directory
     base_output_dir = os.path.join(target_directory, "output")
-    output_image_dir = get_next_output_directory(base_output_dir)
+    output_dir = get_next_output_directory(base_output_dir)
     
     # Ensure the new directory exists
-    os.makedirs(output_image_dir, exist_ok=True)
+    image_dir = os.path.join(output_dir, 'images')
+    labels_dir = os.path.join(output_dir, 'labels')
+    
+    os.makedirs(image_dir, exist_ok=True)
+    os.makedirs(labels_dir, exist_ok=True)
     
     # Update output paths
-    output_image = os.path.join(output_image_dir, "sign_step_")
-    output_bbox = os.path.join(output_image_dir, "bbox.txt")
-    
-    # Render images
     for step in range(args.num_steps):
+        # Move camera to next position
         camera.location.y += args.step_size
-        image_path = f"{output_image}{step}.png"
+        
+        filename = f"image_{step}"
+        image_path = os.path.join(image_dir, f"{filename}.png")
+        bbox_path = os.path.join(labels_dir, f"{filename}_bbox.txt")
+        
+        # Render and save image
         snap.render_and_save(image_path, samples=args.samples)
         print(f"Saved Image {step} at {image_path}")
-    
-    # Save bounding box
-    bbox.save_bbox_as_text(
-        'Simple Sign',
-        'Camera',
-        output_bbox
-    )
+        
+        # Save bounding box with matching name
+        bbox.save_bbox_as_text(
+            'Simple Sign',
+            'Camera',
+            bbox_path
+        )
     
     # Ensure proper shading mode
     for area in bpy.context.screen.areas:

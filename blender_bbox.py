@@ -15,7 +15,12 @@ def get_bounding_box(obj, cam):
         min_x, min_y = min(min_x, x), min(min_y, y)
         max_x, max_y = max(max_x, x), max(max_y, y)
 
-    return min_x, min_y, max_x, max_y
+    # Convert to COCO format: [x, y, width, height]
+    x = min_x
+    y = min_y
+    width = max_x - min_x
+    height = max_y - min_y
+    return x, y, width, height
 
 def save_bbox_as_text(obj_name, cam_name, file_path):
     if obj_name not in bpy.data.objects or cam_name not in bpy.data.objects:
