@@ -22,6 +22,14 @@ class COCOAnnotator:
         os.makedirs(self.image_dir, exist_ok=True)
         os.makedirs(self.labels_dir, exist_ok=True)
         
+        # Get the sign name from config and create a category name
+        sign_file = config.get("sign", "unknown_sign.png")
+        self.sign_category = self._extract_sign_name(sign_file)
+        
+        # Category mapping (id -> name) and reverse mapping (name -> id)
+        self.categories = {}
+        self.category_names = {}
+        
         # Initialize default COCO format structure
         self.coco_data = {
             "info": {
@@ -39,13 +47,7 @@ class COCOAnnotator:
                     "url": ""
                 }
             ],
-            "categories": [
-                {
-                    "id": 1,
-                    "name": "traffic_sign",
-                    "supercategory": "sign"
-                }
-            ],
+            "categories": [],
             "images": [],
             "annotations": []
         }
@@ -56,6 +58,73 @@ class COCOAnnotator:
                 self._load_previous_file(previous_file)
             except Exception as e:
                 raise ValueError(f"Error processing previous annotations file: {str(e)}")
+        
+        # Initialize categories
+        if not self.coco_data["categories"]:
+            # Start with ID 1 for the first category if no previous file
+            self._add_category(self.sign_category, supercategory="traffic_sign")
+        else:
+            # Make sure our current sign is in the categories list
+            self._ensure_category_exists(self.sign_category, supercategory="traffic_sign")
+    
+    def _extract_sign_name(self, sign_file: str) -> str:
+        """Extract a clean category name from the sign filename"""
+        # Remove file extension
+        name = os.path.splitext(sign_file)[0]
+        
+        # Remove any path components
+        name = os.path.basename(name)
+        
+        # Replace special characters with underscore
+        import re
+        name = re.sub(r'[^\w\s]', '_', name)
+        
+        # Replace spaces with underscores and make lowercase for consistency
+        name = name.replace(' ', '_').lower()
+        
+        return name
+    
+    def _add_category(self, name: str, supercategory: str = "sign") -> int:
+        """
+        Add a new category to the dataset.
+        Returns the category ID.
+        """
+        # Find the next available category ID
+        next_id = 1
+        if self.coco_data["categories"]:
+            next_id = max(cat["id"] for cat in self.coco_data["categories"]) + 1
+            
+        category = {
+            "id": next_id,
+            "name": name,
+            "supercategory": supercategory
+        }
+        
+        # Add to COCO data
+        self.coco_data["categories"].append(category)
+        
+        # Update our category mappings
+        self.categories[next_id] = name
+        self.category_names[name] = next_id
+        
+        print(f"Added new category: {name} (ID: {next_id})")
+        return next_id
+    
+    def _ensure_category_exists(self, name: str, supercategory: str = "sign") -> int:
+        """
+        Check if a category exists, add it if it doesn't.
+        Returns the category ID.
+        """
+        # Update internal category mappings from the COCO data
+        self.categories = {cat["id"]: cat["name"] for cat in self.coco_data["categories"]}
+        self.category_names = {cat["name"]: cat["id"] for cat in self.coco_data["categories"]}
+        
+        # Check if category exists by name
+        if name in self.category_names:
+            return self.category_names[name]
+        
+        # Category doesn't exist, add it
+        return self._add_category(name, supercategory)
     
     def _validate_coco_format(self, data: Dict[str, Any]) -> bool:
         """
@@ -137,6 +206,10 @@ class COCOAnnotator:
         print(f"Continuing with image_id: {self.image_id}, annotation_id: {self.annotation_id}")
         print(f"Found {len(self.existing_image_names)} existing images in annotations")
         
+        # Update our category mappings after loading
+        self.categories = {cat["id"]: cat["name"] for cat in self.coco_data["categories"]}
+        self.category_names = {cat["name"]: cat["id"] for cat in self.coco_data["categories"]}
+    
     def generate_unique_filename(self, base_name: str) -> str:
         """
         Generate a unique filename that doesn't collide with existing ones
@@ -305,10 +378,13 @@ class COCOAnnotator:
         # Calculate area as width * height
         area = bbox[2] * bbox[3]
         
+        # Get the category ID for the current sign
+        category_id = self.category_names.get(self.sign_category, 1)
+        
         annotation_info = {
             "id": annotation_id,
             "image_id": image_id,
-            "category_id": 1,  # traffic_sign category
+            "category_id": category_id,  # Use the specific sign category
             "segmentation": [],  # No segmentation for now
             "area": area,
             "bbox": list(bbox),  # [x, y, width, height]
@@ -317,7 +393,7 @@ class COCOAnnotator:
             "metadata": {
                 "sign_width": self.config.get("sign_width", ""),
                 "sign_height": self.config.get("sign_height", ""),
-                "sign_texture": self.config.get("sign_texture", "").split('/')[-1],
+                "sign_texture": self.config.get("sign", "").split('/')[-1],
             }
         }
         
@@ -342,3 +418,5 @@ class COCOAnnotator:
         print(f"COCO annotations saved to {output_path}")
         print(f"Total images: {len(self.coco_data['images'])}")
         print(f"Total annotations: {len(self.coco_data['annotations'])}")
+        category_literal = [f'{cat["name"]} (ID: {cat["id"]})' for cat in self.coco_data['categories']]
+        print(f"Categories: {', '.join(category_literal)}")
