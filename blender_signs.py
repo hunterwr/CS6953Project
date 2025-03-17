@@ -3,6 +3,45 @@ import texture_utils as textures
 import math
 import bmesh
 from mathutils import Vector
+import os 
+
+def generate_sign(road_boundaries,png_path ='textures/Signs/Signs/PNGs/Loose Gravel.png',scratches =0.25, rust = 0.25,rivets=False,snow = 0.0,mud = 0.0, sign_name = 'Simple Sign', target_directory = None ):
+    # Create the pole
+
+    print(road_boundaries)
+    right_edge = road_boundaries[2][0]
+    pole_end_points = create_pole(
+        0.2,
+        5,
+        location=(right_edge + 3, 50, 5 / 2),
+        texture_path=os.path.join(target_directory, 'textures/Signs/sign_pole_al.PNG')
+    )
+
+
+    # to center road 
+    # roadwidth -(road_width-((road_width-offset)/2))
+    # Create a simple square sign
+
+    create_sign_square(
+        5,
+        5,
+        text=None,
+        start_location=(
+            pole_end_points[0]-5/2,
+            pole_end_points[1] - 2.5 * 0.2,
+            pole_end_points[2] - 0.25
+        ),
+        name= sign_name
+    )
+
+    # Add a sign texture
+    sign_obj = bpy.data.objects.get(sign_name)
+
+    # texutils.apply_sign_png_conditions(sign_obj,png_path = os.path.join(target_directory,'textures/Signs/Signs/PNGs/Loose Gravel.png'),
+#                                     scratches_on =0.5, rust_minor_on = 0.0, rust_major_on = False,rivets_on=False,snow=0.5,target_directory = target_directory)
+
+    textures.apply_sign_png_conditions(sign_obj,png_path = os.path.join(target_directory,png_path),
+                                        scratches_on =scratches, rust_minor_on = rust, rust_major_on = False,rivets_on=rivets,snow=snow,mud=mud,target_directory = target_directory)
 
 def unwrap_uv(obj):
     bpy.context.view_layer.objects.active = obj
@@ -102,44 +141,6 @@ def add_sign_color(object, target_directory, texture_path = None):
     unwrap_uv(obj)
     textures.apply_blenderkit_sign_jpg(obj,target_directory=target_directory,base_color_path=texture_path)
 
-#     mat = bpy.data.materials.new(name="SignMaterial")
-# #    obj.data.materials.append(mat) 
-    
-#     if obj.data.materials:
-#         obj.data.materials[0] = mat  # Replace first material slot
-#     else:
-#         obj.data.materials.append(mat)  # Add the material if none exists
-    
-#     mat.use_nodes = True
-#     nodes = mat.node_tree.nodes
-#     links = mat.node_tree.links
-#     nodes.clear()
-
-    
-#     # Create the Principled BSDF shader
-#     bsdf = nodes.new(type="ShaderNodeBsdfPrincipled")
-#     bsdf.inputs['Base Color'].default_value = color  # Default is white
-      
-#     bsdf.location = (0, 0)
-#     bsdf.inputs['Metallic'].default_value = 0.2  
-#     bsdf.inputs['Roughness'].default_value = 0.8  
-# #    
-#     bpy.ops.object.mode_set(mode='EDIT')
-#     bpy.ops.mesh.select_all(action='SELECT')
-#     bpy.ops.uv.cube_project()
-#     bpy.ops.object.mode_set(mode='OBJECT')
-    
-#     tex_image = nodes.new(type="ShaderNodeTexImage")
-#     tex_image.location = (-400, 0)
-#     tex_image.image = bpy.data.images.load(texture_path)  
-    
-#     links.new(tex_image.outputs['Color'], bsdf.inputs['Base Color'])
-    
-    
-#     output = nodes.new(type="ShaderNodeOutputMaterial")
-#     output.location = (200, 0)
-#     links.new(bsdf.outputs['BSDF'], output.inputs['Surface'])
-#     bpy.ops.object.mode_set(mode='OBJECT')
 
 
 

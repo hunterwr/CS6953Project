@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # Define Blender executable path
-BLENDER_PATH="/Applications/Blender.app/Contents/MacOS/blender"
+BLENDER_PATH=r'C:\Program Files\Blender Foundation\Blender 4.3'
 
 # Define Python script path
-SCRIPT_PATH="/Users/leeyikai/Desktop/CS6953Project/run.py"
+SCRIPT_PATH='C:\Users\Will\Documents\DL Capstone\CS6953Project\run.py'
 
 #!/bin/bash
 

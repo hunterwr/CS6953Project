@@ -2017,6 +2017,8 @@ def apply_sign_png_conditions(obj,png_path,scratches_on =0.25, rust_minor_on = 0
             black_value = mud
         elif snow>0.0:
             black_value = snow
+        elif snow == 0.0 and mud ==0.0:
+            black_value =0.5
 
 
         color_ramp.color_ramp.elements.remove(color_ramp.color_ramp.elements[0])
@@ -2353,6 +2355,15 @@ def apply_sign_png_conditions(obj,png_path,scratches_on =0.25, rust_minor_on = 0
         frame_001.label_size = 20
         frame_001.shrink = True
 
+                #node Displacement.002
+        displacement_002 = signmaterial.nodes.new("ShaderNodeDisplacement")
+        displacement_002.label = "DISPLACEMENT FOR PNG"
+        displacement_002.name = "Displacement.002"
+        displacement_002.space = 'OBJECT'
+        #Midlevel
+        displacement_002.inputs[1].default_value = 0.5
+        #Scale
+        displacement_002.inputs[2].default_value = 1.0
 
         #Set locations
         principled_bsdf.location = (510.5553283691406, -59.9542236328125)
@@ -2509,8 +2520,7 @@ def apply_sign_png_conditions(obj,png_path,scratches_on =0.25, rust_minor_on = 0
         signmaterial.links.new(mix_shader.outputs[0], material_output_001.inputs[0])
         #noise_texture_001.Color -> color_ramp.Fac
         signmaterial.links.new(noise_texture_001.outputs[1], color_ramp.inputs[0])
-        #color_ramp.Color -> mix_shader.Fac
-        signmaterial.links.new(color_ramp.outputs[0], mix_shader.inputs[0])
+
         #mapping.Vector -> noise_texture_001.Vector
         signmaterial.links.new(mapping.outputs[0], noise_texture_001.inputs[0])
         #mapping_003.Vector -> noise_texture_002.Vector
@@ -2570,6 +2580,8 @@ def apply_sign_png_conditions(obj,png_path,scratches_on =0.25, rust_minor_on = 0
             signmaterial.links.new(image_texture_005.outputs[0], principled_bsdf.inputs[7])
         
         if mud>0.0:
+                    #color_ramp.Color -> mix_shader.Fac
+            signmaterial.links.new(color_ramp.outputs[0], mix_shader.inputs[0])
             signmaterial.links.new(image_texture.outputs[1], principled_bsdf_002.inputs[4])
             #image_texture.Alpha -> principled_bsdf_003.Alpha
             signmaterial.links.new(image_texture.outputs[1], principled_bsdf_003.inputs[4])
@@ -2581,12 +2593,17 @@ def apply_sign_png_conditions(obj,png_path,scratches_on =0.25, rust_minor_on = 0
             signmaterial.links.new(displacement_001.outputs[0], material_output_001.inputs[2])
 
         if snow >0.0:
+                    #color_ramp.Color -> mix_shader.Fac
+            signmaterial.links.new(color_ramp.outputs[0], mix_shader.inputs[0])
              #principled_bsdf_001.BSDF -> mix_shader.Shader
             signmaterial.links.new(principled_bsdf_001.outputs[0], mix_shader.inputs[2])
             #displacement.Displacement -> material_output_001.Displacement
             signmaterial.links.new(displacement.outputs[0], material_output_001.inputs[2])
             #image_texture.Alpha -> principled_bsdf_001.Alpha
             signmaterial.links.new(image_texture.outputs[1], principled_bsdf_001.inputs[4])
+        
+        if snow == 0.0 and mud ==0.0:
+            mix_shader.inputs[0].default_value = 0.0
         return signmaterial
 
     signmaterial = signmaterial_node_group()
