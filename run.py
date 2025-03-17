@@ -52,11 +52,13 @@ import blender_sky_texture as sky_texture
 # Import our new COCO annotations module
 from coco_annotations import COCOAnnotator
 
-def find_previous_annotations(base_output_dir):
-    annotation_path = os.path.join(base_output_dir, "coco_annotations.json")
+def find_previous_annotations(output_dir):
+    """
+    Look for existing COCO annotations file in the output directory
+    """
+    annotation_path = os.path.join(output_dir, "coco_annotations.json")
     if os.path.exists(annotation_path):
         return annotation_path
-    
     return None
 
 def main(args):
@@ -145,16 +147,8 @@ def main(args):
     
     # Determine output directory
     base_output_dir = os.path.join(target_directory, "output")
-    output_dir = os.path.join(base_output_dir, 'samples7') # get_next_output_directory(base_output_dir)
+    output_dir = os.path.join(base_output_dir, 'samples8') # get_next_output_directory(base_output_dir)
     
-    # Ensure the new directory exists
-    image_dir = os.path.join(output_dir, 'images')
-    labels_dir = os.path.join(output_dir, 'labels')
-    
-    os.makedirs(image_dir, exist_ok=True)
-    os.makedirs(labels_dir, exist_ok=True)
-    
-    # Look for previous annotations file to continue from
     previous_annotations = find_previous_annotations(output_dir)
     
     try:
@@ -171,32 +165,23 @@ def main(args):
         print("Creating new annotations file.")
         coco_annotator = COCOAnnotator(output_dir, args_dict)
     
-    # Update output paths
     for step in range(args.num_steps):
         # Move camera to next position
         camera.location.y += args.step_size
         
-        filename = f"image_{step}"
-        image_path = os.path.join(image_dir, f"{filename}.png")
-        bbox_path = os.path.join(labels_dir, f"{filename}_bbox.txt")
-        
-        # Render and save image
-        snap.render_and_save(image_path, samples=args.samples)
-        print(f"Saved Image {step} at {image_path}")
-        
-        # Get image dimensions for COCO annotations
-        img_width, img_height = bbox.get_image_dimensions()
-        
-        # Save bounding box with matching name
-        bounding_box = bbox.save_bbox_as_text(
-            'Simple Sign',
-            'Camera',
-            bbox_path
-        )
-        
-        # Add to COCO annotations
-        image_id = coco_annotator.add_image(image_path, img_width, img_height)
-        coco_annotator.add_annotation(image_id, bounding_box)
+        base_filename = f"image_{step}"
+        try:
+            # This does everything in one call: renders image, saves bbox, adds to annotations
+            image_id = coco_annotator.add_image_with_annotation(
+                'Simple Sign', 
+                'Camera', 
+                base_filename, 
+                args.samples
+            )
+            print(f"Processed image {step} with ID: {image_id}")
+        except Exception as e:
+            print(f"Error processing image {step}: {str(e)}")
+            continue
     
     # Save the COCO annotations file
     coco_annotator.save("coco_annotations.json")

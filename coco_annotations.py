@@ -1,7 +1,9 @@
 import os
 import json
 import datetime
+import uuid
 from typing import Dict, List, Any, Tuple, Optional, Set
+import bpy
 
 class COCOAnnotator:
     def __init__(self, output_dir: str, config: Dict[str, Any], previous_file: Optional[str] = None):
@@ -11,6 +13,14 @@ class COCOAnnotator:
         self.image_id = 0
         self.annotation_id = 0
         self.existing_image_names: Set[str] = set()
+        
+        # Create paths for images and labels
+        self.image_dir = os.path.join(output_dir, 'images')
+        self.labels_dir = os.path.join(output_dir, 'labels')
+        
+        # Ensure directories exist
+        os.makedirs(self.image_dir, exist_ok=True)
+        os.makedirs(self.labels_dir, exist_ok=True)
         
         # Initialize default COCO format structure
         self.coco_data = {
@@ -41,7 +51,6 @@ class COCOAnnotator:
         }
         
         # Try to load previous annotations if file path is provided
-        
         if previous_file:
             try:
                 self._load_previous_file(previous_file)
@@ -128,6 +137,122 @@ class COCOAnnotator:
         print(f"Continuing with image_id: {self.image_id}, annotation_id: {self.annotation_id}")
         print(f"Found {len(self.existing_image_names)} existing images in annotations")
         
+    def generate_unique_filename(self, base_name: str) -> str:
+        """
+        Generate a unique filename that doesn't collide with existing ones
+        by appending a timestamp and random string
+        """
+        # Get timestamp for uniqueness
+        timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+        
+        # Add a unique identifier (first 6 chars of a UUID)
+        unique_id = str(uuid.uuid4())[:6]
+        
+        # Create a unique filename with timestamp and random ID
+        unique_name = f"{base_name}_{timestamp}_{unique_id}"
+        
+        return unique_name
+
+    def save_image_and_bbox(self, obj_name: str, cam_name: str, base_filename: str = "image", 
+                           samples: int = 128) -> Tuple[str, Tuple[float, float, float, float]]:
+        """
+        Renders, saves an image and its bounding box, and returns paths and bbox data
+        
+        Args:
+            obj_name: Name of the object to track with bounding box
+            cam_name: Name of the camera to render from
+            base_filename: Base name for the saved files
+            samples: Render samples
+            
+        Returns:
+            Tuple of (image_path, bbox_data)
+        """
+        # Check if objects exist
+        if obj_name not in bpy.data.objects or cam_name not in bpy.data.objects:
+            raise ValueError(f"Object '{obj_name}' or camera '{cam_name}' not found in scene")
+        
+        # Get a unique filename
+        filename = self.generate_unique_filename(base_filename)
+        
+        # Set paths
+        image_path = os.path.join(self.image_dir, f"{filename}.png")
+        bbox_path = os.path.join(self.labels_dir, f"{filename}_bbox.txt")
+        
+        # Check that we don't have this exact filename already
+        while os.path.exists(image_path):
+            filename = self.generate_unique_filename(base_filename)
+            image_path = os.path.join(self.image_dir, f"{filename}.png")
+            bbox_path = os.path.join(self.labels_dir, f"{filename}_bbox.txt")
+            
+        # Render and save image
+        scene = bpy.context.scene
+        scene.render.filepath = image_path
+        scene.render.engine = 'CYCLES'
+        scene.cycles.device = 'GPU'
+        scene.render.image_settings.file_format = 'PNG'
+        scene.cycles.samples = samples
+        bpy.ops.render.render(write_still=True)
+        print(f"Saved image to: {image_path}")
+        
+        # Calculate bounding box
+        bbox = self.get_bounding_box(bpy.data.objects[obj_name], bpy.data.objects[cam_name])
+        
+        # Save bounding box as text file
+        with open(bbox_path, "w") as f:
+            f.write(f"{bbox[0]} {bbox[1]} {bbox[2]} {bbox[3]}\n")
+        print(f"Saved bounding box to: {bbox_path}")
+        
+        return image_path, bbox
+    
+    def get_bounding_box(self, obj, cam):
+        """
+        Calculate bounding box of object from camera perspective
+        Returns (x, y, width, height) in COCO format
+        """
+        import bpy_extras
+        
+        scene = bpy.context.scene
+        w, h = scene.render.resolution_x, scene.render.resolution_y
+        
+        min_x, min_y, max_x, max_y = float("inf"), float("inf"), float("-inf"), float("-inf")
+        
+        for vertex in obj.data.vertices:
+            world_coord = obj.matrix_world @ vertex.co
+            projected2d = bpy_extras.object_utils.world_to_camera_view(scene, cam, world_coord)
+            x, y = int(projected2d.x * w), int((1 - projected2d.y) * h)
+            min_x, min_y = min(min_x, x), min(min_y, y)
+            max_x, max_y = max(max_x, x), max(max_y, y)
+        
+        # Convert to COCO format: [x, y, width, height]
+        x = min_x
+        y = min_y
+        width = max_x - min_x
+        height = max_y - min_y
+        return x, y, width, height
+        
+    def get_image_dimensions(self):
+        """Return the current render resolution as (width, height)"""
+        scene = bpy.context.scene
+        return scene.render.resolution_x, scene.render.resolution_y
+    
+    def add_image_with_annotation(self, obj_name: str, cam_name: str, base_filename: str = "image", 
+                                 samples: int = 128) -> int:
+        """
+        Combined method to render image, save bbox, and add both to COCO annotations.
+        Returns the image ID.
+        """
+        # Save image and get bbox
+        image_path, bbox_data = self.save_image_and_bbox(obj_name, cam_name, base_filename, samples)
+        
+        # Get image dimensions
+        img_width, img_height = self.get_image_dimensions()
+        
+        # Add to COCO annotations
+        image_id = self.add_image(image_path, img_width, img_height)
+        self.add_annotation(image_id, bbox_data)
+        
+        return image_id
+
     def add_image(self, file_path: str, width: int, height: int) -> int:
         """
         Add an image to the COCO dataset and return its ID

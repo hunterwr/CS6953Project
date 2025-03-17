@@ -1,0 +1,238 @@
+{
+  "info": {
+    "description": "Synthetic traffic sign dataset",
+    "url": "",
+    "version": "1.0",
+    "year": 2025,
+    "contributor": "Blender Synthetic Data Generator",
+    "date_created": "2025-03-16 21:58:33"
+  },
+  "licenses": [
+    {
+      "id": 1,
+      "name": "Synthetic Data License",
+      "url": ""
+    }
+  ],
+  "categories": [
+    {
+      "id": 1,
+      "name": "traffic_sign",
+      "supercategory": "sign"
+    }
+  ],
+  "images": [
+    {
+      "id": 0,
+      "file_name": "image_0_20250316215833_d6577a.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-16 21:58:55",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dusk",
+        "plane": "snow",
+        "background": "sky",
+        "density": "many trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 1,
+      "file_name": "image_1_20250316215855_1d19af.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-16 21:59:12",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dusk",
+        "plane": "snow",
+        "background": "sky",
+        "density": "many trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 2,
+      "file_name": "image_0_20250316220820_55178a.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-16 22:08:52",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dusk",
+        "plane": "snow",
+        "background": "sky",
+        "density": "many trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 3,
+      "file_name": "image_1_20250316220852_d976e8.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-16 22:09:24",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dusk",
+        "plane": "snow",
+        "background": "sky",
+        "density": "many trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 4,
+      "file_name": "image_0_20250316221336_398b4c.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-16 22:14:10",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dusk",
+        "plane": "snow",
+        "background": "sky",
+        "density": "many trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 5,
+      "file_name": "image_1_20250316221410_dc2045.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-16 22:14:42",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dusk",
+        "plane": "snow",
+        "background": "sky",
+        "density": "many trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    }
+  ],
+  "annotations": [
+    {
+      "id": 0,
+      "image_id": 0,
+      "category_id": 1,
+      "segmentation": [],
+      "area": 7569,
+      "bbox": [
+        1190,
+        486,
+        87,
+        87
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": 5,
+        "sign_height": 5,
+        "sign_texture": "exit_sign.PNG"
+      }
+    },
+    {
+      "id": 1,
+      "image_id": 1,
+      "category_id": 1,
+      "segmentation": [],
+      "area": 8100,
+      "bbox": [
+        1198,
+        484,
+        90,
+        90
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": 5,
+        "sign_height": 5,
+        "sign_texture": "exit_sign.PNG"
+      }
+    },
+    {
+      "id": 2,
+      "image_id": 2,
+      "category_id": 1,
+      "segmentation": [],
+      "area": 7569,
+      "bbox": [
+        1190,
+        486,
+        87,
+        87
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": 5,
+        "sign_height": 5,
+        "sign_texture": "exit_sign.PNG"
+      }
+    },
+    {
+      "id": 3,
+      "image_id": 3,
+      "category_id": 1,
+      "segmentation": [],
+      "area": 8100,
+      "bbox": [
+        1198,
+        484,
+        90,
+        90
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": 5,
+        "sign_height": 5,
+        "sign_texture": "exit_sign.PNG"
+      }
+    },
+    {
+      "id": 4,
+      "image_id": 4,
+      "category_id": 1,
+      "segmentation": [],
+      "area": 7569,
+      "bbox": [
+        1190,
+        486,
+        87,
+        87
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": 5,
+        "sign_height": 5,
+        "sign_texture": "exit_sign.PNG"
+      }
+    },
+    {
+      "id": 5,
+      "image_id": 5,
+      "category_id": 1,
+      "segmentation": [],
+      "area": 8100,
+      "bbox": [
+        1198,
+        484,
+        90,
+        90
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": 5,
+        "sign_height": 5,
+        "sign_texture": "exit_sign.PNG"
+      }
+    }
+  ]
+}
