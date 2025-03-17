@@ -13,7 +13,7 @@ def generate_sign(road_boundaries,png_path ='textures/Signs/Signs/PNGs/Loose Gra
     pole_end_points = create_pole(
         0.2,
         5,
-        location=(right_edge + 3, 50, 5 / 2),
+        location=(right_edge + 3, 100, 5 / 2),
         texture_path=os.path.join(target_directory, 'textures/Signs/sign_pole_al.PNG')
     )
 
