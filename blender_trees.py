@@ -430,6 +430,12 @@ def generate_forest(target_directory, road_width, road_length, min_dist=3, max_d
     
     
 def generate_preset_forest(target_directory, road_width, road_length, density="some trees", distance_from_road="close", tree_type="pine"):
+    
+    #added default parameters
+    trees = 16
+    min_dist=3
+    max_dist=20
+
     if density == "no trees":
         trees = 0
     elif density == "some trees":
