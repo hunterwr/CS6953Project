@@ -10,24 +10,22 @@ def generate_sign(road_boundaries,png_path ='textures/Signs/Signs/PNGs/Loose Gra
 
     print(road_boundaries)
     right_edge = road_boundaries[2][0]
+    sign_height = 7
     pole_end_points = create_pole(
-        0.2,
-        5,
-        location=(right_edge + 3, 100, 5 / 2),
+        radius=0.2,
+        height=sign_height,
+        location=(right_edge + 1.5, 100, sign_height / 1.5),
         texture_path=os.path.join(target_directory, 'textures/Signs/sign_pole_al.PNG')
     )
 
 
-    # to center road 
-    # roadwidth -(road_width-((road_width-offset)/2))
-    # Create a simple square sign
-
+    sign_size = 7
     create_sign_square(
-        5,
-        5,
+        sign_size,
+        sign_size,
         text=None,
         start_location=(
-            pole_end_points[0]-5/2,
+            pole_end_points[0]-sign_size/2.0,
             pole_end_points[1] - 2.5 * 0.2,
             pole_end_points[2] - 0.25
         ),
@@ -220,7 +218,8 @@ def create_pole(radius,height, location = (0,0,0),texture_path = None):
     
     
     z_out = height/2+location[2]
-    x_out = location[0]+radius
+    # x_out = location[0]+radius
+    x_out = location[0]
     y_out = location[1]+radius
     return [x_out,y_out,z_out]
 

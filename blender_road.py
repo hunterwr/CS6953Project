@@ -11,7 +11,7 @@ def road_presets(scene = 'Two Lane', conditions = 'Dry',target_directory = None)
     if scene == 'Two Lane': 
         create_road_edges(
         road_width=50,road_height=1, 
-        road_length=300,
+        road_length=400,
         left_edge_start = (-(50/2),-50,0),
         name='Road_Edges',
         target_directory=target_directory,
@@ -28,40 +28,45 @@ def road_presets(scene = 'Two Lane', conditions = 'Dry',target_directory = None)
         lane_2 = (0.75*road_width +left_edge_start[0], left_edge_start[1],left_edge_start[2])
         lane_positions = [ lane_1,lane_2]
 
+        road_width = 50
+        road_length = 400 
 
 
     
-      
-
-        
-        
     elif scene == 'Highway':
         
         ### Create the road ### 
-        width = 50
-                
+        width = 100
+
+        road_width = width
+        road_length = 400         
         create_road_edges(
         road_width=width,road_height=1, 
-        road_length=300,
+        road_length=400,
         left_edge_start = (-(width/2),-50,0),
         name='Road_Edges',
         target_directory=target_directory,
         conditions=conditions)
-        
+
+        bpy.data.materials["Patched road 02"].node_tree.nodes["Mapping"].inputs[3].default_value[0] = -10.2757
+        bpy.data.materials["Patched road 02"].node_tree.nodes["Mapping"].inputs[1].default_value[0] = 1
+        bpy.data.materials["Patched road 02"].node_tree.nodes["Mapping"].inputs[1].default_value[1] = -0.15
+
         start = width*0.6031 +0.3643
         
-        obj = bpy.data.objects.get('Road_Edges')
-        bpy.context.view_layer.objects.active = obj
-        obj.select_set(True)
+        # obj = bpy.data.objects.get('Road_Edges')
+        # bpy.context.view_layer.objects.active = obj
+        # obj.select_set(True)
 
-        # Duplicate the object
-        bpy.ops.object.duplicate()
+        # # Duplicate the object
+        # bpy.ops.object.duplicate()
 
-        # Get the newly duplicated object (it will now be the active object)
-        obj2 = bpy.context.object  
+        # # Get the newly duplicated object (it will now be the active object)
+        # obj2 = bpy.context.object  
 
-        # Move the duplicated object  
-        obj2.location.x = -(width / 2) + start
+        # # Move the duplicated object  
+        # obj2.location.x = -(width / 2) + start
+        # # obj2.location.z = -0.5
 
        
         
@@ -110,42 +115,43 @@ def road_presets(scene = 'Two Lane', conditions = 'Dry',target_directory = None)
 
                     
         for obj in data_to.objects:
-            if obj is not None:
+            if obj is not None and obj.name =='RoadBlockade_02':
                 bpy.context.collection.objects.link(obj)
                 # Reset location (set to 0, 0, 0)
-        
-                obj.scale = (2.35, 2.35, 2.35)
-                obj.location = (15.0/2, -40.0/2, 1.0/2) 
+
+                obj.scale = (6, 6, 6)
+                obj.location = (0, -40.0, 1.0/2) 
                 
-                obj.rotation_euler[2] = math.radians(45)
-                obj.location = (-7, -21, 0) 
+                obj.rotation_euler[2] = math.radians(90)
+        #        obj.location = (-7, -21, 0) 
                 
         obj = bpy.data.objects.get('RoadBlockade_02')        
         array_modifier = obj.modifiers.new(name="Array", type='ARRAY')
-        array_modifier.count = 20  # Number of array copies
+        array_modifier.count = 23 # Number of array copies
         array_modifier.use_relative_offset = True  # Use constant offset (for linear array)
         array_modifier.relative_offset_displace = (1.0, 0.0, 0.0)  # Offset along the X-axis
 
 
-        ###guardrails 
+        ##guardrails 
         with bpy.data.libraries.load(guardrails_path, link=False) as (data_from, data_to):
             # Load all objects in the .blend file
             data_to.objects = data_from.objects 
             
         for obj in data_to.objects:
-            if obj is not None:
+            if obj is not None and obj.name[:5] == 'Plane':
                 bpy.context.collection.objects.link(obj)
-                obj.scale = (2.5, 2.5, 2.5)
-                obj.rotation_euler.z+=math.radians(45)
-        
-                obj.location = (-12, -7.0, 1.0) 
-                obj.rotation_mode = 'XYZ' 
+                obj.scale = (6.5, 6.5, 6.5)
+                obj.rotation_euler.z+=math.radians(90)
+
+                obj.location = (-44.65, -40.0, 3.0) 
+                object_name = obj.name
+        #        obj.rotation_mode = 'XYZ' 
         #        obj.rotation_euler = (math.radians(90),0,0)
                 
         #        obj.rotation_euler.z+=math.radians(90)
-        obj = bpy.data.objects.get('Plane.001')        
+        obj = bpy.data.objects.get(object_name)        
         array_modifier = obj.modifiers.new(name="Array", type='ARRAY')
-        array_modifier.count = 23  # Number of array copies
+        array_modifier.count = 30  # Number of array copies
         array_modifier.use_relative_offset = True  # Use constant offset (for linear array)
         array_modifier.relative_offset_displace = (0.0, 1.0, 0.0)  # Offset along the X-axis
 
@@ -155,19 +161,20 @@ def road_presets(scene = 'Two Lane', conditions = 'Dry',target_directory = None)
             data_to.objects = data_from.objects 
             
         for obj in data_to.objects:
-            if obj is not None:
+            if obj is not None and obj.name[:5] == 'Plane':
                 bpy.context.collection.objects.link(obj)
-                obj.scale = (2.5, 2.5, 2.5)
-                obj.rotation_euler.z+=math.radians(-45)
-        
-                obj.location = (22.5, -6.0, 1.0) 
-                obj.rotation_mode = 'XYZ' 
+                obj.scale = (6.5, 6.5, 6.5)
+                obj.rotation_euler.z+=math.radians(-90)
+
+                obj.location = (44.65, -40.0, 3.0) 
+                object_name = obj.name
+        #        obj.rotation_mode = 'XYZ' 
         #        obj.rotation_euler = (math.radians(90),0,0)
                 
         #        obj.rotation_euler.z+=math.radians(90)
-        obj = bpy.data.objects.get('Plane.002')        
+        obj = bpy.data.objects.get(object_name)       
         array_modifier = obj.modifiers.new(name="Array", type='ARRAY')
-        array_modifier.count = 23  # Number of array copies
+        array_modifier.count = 30  # Number of array copies
         array_modifier.use_relative_offset = True  # Use constant offset (for linear array)
         array_modifier.relative_offset_displace = (0.0, -1.0, 0.0)  # Offset along the X-axis
 
@@ -182,12 +189,12 @@ def road_presets(scene = 'Two Lane', conditions = 'Dry',target_directory = None)
                 obj.scale = (5, 5, 5)
                 obj.rotation_euler.z+=math.radians(-90)
 
-                obj.location = (58.0, -45, 1.0) 
+                obj.location = (52, -45, 1.0) 
                 obj.rotation_mode = 'XYZ' 
 
         obj = bpy.data.objects.get('Street Light 1')        
         array_modifier = obj.modifiers.new(name="Array", type='ARRAY')
-        array_modifier.count =5 # Number of array copies
+        array_modifier.count =10 # Number of array copies
         array_modifier.use_relative_offset = True  # Use constant offset (for linear array)
         array_modifier.relative_offset_displace = (-40, 0.0, 0.0)  # Offset along the X-axis
 
@@ -201,10 +208,15 @@ def road_presets(scene = 'Two Lane', conditions = 'Dry',target_directory = None)
         obj2 = bpy.context.object  
 
         # Move the duplicated object  
-        obj2.location= (-28.0, 200, 1.0) 
+        obj2.location= (-52, 400, 1.0) 
         obj2.rotation_euler.z+=math.radians(180)
 
-    return road_boundaries,lane_positions
+        obj = bpy.data.objects.get('Road_Edges.001')  
+        bpy.data.objects.remove(obj)
+        bpy.context.view_layer.update()
+
+
+    return road_boundaries,lane_positions,road_width,road_length
 
 def apply_blenderkit_material(obj_name, asset_base_id):
 
