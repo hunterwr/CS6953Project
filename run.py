@@ -106,15 +106,15 @@ def main(args):
     # )
     
     # Place road and sign
-    road_boundaries, lane_positions, road_width, road_length = road.road_presets(scene = args.road_scene, conditions = args.road_conditions, target_directory = target_directory)
+    road_boundaries, lane_positions = road.road_presets(scene = args.road_scene, conditions = args.road_conditions, target_directory = target_directory)
     png_path = 'textures/Signs/Signs/PNGs/'
     sign_path = png_path + args.sign
     signs.generate_sign(road_boundaries,sign_path, scratches =0.0, rust = 0.0, rivets=False, snow = 0.0, mud = 0.0, target_directory = target_directory )
 
     
     # Add trees 
-    # trees.generate_forest(args.road_width, args.road_length, args.min_tree_dist, args.max_tree_dist, args.num_trees)
-    trees.generate_preset_forest(target_directory, road_width, road_length, args.density, args.distance, args.tree_type)
+    #trees.generate_forest(args.road_width, args.road_length, args.min_dist, args.max_dist, args.num_trees)
+    trees.generate_preset_forest(target_directory, args.road_width, args.road_length, args.density, args.distance, args.tree_type)
     
     backgrounds = {
         "city": ["burj_khalifa"],
@@ -154,7 +154,7 @@ def main(args):
     sky_texture.create_sky_texture(time_of_day=args.time_of_day)
     
     # Add particles
-    weather.add_snow(density=args.particle_density, start_frame=args.start_frame, end_frame=args.end_frame)
+    weather.add_snow(snow_type=args.snow_type)
     
     # Determine output directory
     base_output_dir = os.path.join(target_directory, "output")
@@ -186,7 +186,8 @@ def main(args):
             image_id = coco_annotator.add_image_with_annotation(
                 'Simple Sign', 
                 'Camera', 
-                base_filename, 
+                base_filename,
+                args.frame_number, 
                 args.samples
             )
             print(f"Processed image {step} with ID: {image_id}")

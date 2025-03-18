@@ -27,7 +27,7 @@ sys.path.append(os.getcwd())
 import blender_utils as utils
 import blender_signs as signs
 import blender_road as road 
-# import blender_trees as trees
+import blender_trees as trees
 import blender_camera as cam
 import blender_light_source as light
 import blender_save as snap
@@ -36,6 +36,7 @@ import blender_plane as plane
 import blender_car as car
 import blender_sky_texture as sky_texture
 import texture_utils as texutils
+import blender_weather as weather
 
 import importlib
 importlib.reload(sky_texture)
@@ -94,7 +95,7 @@ max_tree_dist = 30
 num_trees = 10
 
 # Add trees 
-trees.generate_preset_forest(target_directory, road_width, road_length, density='some trees', distance_from_road='close', tree_type='pine')
+#trees.generate_preset_forest(target_directory, road_width, road_length, density='some trees', distance_from_road='close', tree_type='pine')
 # min_dist is the distance from the road to the nearest tree
 # max_dist is the distance from the road to the farthest tree
 
@@ -132,8 +133,9 @@ plane.create_plane(size=ground_plane_size, target_directory=target_directory, ma
 car.create_car(target_directory)
 
 #adds sky texture
-sky_texture.create_sky_texture(time_of_day="dusk")
+sky_texture.create_sky_texture(time_of_day="dawn")
 
+weather.add_snow(snow_type="heavy")
 # output_image = 'output/sign.png'
 # samples = 256
 # output_bbox = 'output/bbox.txt'
