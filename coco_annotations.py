@@ -227,7 +227,7 @@ class COCOAnnotator:
         return unique_name
 
     def save_image_and_bbox(self, obj_name: str, cam_name: str, base_filename: str = "image", 
-                           samples: int = 128) -> Tuple[str, Tuple[float, float, float, float]]:
+                           frame_number: int = 450, samples: int = 128) -> Tuple[str, Tuple[float, float, float, float]]:
         """
         Renders, saves an image and its bounding box, and returns paths and bbox data
         
@@ -259,6 +259,14 @@ class COCOAnnotator:
             
         # Render and save image
         scene = bpy.context.scene
+        #Continue animation to update particles in scene
+        #frame_number = 450 set to arbitrary value
+        
+        for i in range(1, frame_number + 1):
+            scene.frame_set(i)
+
+        scene.frame_set(frame_number) #set desired frame for output
+
         scene.render.filepath = image_path
         scene.render.engine = 'CYCLES'
         scene.cycles.device = 'GPU'
@@ -309,13 +317,13 @@ class COCOAnnotator:
         return scene.render.resolution_x, scene.render.resolution_y
     
     def add_image_with_annotation(self, obj_name: str, cam_name: str, base_filename: str = "image", 
-                                 samples: int = 128) -> int:
+                                  frame_number: int = 400, samples: int = 128) -> int:
         """
         Combined method to render image, save bbox, and add both to COCO annotations.
         Returns the image ID.
         """
         # Save image and get bbox
-        image_path, bbox_data = self.save_image_and_bbox(obj_name, cam_name, base_filename, samples)
+        image_path, bbox_data = self.save_image_and_bbox(obj_name, cam_name, base_filename, frame_number, samples)
         
         # Get image dimensions
         img_width, img_height = self.get_image_dimensions()
