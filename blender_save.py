@@ -1,18 +1,22 @@
 import bpy
 
-def render_and_save(output_path,samples=512):
+def render_and_save(output_path, frame_number, samples=32):
     
-    bpy.context.scene.render.filepath = output_path
-    
-    bpy.context.scene.render.engine = 'CYCLES'
-    bpy.context.scene.cycles.device = 'GPU'
-    bpy.context.scene.cycles.samples = samples
+    scene = bpy.context.scene
+    #Continue animation to update particles in scene
+    #frame_number = 450 -set to arbitary value
+    for i in range(1, frame_number + 1):
+        scene.frame_set(i)
 
-    # Set the image format (PNG, JPEG, etc.)
-    bpy.context.scene.render.image_settings.file_format = 'PNG'  # Change to any format as needed
+    scene.frame_set(frame_number) #set desired frame for output
+    scene.render.filepath = output_path
+    scene.render.engine = 'CYCLES'
+    scene.cycles.device = 'GPU'
+    scene.cycles.samples = samples
+
+    scene.render.image_settings.file_format = 'PNG'
 
     # Render and save the image
     bpy.ops.render.render(write_still=True)
 
     return
-    

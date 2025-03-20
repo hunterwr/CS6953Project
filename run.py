@@ -66,54 +66,16 @@ def main(args):
     # Reset and Clear the Scene
     utils.clear_scene()
     
-    # # Place a Road
-    # road.create_road_edges(
-    #     road_width=args.road_width, road_height=1, 
-    #     road_length=args.road_length,
-    #     left_edge_start = (-(args.road_width/2),-50,0),
-    #     name='Road_Edges',
-    #     target_directory=target_directory,
-    #     conditions='Dry'
-    # )
-    
-    # # Create the pole
-    # pole_end_points = signs.create_pole(
-    #     args.pole_radius,
-    #     args.pole_height,
-    #     location=((args.road_width/2) + 3, args.sign_distance, args.pole_height / 2),
-    #     texture_path=os.path.join(target_directory, args.pole_texture)
-    # )
-    
-    # # Create a simple square sign
-    # signs.create_sign_square(
-    #     args.sign_width,
-    #     args.sign_height,
-    #     text=None,
-    #     start_location=(
-    #         pole_end_points[0]-5/2,
-    #         pole_end_points[1] - 2.5 * 0.2,
-    #         pole_end_points[2] - 0.25
-    #     ),
-    #     name='Simple Sign'
-    # )
-    
-    # # Add a sign texture
-    # sign_obj = bpy.data.objects.get('Simple Sign')
-    # signs.add_sign_color(
-    #     sign_obj,
-    #     target_directory=target_directory,
-    #     texture_path=args.sign_texture
-    # )
-    
+       
     # Place road and sign
-    road_boundaries, lane_positions, road_width, road_length = road.road_presets(scene = args.road_scene, conditions = args.road_conditions, target_directory = target_directory)
+    road_boundaries, lane_positions, road_width,road_length = road.road_presets(scene = args.road_scene, conditions = args.road_conditions, target_directory = target_directory)
     png_path = 'textures/Signs/Signs/PNGs/'
-    sign_path = png_path + args.sign
-    signs.generate_sign(road_boundaries,sign_path, scratches =0.0, rust = 0.0, rivets=False, snow = 0.0, mud = 0.0, target_directory = target_directory )
+    sign_path = png_path + args.sign + '.png'
+    signs.generate_sign(road_boundaries,sign_path, scratches = args.scratches, rust = args.rust, rivets=False, snow = args.snow, mud = args.mud, target_directory = target_directory )
 
     
-    # Add trees 
-    # trees.generate_forest(args.road_width, args.road_length, args.min_tree_dist, args.max_tree_dist, args.num_trees)
+    # # Add trees 
+    # #trees.generate_forest(args.road_width, args.road_length, args.min_dist, args.max_dist, args.num_trees)
     trees.generate_preset_forest(target_directory, road_width, road_length, args.density, args.distance, args.tree_type)
     
     backgrounds = {
@@ -154,7 +116,7 @@ def main(args):
     sky_texture.create_sky_texture(time_of_day=args.time_of_day)
     
     # Add particles
-    weather.add_snow(density=args.particle_density, start_frame=args.start_frame, end_frame=args.end_frame)
+    weather.add_snow(snow_type=args.snow_type)
     
     # Determine output directory
     base_output_dir = os.path.join(target_directory, "output")
@@ -186,7 +148,8 @@ def main(args):
             image_id = coco_annotator.add_image_with_annotation(
                 'Simple Sign', 
                 'Camera', 
-                base_filename, 
+                base_filename,
+                args.frame_number, 
                 args.samples
             )
             print(f"Processed image {step} with ID: {image_id}")

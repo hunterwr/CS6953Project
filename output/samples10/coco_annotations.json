@@ -1,0 +1,63 @@
+{
+  "info": {
+    "description": "Synthetic traffic sign dataset",
+    "url": "",
+    "version": "1.0",
+    "year": 2025,
+    "contributor": "Blender Synthetic Data Generator",
+    "date_created": "2025-03-17 21:26:27"
+  },
+  "licenses": [
+    {
+      "id": 1,
+      "name": "Synthetic Data License",
+      "url": ""
+    }
+  ],
+  "categories": [
+    {
+      "id": 1,
+      "name": "loose_gravel",
+      "supercategory": "traffic_sign"
+    }
+  ],
+  "images": [
+    {
+      "id": 0,
+      "file_name": "image_0_20250317212627_bb6df5.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-17 21:29:34",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    }
+  ],
+  "annotations": [
+    {
+      "id": 0,
+      "image_id": 0,
+      "category_id": 1,
+      "segmentation": [],
+      "area": 7656,
+      "bbox": [
+        1722,
+        486,
+        88,
+        87
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "Loose Gravel.png"
+      }
+    }
+  ]
+}

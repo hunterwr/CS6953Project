@@ -89,6 +89,9 @@ def add_camera(target_directory, background="dunes" , location=(0.0, -19.409, 14
     bpy.ops.uv.cube_project()
     bpy.ops.object.mode_set(mode='OBJECT')
     
-    
+    #define frames for animation
+    scene = bpy.context.scene
+    scene.frame_start = 1
+    scene.frame_end = 500
         
     return camera
