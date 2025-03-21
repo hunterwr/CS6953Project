@@ -58,7 +58,7 @@ road_boundaries, lane_positions = road.road_presets(scene = 'Highway', condition
 png_path = 'textures/Signs/Signs/PNGs/Loose Gravel.png'
 signs.generate_sign(road_boundaries,png_path,scratches =0.0, rust = 0.0,rivets=False,snow = 0.0,mud = 0.0, target_directory = target_directory )
 
-
+print(f"Road Boundaries: {road_boundaries}")
 # # Create the pole
 # pole_end_points = signs.create_pole(
 #     0.2,
@@ -95,7 +95,7 @@ max_tree_dist = 30
 num_trees = 10
 
 # Add trees 
-#trees.generate_preset_forest(target_directory, road_width, road_length, density='some trees', distance_from_road='close', tree_type='pine')
+trees.generate_preset_forest(target_directory, road_boundaries, density='some trees', distance_from_road='close', tree_type='pine')
 # min_dist is the distance from the road to the nearest tree
 # max_dist is the distance from the road to the farthest tree
 

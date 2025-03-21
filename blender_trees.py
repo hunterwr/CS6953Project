@@ -429,8 +429,14 @@ def generate_forest(target_directory, road_width, road_length, min_dist=3, max_d
     print("Forest generation complete!")
     
     
-def generate_preset_forest(target_directory, road_width, road_length, density="some trees", distance_from_road="close", tree_type="pine"):
+def generate_preset_forest(target_directory, road_boundaries, density="some trees", distance_from_road="close", tree_type="pine"):
     
+    corner1, corner2, corner3, corner4 = road_boundaries
+    road_width = abs(corner1[0] - corner3[0])
+    road_length = abs(corner1[1] - corner2[1])
+    print(f"Road width: {road_width}")
+    print(f"Road length: {road_length}")
+    #find the difference between x values to get the road_width, y values for road length
     #added default parameters
     trees = 16
     min_dist=3
@@ -443,11 +449,11 @@ def generate_preset_forest(target_directory, road_width, road_length, density="s
     elif density == "many trees":
         trees = 32
     if distance_from_road == "close":
-        min_dist=3
-        max_dist=20
+        min_dist=7
+        max_dist=30
     elif distance_from_road == "far":
-        min_dist = 15
-        max_dist = 60
+        min_dist = 40
+        max_dist = 100
     generate_forest(target_directory, road_width, road_length, min_dist=min_dist, max_dist=max_dist, num_trees=trees, tree_type=tree_type)
 
 # def test_trees_script():
