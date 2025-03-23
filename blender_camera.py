@@ -4,6 +4,11 @@
 import bpy
 import math
 import os
+import random
+import bmesh
+import bpy_extras
+import mathutils
+from mathutils import Vector
 
 def add_camera(target_directory, background="dunes" , location=(0.0, -19.409, 14.526), rotation=(69.127, 0.000008, 0.569964), scale=1.0):
     """
@@ -95,3 +100,192 @@ def add_camera(target_directory, background="dunes" , location=(0.0, -19.409, 14
     scene.frame_end = 500
         
     return camera
+
+
+class CameraController:
+    """
+    Controls camera movement to ensure traffic signs remain in view
+    while providing different perspectives of the scene.
+    """
+    
+    def __init__(self, camera, road_boundaries, sign_name="Simple Sign", height_range=(4, 10)):
+        """
+        Initialize the camera controller.
+        
+        Args:
+            camera: Blender camera object to control
+            road_boundaries: List of coordinates defining road boundaries
+            sign_name: Name of the traffic sign object to keep in view
+            height_range: Min and max heights for camera positioning
+        """
+        self.camera = camera
+        self.road_boundaries = road_boundaries
+        self.sign_obj = bpy.data.objects.get(sign_name)
+        if not self.sign_obj:
+            raise ValueError(f"Sign object '{sign_name}' not found in scene")
+            
+        self.height_range = height_range
+        self.road_start_y = min(p[1] for p in road_boundaries)
+        self.road_end_y = max(p[1] for p in road_boundaries)
+        self.road_left_x = min(p[0] for p in road_boundaries)
+        self.road_right_x = max(p[0] for p in road_boundaries)
+        self.road_width = self.road_right_x - self.road_left_x
+        self.road_length = self.road_end_y - self.road_start_y
+        
+        # Store initial position to avoid straying too far
+        self.initial_position = self.camera.location.copy()
+        
+        # Set up tracking history to avoid repeating positions
+        self.position_history = []
+        self.max_history = 10
+        
+        # Movement ranges in XYZ, relative to current position
+        self.movement_ranges = {
+            'x': (-self.road_width * 0.3, self.road_width * 0.3),
+            'y': (-25, 25),  # Forward/back movement range
+            'z': (-1, 1)     # Height adjustment range
+        }
+        
+        # Track failed attempts to find good positions
+        self.failed_attempts = 0
+        self.max_failed_attempts = 5
+        
+        # Store the sign's world position for reference
+        self.sign_position = self.sign_obj.location.copy()
+        
+        print(f"Camera controller initialized with road boundaries: {road_boundaries}")
+        print(f"Sign position: {self.sign_position}")
+    
+    def is_position_on_road(self, position):
+        """Check if a position is within the road boundaries"""
+        buffer = self.road_width * 0.1  # Small buffer from edge
+        return (self.road_left_x + buffer <= position[0] <= self.road_right_x - buffer and
+                self.road_start_y <= position[1] <= self.road_end_y)
+    
+    def is_sign_in_view(self):
+        """
+        Check if the sign is visible from the current camera position
+        Returns True if sign is in view, False otherwise
+        """
+        scene = bpy.context.scene
+        
+        # Get sign's bounding box corners in world space
+        bbox_corners = [self.sign_obj.matrix_world @ Vector(corner) for corner in self.sign_obj.bound_box]
+        
+        # Check if any corner of the sign is visible in camera view
+        for corner in bbox_corners:
+            # Convert 3D point to 2D screen coordinates
+            co_2d = bpy_extras.object_utils.world_to_camera_view(scene, self.camera, corner)
+            
+            # Check if point is within camera frame (0-1 range for both x and y)
+            if 0 < co_2d.x < 1 and 0 < co_2d.y < 1:
+                return True
+                
+        return False
+    
+    def get_sign_direction(self):
+        """Get normalized direction vector from camera to sign"""
+        cam_loc = self.camera.location
+        sign_loc = self.sign_obj.location
+        direction = Vector((sign_loc.x - cam_loc.x, 
+                           sign_loc.y - cam_loc.y,
+                           sign_loc.z - cam_loc.z))
+        return direction.normalized()
+    
+    def adjust_to_view_sign(self):
+        """Adjust camera rotation to look at the sign"""
+        direction = self.get_sign_direction()
+        
+        # Create a rotation quaternion that points in the direction of the sign
+        track_quat = direction.to_track_quat('-Z', 'Y')
+        
+        # Convert to Euler rotation
+        self.camera.rotation_euler = track_quat.to_euler()
+        
+        # Add some random variation to rotation (within small range)
+        self.camera.rotation_euler.x += random.uniform(-0.1, 0.1)
+        self.camera.rotation_euler.z += random.uniform(-0.05, 0.05)
+        self.camera.rotation_euler.y += random.uniform(-0.05, 0.05)
+    
+    def move_towards_road_center(self):
+        """Move camera back toward road center if it's too far off"""
+        road_center_x = (self.road_left_x + self.road_right_x) / 2
+        
+        # Calculate vector to road center
+        current_x = self.camera.location.x
+        move_x = (road_center_x - current_x) * 0.2  # Move 30% of the way toward center
+        
+        # Apply movement
+        self.camera.location.x += move_x
+    
+    def step(self):
+        """
+        Move the camera to a new position that keeps the sign in view
+        Returns True if successful, False if couldn't find a valid position
+        """
+        original_location = self.camera.location.copy()
+        original_rotation = self.camera.rotation_euler.copy()
+        
+        # Store current position in history
+        if len(self.position_history) >= self.max_history:
+            self.position_history.pop(0)
+        self.position_history.append((self.camera.location.x, self.camera.location.y, self.camera.location.z))
+        
+        # Try to find a new valid position
+        for attempt in range(10):  # Try up to 10 times to find a good position
+            # Random movement in all directions
+            new_x = self.camera.location.x + random.uniform(*self.movement_ranges['x'])
+            new_y = self.camera.location.y + random.uniform(*self.movement_ranges['y'])
+            new_z = self.camera.location.z + random.uniform(*self.movement_ranges['z'])
+            
+            # Ensure height stays within reasonable range
+            new_z = max(min(new_z, self.height_range[1]), self.height_range[0])
+            
+            # Check if new position is too similar to recent positions
+            too_similar = False
+            for pos in self.position_history[-3:]:  # Check last 3 positions
+                distance = ((new_x - pos[0])**2 + (new_y - pos[1])**2 + (new_z - pos[2])**2)**0.5
+                if distance < 2.0:  # If too close to a recent position
+                    too_similar = True
+                    break
+            
+            if too_similar:
+                continue
+            
+            # Apply new position
+            self.camera.location = mathutils.Vector((new_x, new_y, new_z))
+            
+            # Check if we're still on the road
+            if not self.is_position_on_road((new_x, new_y, new_z)):
+                self.move_towards_road_center()
+            
+            # Adjust camera to look at sign
+            self.adjust_to_view_sign()
+            
+            # Check if sign is visible after adjustment
+            if self.is_sign_in_view():
+                self.failed_attempts = 0
+                return True
+        
+        # If we couldn't find a good position, adjust camera to directly face the sign
+        self.failed_attempts += 1
+        
+        if self.failed_attempts >= self.max_failed_attempts:
+            # Reset to a known good position near the sign
+            self.camera.location = mathutils.Vector((
+                self.sign_position.x - random.uniform(5, 10),
+                self.sign_position.y - random.uniform(20, 30),
+                self.height_range[0] + random.uniform(2, 4)
+            ))
+            self.failed_attempts = 0
+        else:
+            # Restore original position
+            self.camera.location = original_location
+            self.camera.rotation_euler = original_rotation
+            
+            # Try moving toward the sign
+            sign_dir = self.get_sign_direction()
+            self.camera.location += sign_dir * random.uniform(3, 8)
+            self.adjust_to_view_sign()
+        
+        return self.is_sign_in_view()

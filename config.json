@@ -1,7 +1,7 @@
 {
   "road_scene": "Highway",
   "road_conditions": "Dry",
-  "sign" : "Bump",
+  "sign": "Minimum Speed 40",
   "scratches": 0.25,
   "rust": 0.25,
   "snow": 0.0,
@@ -21,7 +21,7 @@
   "tree_type": "pine",
   "snow_type": "moderate",
   "frame_number": 450,
-  "samples": 128,
-  "num_steps": 1,
+  "samples": 64,
+  "num_steps": 5,
   "step_size": 5
 }

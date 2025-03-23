@@ -19,6 +19,26 @@
       "id": 1,
       "name": "traffic_sign",
       "supercategory": "sign"
+    },
+    {
+      "id": 2,
+      "name": "bump",
+      "supercategory": "traffic_sign"
+    },
+    {
+      "id": 3,
+      "name": "one_way",
+      "supercategory": "traffic_sign"
+    },
+    {
+      "id": 4,
+      "name": "merging_traffic",
+      "supercategory": "traffic_sign"
+    },
+    {
+      "id": 5,
+      "name": "minimum_speed_40",
+      "supercategory": "traffic_sign"
     }
   ],
   "images": [
@@ -114,6 +134,1206 @@
         "plane": "snow",
         "background": "sky",
         "density": "many trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 6,
+      "file_name": "image_0_20250318103552_b3c176.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-18 10:36:45",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 7,
+      "file_name": "image_0_20250318130146_94128b.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-18 13:02:33",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 8,
+      "file_name": "image_0_20250318130400_328128.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-18 13:04:28",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 9,
+      "file_name": "image_1_20250318130428_1c52ff.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-18 13:04:54",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 10,
+      "file_name": "image_2_20250318130454_569729.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-18 13:05:20",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 11,
+      "file_name": "image_3_20250318130520_375bec.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-18 13:05:46",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 12,
+      "file_name": "image_4_20250318130546_be3fa8.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-18 13:06:12",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 13,
+      "file_name": "image_0_20250318130853_0c0410.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-18 13:09:20",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 14,
+      "file_name": "image_1_20250318130920_d70625.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-18 13:09:47",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 15,
+      "file_name": "image_2_20250318130947_602202.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-18 13:10:15",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 16,
+      "file_name": "image_3_20250318131015_3b019c.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-18 13:10:41",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 17,
+      "file_name": "image_4_20250318131041_f3064c.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-18 13:11:09",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 18,
+      "file_name": "image_0_20250318131148_83701d.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-18 13:12:17",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 19,
+      "file_name": "image_1_20250318131217_533270.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-18 13:12:44",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 20,
+      "file_name": "image_2_20250318131244_5a2930.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-18 13:13:11",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 21,
+      "file_name": "image_3_20250318131311_8a32b4.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-18 13:13:37",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 22,
+      "file_name": "image_4_20250318131337_3d7e18.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-18 13:14:05",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 23,
+      "file_name": "image_5_20250318131405_51eb82.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-18 13:14:32",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 24,
+      "file_name": "image_6_20250318131432_4ed79b.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-18 13:15:00",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 25,
+      "file_name": "image_0_20250318131730_6f13b3.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-18 13:18:00",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 26,
+      "file_name": "image_1_20250318131800_5d83e3.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-18 13:18:29",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 27,
+      "file_name": "image_2_20250318131829_0b1343.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-18 13:18:57",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 28,
+      "file_name": "image_3_20250318131857_6119f5.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-18 13:19:25",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 29,
+      "file_name": "image_4_20250318131925_26fa2c.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-18 13:19:53",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 30,
+      "file_name": "image_5_20250318131953_22d0bd.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-18 13:20:21",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 31,
+      "file_name": "image_6_20250318132021_64a687.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-18 13:20:50",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 32,
+      "file_name": "image_0_20250318132417_12654a.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-18 13:24:46",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 33,
+      "file_name": "image_1_20250318132446_53fc03.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-18 13:25:14",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 34,
+      "file_name": "image_0_20250323135133_2fdd1d.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-23 13:53:21",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 35,
+      "file_name": "image_1_20250323135321_8d1e55.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-23 13:53:44",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 36,
+      "file_name": "image_0_20250323135544_35a294.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-23 13:56:06",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 37,
+      "file_name": "image_1_20250323135606_432175.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-23 13:56:28",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 38,
+      "file_name": "image_2_20250323135628_88060c.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-23 13:56:49",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 39,
+      "file_name": "image_3_20250323135649_f3473f.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-23 13:57:10",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 40,
+      "file_name": "image_4_20250323135710_a4894e.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-23 13:57:30",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 41,
+      "file_name": "image_5_20250323135730_9eb447.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-23 13:57:50",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 42,
+      "file_name": "image_6_20250323135750_6811c6.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-23 13:58:08",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 43,
+      "file_name": "image_7_20250323135808_b1c3b2.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-23 13:58:28",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 44,
+      "file_name": "image_8_20250323135828_3e2182.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-23 13:58:47",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 45,
+      "file_name": "image_9_20250323135847_882bc5.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-23 13:59:09",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 46,
+      "file_name": "image_0_20250323140406_af0ab6.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-23 14:04:27",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 47,
+      "file_name": "image_1_20250323140427_92810b.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-23 14:04:48",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 48,
+      "file_name": "image_2_20250323140448_f59417.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-23 14:05:06",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 49,
+      "file_name": "image_3_20250323140506_d58e04.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-23 14:05:27",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 50,
+      "file_name": "image_4_20250323140527_011932.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-23 14:05:47",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 51,
+      "file_name": "image_0_20250323140631_83dc38.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-23 14:06:47",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 52,
+      "file_name": "image_1_20250323140647_16a579.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-23 14:07:02",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 53,
+      "file_name": "image_2_20250323140702_9d4103.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-23 14:07:21",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 54,
+      "file_name": "image_3_20250323140721_c55f99.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-23 14:07:41",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 55,
+      "file_name": "image_4_20250323140741_ca5f66.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-23 14:07:57",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 56,
+      "file_name": "image_0_20250323141007_1a9bb8.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-23 14:10:25",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 57,
+      "file_name": "image_1_20250323141025_27aa1b.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-23 14:10:43",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 58,
+      "file_name": "image_2_20250323141043_3dd653.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-23 14:11:03",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 59,
+      "file_name": "image_3_20250323141103_3103ee.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-23 14:11:21",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 60,
+      "file_name": "image_4_20250323141121_d2a98e.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-23 14:11:41",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 61,
+      "file_name": "image_0_20250323141500_29136a.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-23 14:15:20",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 62,
+      "file_name": "image_1_20250323141520_299b0e.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-23 14:15:40",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 63,
+      "file_name": "image_2_20250323141540_8fc2bd.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-23 14:15:59",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 64,
+      "file_name": "image_3_20250323141559_0ad0fe.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-23 14:16:19",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 65,
+      "file_name": "image_4_20250323141619_f529d8.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-23 14:16:38",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 66,
+      "file_name": "image_0_20250323141822_70ec05.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-23 14:18:41",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 67,
+      "file_name": "image_1_20250323141841_324df0.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-23 14:19:00",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 68,
+      "file_name": "image_2_20250323141900_a06e2d.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-23 14:19:18",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 69,
+      "file_name": "image_3_20250323141918_27814a.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-23 14:19:36",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 70,
+      "file_name": "image_4_20250323141936_bce6f9.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-23 14:19:55",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 71,
+      "file_name": "image_0_20250323142127_b8dba4.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-23 14:21:48",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 72,
+      "file_name": "image_1_20250323142148_a8b9f4.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-23 14:22:09",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 73,
+      "file_name": "image_2_20250323142209_705e31.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-23 14:22:31",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 74,
+      "file_name": "image_3_20250323142231_eb6d17.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-23 14:22:52",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 75,
+      "file_name": "image_4_20250323142252_9cc996.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-23 14:23:12",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 76,
+      "file_name": "image_0_20250323142347_67329c.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-23 14:24:07",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 77,
+      "file_name": "image_1_20250323142407_b16d06.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-23 14:24:25",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 78,
+      "file_name": "image_2_20250323142425_ac7e63.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-23 14:24:45",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 79,
+      "file_name": "image_3_20250323142445_36bb6a.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-23 14:25:04",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 80,
+      "file_name": "image_4_20250323142504_de6706.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-03-23 14:25:24",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
         "distance": "close",
         "tree_type": "pine"
       }
@@ -232,6 +1452,1431 @@
         "sign_width": 5,
         "sign_height": 5,
         "sign_texture": "exit_sign.PNG"
+      }
+    },
+    {
+      "id": 6,
+      "image_id": 6,
+      "category_id": 2,
+      "segmentation": [],
+      "area": 15006,
+      "bbox": [
+        1765,
+        396,
+        123,
+        122
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "Bump"
+      }
+    },
+    {
+      "id": 7,
+      "image_id": 7,
+      "category_id": 2,
+      "segmentation": [],
+      "area": 15006,
+      "bbox": [
+        1765,
+        396,
+        123,
+        122
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "Bump"
+      }
+    },
+    {
+      "id": 8,
+      "image_id": 8,
+      "category_id": 2,
+      "segmentation": [],
+      "area": 15006,
+      "bbox": [
+        1765,
+        396,
+        123,
+        122
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "Bump"
+      }
+    },
+    {
+      "id": 9,
+      "image_id": 9,
+      "category_id": 2,
+      "segmentation": [],
+      "area": 16002,
+      "bbox": [
+        1793,
+        391,
+        127,
+        126
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "Bump"
+      }
+    },
+    {
+      "id": 10,
+      "image_id": 10,
+      "category_id": 2,
+      "segmentation": [],
+      "area": 17030,
+      "bbox": [
+        1822,
+        386,
+        131,
+        130
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "Bump"
+      }
+    },
+    {
+      "id": 11,
+      "image_id": 11,
+      "category_id": 2,
+      "segmentation": [],
+      "area": 18496,
+      "bbox": [
+        1853,
+        380,
+        136,
+        136
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "Bump"
+      }
+    },
+    {
+      "id": 12,
+      "image_id": 12,
+      "category_id": 2,
+      "segmentation": [],
+      "area": 19881,
+      "bbox": [
+        1887,
+        374,
+        141,
+        141
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "Bump"
+      }
+    },
+    {
+      "id": 13,
+      "image_id": 13,
+      "category_id": 3,
+      "segmentation": [],
+      "area": 15006,
+      "bbox": [
+        1765,
+        396,
+        123,
+        122
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "One Way"
+      }
+    },
+    {
+      "id": 14,
+      "image_id": 14,
+      "category_id": 3,
+      "segmentation": [],
+      "area": 16002,
+      "bbox": [
+        1793,
+        391,
+        127,
+        126
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "One Way"
+      }
+    },
+    {
+      "id": 15,
+      "image_id": 15,
+      "category_id": 3,
+      "segmentation": [],
+      "area": 17030,
+      "bbox": [
+        1822,
+        386,
+        131,
+        130
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "One Way"
+      }
+    },
+    {
+      "id": 16,
+      "image_id": 16,
+      "category_id": 3,
+      "segmentation": [],
+      "area": 18496,
+      "bbox": [
+        1853,
+        380,
+        136,
+        136
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "One Way"
+      }
+    },
+    {
+      "id": 17,
+      "image_id": 17,
+      "category_id": 3,
+      "segmentation": [],
+      "area": 19881,
+      "bbox": [
+        1887,
+        374,
+        141,
+        141
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "One Way"
+      }
+    },
+    {
+      "id": 18,
+      "image_id": 18,
+      "category_id": 3,
+      "segmentation": [],
+      "area": 15006,
+      "bbox": [
+        1765,
+        396,
+        123,
+        122
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "One Way"
+      }
+    },
+    {
+      "id": 19,
+      "image_id": 19,
+      "category_id": 3,
+      "segmentation": [],
+      "area": 16002,
+      "bbox": [
+        1793,
+        391,
+        127,
+        126
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "One Way"
+      }
+    },
+    {
+      "id": 20,
+      "image_id": 20,
+      "category_id": 3,
+      "segmentation": [],
+      "area": 17030,
+      "bbox": [
+        1822,
+        386,
+        131,
+        130
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "One Way"
+      }
+    },
+    {
+      "id": 21,
+      "image_id": 21,
+      "category_id": 3,
+      "segmentation": [],
+      "area": 18496,
+      "bbox": [
+        1853,
+        380,
+        136,
+        136
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "One Way"
+      }
+    },
+    {
+      "id": 22,
+      "image_id": 22,
+      "category_id": 3,
+      "segmentation": [],
+      "area": 19881,
+      "bbox": [
+        1887,
+        374,
+        141,
+        141
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "One Way"
+      }
+    },
+    {
+      "id": 23,
+      "image_id": 23,
+      "category_id": 3,
+      "segmentation": [],
+      "area": 21609,
+      "bbox": [
+        1923,
+        367,
+        147,
+        147
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "One Way"
+      }
+    },
+    {
+      "id": 24,
+      "image_id": 24,
+      "category_id": 3,
+      "segmentation": [],
+      "area": 23409,
+      "bbox": [
+        1962,
+        360,
+        153,
+        153
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "One Way"
+      }
+    },
+    {
+      "id": 25,
+      "image_id": 25,
+      "category_id": 3,
+      "segmentation": [],
+      "area": 15006,
+      "bbox": [
+        1765,
+        396,
+        123,
+        122
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "One Way"
+      }
+    },
+    {
+      "id": 26,
+      "image_id": 26,
+      "category_id": 3,
+      "segmentation": [],
+      "area": 16002,
+      "bbox": [
+        1793,
+        391,
+        127,
+        126
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "One Way"
+      }
+    },
+    {
+      "id": 27,
+      "image_id": 27,
+      "category_id": 3,
+      "segmentation": [],
+      "area": 17030,
+      "bbox": [
+        1822,
+        386,
+        131,
+        130
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "One Way"
+      }
+    },
+    {
+      "id": 28,
+      "image_id": 28,
+      "category_id": 3,
+      "segmentation": [],
+      "area": 18496,
+      "bbox": [
+        1853,
+        380,
+        136,
+        136
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "One Way"
+      }
+    },
+    {
+      "id": 29,
+      "image_id": 29,
+      "category_id": 3,
+      "segmentation": [],
+      "area": 19881,
+      "bbox": [
+        1887,
+        374,
+        141,
+        141
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "One Way"
+      }
+    },
+    {
+      "id": 30,
+      "image_id": 30,
+      "category_id": 3,
+      "segmentation": [],
+      "area": 21609,
+      "bbox": [
+        1923,
+        367,
+        147,
+        147
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "One Way"
+      }
+    },
+    {
+      "id": 31,
+      "image_id": 31,
+      "category_id": 3,
+      "segmentation": [],
+      "area": 23409,
+      "bbox": [
+        1962,
+        360,
+        153,
+        153
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "One Way"
+      }
+    },
+    {
+      "id": 32,
+      "image_id": 32,
+      "category_id": 4,
+      "segmentation": [],
+      "area": 15006,
+      "bbox": [
+        1765,
+        396,
+        123,
+        122
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "Merging Traffic"
+      }
+    },
+    {
+      "id": 33,
+      "image_id": 33,
+      "category_id": 4,
+      "segmentation": [],
+      "area": 16002,
+      "bbox": [
+        1793,
+        391,
+        127,
+        126
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "Merging Traffic"
+      }
+    },
+    {
+      "id": 34,
+      "image_id": 34,
+      "category_id": 4,
+      "segmentation": [],
+      "area": 10500,
+      "bbox": [
+        980,
+        569,
+        100,
+        105
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "Merging Traffic"
+      }
+    },
+    {
+      "id": 35,
+      "image_id": 35,
+      "category_id": 4,
+      "segmentation": [],
+      "area": 12765,
+      "bbox": [
+        719,
+        224,
+        111,
+        115
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "Merging Traffic"
+      }
+    },
+    {
+      "id": 36,
+      "image_id": 36,
+      "category_id": 4,
+      "segmentation": [],
+      "area": 15125,
+      "bbox": [
+        1204,
+        493,
+        121,
+        125
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "Merging Traffic"
+      }
+    },
+    {
+      "id": 37,
+      "image_id": 37,
+      "category_id": 4,
+      "segmentation": [],
+      "area": 18224,
+      "bbox": [
+        849,
+        139,
+        134,
+        136
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "Merging Traffic"
+      }
+    },
+    {
+      "id": 38,
+      "image_id": 38,
+      "category_id": 4,
+      "segmentation": [],
+      "area": 14756,
+      "bbox": [
+        783,
+        231,
+        119,
+        124
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "Merging Traffic"
+      }
+    },
+    {
+      "id": 39,
+      "image_id": 39,
+      "category_id": 4,
+      "segmentation": [],
+      "area": 15872,
+      "bbox": [
+        997,
+        294,
+        124,
+        128
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "Merging Traffic"
+      }
+    },
+    {
+      "id": 40,
+      "image_id": 40,
+      "category_id": 4,
+      "segmentation": [],
+      "area": 17685,
+      "bbox": [
+        1021,
+        373,
+        131,
+        135
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "Merging Traffic"
+      }
+    },
+    {
+      "id": 41,
+      "image_id": 41,
+      "category_id": 4,
+      "segmentation": [],
+      "area": 20878,
+      "bbox": [
+        893,
+        421,
+        143,
+        146
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "Merging Traffic"
+      }
+    },
+    {
+      "id": 42,
+      "image_id": 42,
+      "category_id": 4,
+      "segmentation": [],
+      "area": 24964,
+      "bbox": [
+        1049,
+        520,
+        158,
+        158
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "Merging Traffic"
+      }
+    },
+    {
+      "id": 43,
+      "image_id": 43,
+      "category_id": 4,
+      "segmentation": [],
+      "area": 19599,
+      "bbox": [
+        1223,
+        188,
+        139,
+        141
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "Merging Traffic"
+      }
+    },
+    {
+      "id": 44,
+      "image_id": 44,
+      "category_id": 4,
+      "segmentation": [],
+      "area": 19599,
+      "bbox": [
+        734,
+        384,
+        139,
+        141
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "Merging Traffic"
+      }
+    },
+    {
+      "id": 45,
+      "image_id": 45,
+      "category_id": 4,
+      "segmentation": [],
+      "area": 24963,
+      "bbox": [
+        946,
+        129,
+        157,
+        159
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "Merging Traffic"
+      }
+    },
+    {
+      "id": 46,
+      "image_id": 46,
+      "category_id": 4,
+      "segmentation": [],
+      "area": 12064,
+      "bbox": [
+        736,
+        359,
+        104,
+        116
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "Merging Traffic"
+      }
+    },
+    {
+      "id": 47,
+      "image_id": 47,
+      "category_id": 4,
+      "segmentation": [],
+      "area": 10989,
+      "bbox": [
+        1160,
+        282,
+        99,
+        111
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "Merging Traffic"
+      }
+    },
+    {
+      "id": 48,
+      "image_id": 48,
+      "category_id": 4,
+      "segmentation": [],
+      "area": 11227,
+      "bbox": [
+        577,
+        594,
+        103,
+        109
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "Merging Traffic"
+      }
+    },
+    {
+      "id": 49,
+      "image_id": 49,
+      "category_id": 4,
+      "segmentation": [],
+      "area": 9888,
+      "bbox": [
+        954,
+        -80,
+        96,
+        103
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "Merging Traffic"
+      }
+    },
+    {
+      "id": 50,
+      "image_id": 50,
+      "category_id": 4,
+      "segmentation": [],
+      "area": 12096,
+      "bbox": [
+        502,
+        345,
+        108,
+        112
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "Merging Traffic"
+      }
+    },
+    {
+      "id": 51,
+      "image_id": 51,
+      "category_id": 4,
+      "segmentation": [],
+      "area": 14400,
+      "bbox": [
+        1293,
+        836,
+        120,
+        120
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "Merging Traffic"
+      }
+    },
+    {
+      "id": 52,
+      "image_id": 52,
+      "category_id": 4,
+      "segmentation": [],
+      "area": 13566,
+      "bbox": [
+        945,
+        931,
+        114,
+        119
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "Merging Traffic"
+      }
+    },
+    {
+      "id": 53,
+      "image_id": 53,
+      "category_id": 4,
+      "segmentation": [],
+      "area": 13310,
+      "bbox": [
+        726,
+        243,
+        110,
+        121
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "Merging Traffic"
+      }
+    },
+    {
+      "id": 54,
+      "image_id": 54,
+      "category_id": 4,
+      "segmentation": [],
+      "area": 12091,
+      "bbox": [
+        1051,
+        176,
+        107,
+        113
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "Merging Traffic"
+      }
+    },
+    {
+      "id": 55,
+      "image_id": 55,
+      "category_id": 4,
+      "segmentation": [],
+      "area": 13456,
+      "bbox": [
+        1490,
+        802,
+        116,
+        116
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "Merging Traffic"
+      }
+    },
+    {
+      "id": 56,
+      "image_id": 56,
+      "category_id": 4,
+      "segmentation": [],
+      "area": 11340,
+      "bbox": [
+        1176,
+        704,
+        105,
+        108
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "Merging Traffic"
+      }
+    },
+    {
+      "id": 57,
+      "image_id": 57,
+      "category_id": 4,
+      "segmentation": [],
+      "area": 11990,
+      "bbox": [
+        1238,
+        715,
+        109,
+        110
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "Merging Traffic"
+      }
+    },
+    {
+      "id": 58,
+      "image_id": 58,
+      "category_id": 4,
+      "segmentation": [],
+      "area": 13804,
+      "bbox": [
+        1305,
+        426,
+        116,
+        119
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "Merging Traffic"
+      }
+    },
+    {
+      "id": 59,
+      "image_id": 59,
+      "category_id": 4,
+      "segmentation": [],
+      "area": 17423,
+      "bbox": [
+        1315,
+        598,
+        133,
+        131
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "Merging Traffic"
+      }
+    },
+    {
+      "id": 60,
+      "image_id": 60,
+      "category_id": 4,
+      "segmentation": [],
+      "area": 16764,
+      "bbox": [
+        892,
+        330,
+        127,
+        132
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "Merging Traffic"
+      }
+    },
+    {
+      "id": 61,
+      "image_id": 61,
+      "category_id": 5,
+      "segmentation": [],
+      "area": 12753,
+      "bbox": [
+        1011,
+        401,
+        109,
+        117
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "Minimum Speed 40"
+      }
+    },
+    {
+      "id": 62,
+      "image_id": 62,
+      "category_id": 5,
+      "segmentation": [],
+      "area": 11628,
+      "bbox": [
+        1014,
+        402,
+        102,
+        114
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "Minimum Speed 40"
+      }
+    },
+    {
+      "id": 63,
+      "image_id": 63,
+      "category_id": 5,
+      "segmentation": [],
+      "area": 12257,
+      "bbox": [
+        921,
+        511,
+        103,
+        119
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "Minimum Speed 40"
+      }
+    },
+    {
+      "id": 64,
+      "image_id": 64,
+      "category_id": 5,
+      "segmentation": [],
+      "area": 13328,
+      "bbox": [
+        1002,
+        465,
+        112,
+        119
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "Minimum Speed 40"
+      }
+    },
+    {
+      "id": 65,
+      "image_id": 65,
+      "category_id": 5,
+      "segmentation": [],
+      "area": 12600,
+      "bbox": [
+        861,
+        503,
+        105,
+        120
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "Minimum Speed 40"
+      }
+    },
+    {
+      "id": 66,
+      "image_id": 66,
+      "category_id": 5,
+      "segmentation": [],
+      "area": 18630,
+      "bbox": [
+        1034,
+        354,
+        135,
+        138
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "Minimum Speed 40"
+      }
+    },
+    {
+      "id": 67,
+      "image_id": 67,
+      "category_id": 5,
+      "segmentation": [],
+      "area": 27388,
+      "bbox": [
+        1022,
+        379,
+        164,
+        167
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "Minimum Speed 40"
+      }
+    },
+    {
+      "id": 68,
+      "image_id": 68,
+      "category_id": 5,
+      "segmentation": [],
+      "area": 44512,
+      "bbox": [
+        993,
+        291,
+        208,
+        214
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "Minimum Speed 40"
+      }
+    },
+    {
+      "id": 69,
+      "image_id": 69,
+      "category_id": 5,
+      "segmentation": [],
+      "area": 25584,
+      "bbox": [
+        890,
+        483,
+        156,
+        164
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "Minimum Speed 40"
+      }
+    },
+    {
+      "id": 70,
+      "image_id": 70,
+      "category_id": 5,
+      "segmentation": [],
+      "area": 24645,
+      "bbox": [
+        857,
+        331,
+        155,
+        159
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "Minimum Speed 40"
+      }
+    },
+    {
+      "id": 71,
+      "image_id": 71,
+      "category_id": 5,
+      "segmentation": [],
+      "area": 13986,
+      "bbox": [
+        929,
+        -41,
+        111,
+        126
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "Minimum Speed 40"
+      }
+    },
+    {
+      "id": 72,
+      "image_id": 72,
+      "category_id": 5,
+      "segmentation": [],
+      "area": 12744,
+      "bbox": [
+        1055,
+        68,
+        108,
+        118
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "Minimum Speed 40"
+      }
+    },
+    {
+      "id": 73,
+      "image_id": 73,
+      "category_id": 5,
+      "segmentation": [],
+      "area": 12420,
+      "bbox": [
+        883,
+        -102,
+        108,
+        115
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "Minimum Speed 40"
+      }
+    },
+    {
+      "id": 74,
+      "image_id": 74,
+      "category_id": 5,
+      "segmentation": [],
+      "area": 15367,
+      "bbox": [
+        975,
+        100,
+        121,
+        127
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "Minimum Speed 40"
+      }
+    },
+    {
+      "id": 75,
+      "image_id": 75,
+      "category_id": 5,
+      "segmentation": [],
+      "area": 12296,
+      "bbox": [
+        937,
+        116,
+        106,
+        116
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "Minimum Speed 40"
+      }
+    },
+    {
+      "id": 76,
+      "image_id": 76,
+      "category_id": 5,
+      "segmentation": [],
+      "area": 13776,
+      "bbox": [
+        980,
+        168,
+        112,
+        123
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "Minimum Speed 40"
+      }
+    },
+    {
+      "id": 77,
+      "image_id": 77,
+      "category_id": 5,
+      "segmentation": [],
+      "area": 16120,
+      "bbox": [
+        922,
+        630,
+        124,
+        130
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "Minimum Speed 40"
+      }
+    },
+    {
+      "id": 78,
+      "image_id": 78,
+      "category_id": 5,
+      "segmentation": [],
+      "area": 14278,
+      "bbox": [
+        1085,
+        285,
+        118,
+        121
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "Minimum Speed 40"
+      }
+    },
+    {
+      "id": 79,
+      "image_id": 79,
+      "category_id": 5,
+      "segmentation": [],
+      "area": 10710,
+      "bbox": [
+        958,
+        398,
+        102,
+        105
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "Minimum Speed 40"
+      }
+    },
+    {
+      "id": 80,
+      "image_id": 80,
+      "category_id": 5,
+      "segmentation": [],
+      "area": 9600,
+      "bbox": [
+        937,
+        238,
+        96,
+        100
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "Minimum Speed 40"
       }
     }
   ]

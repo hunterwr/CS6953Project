@@ -76,7 +76,7 @@ def main(args):
     
     # # Add trees 
     # #trees.generate_forest(args.road_width, args.road_length, args.min_dist, args.max_dist, args.num_trees)
-    trees.generate_preset_forest(target_directory, road_width, road_length, args.density, args.distance, args.tree_type)
+    # trees.generate_preset_forest(target_directory, road_width, road_length, args.density, args.distance, args.tree_type)
     
     backgrounds = {
         "city": ["burj_khalifa"],
@@ -90,6 +90,14 @@ def main(args):
         location=tuple(map(float, args.camera_location.split(','))),
         rotation=tuple(map(float, args.camera_rotation.split(','))),
         scale=args.camera_scale
+    )
+    
+    # Initialize the camera controller
+    camera_controller = cam.CameraController(
+        camera, 
+        road_boundaries,
+        sign_name="Simple Sign",
+        height_range=(4, 10)
     )
     
     # Add a light source
@@ -120,7 +128,7 @@ def main(args):
     
     # Determine output directory
     base_output_dir = os.path.join(target_directory, "output")
-    output_dir = get_next_output_directory(base_output_dir)
+    output_dir = os.path.join(base_output_dir, "samples8") #get_next_output_directory(base_output_dir)
     
     previous_annotations = find_previous_annotations(output_dir)
     
@@ -139,8 +147,9 @@ def main(args):
         coco_annotator = COCOAnnotator(output_dir, args_dict)
     
     for step in range(args.num_steps):
-        # Move camera to next position
-        camera.location.y += args.step_size
+        # Move camera to next position using the camera controller
+        move_success = camera_controller.step()
+        print(f"Step {step+1}/{args.num_steps}: Camera movement {'successful' if move_success else 'adjusted to maintain sign visibility'}")
         
         base_filename = f"image_{step}"
         try:
