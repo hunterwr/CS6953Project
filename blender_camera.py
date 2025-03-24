@@ -45,9 +45,9 @@ def add_camera(target_directory, background="dunes" , location=(0.0, -19.409, 14
     background_plane = bpy.context.object
     background_plane.name = "Background Plane"
     
-    background_plane.scale = (600.0, 400.0, 0.0)
+    background_plane.scale = (1200.0, 800.0, 0.0)
     background_plane.rotation_euler = camera.rotation_euler
-    background_plane.location = (0.0, 380.0, 190.0)
+    background_plane.location = (0.0, 380.0, 280.0)
     
     # Set the parent of the background plane to the camera
     background_plane.parent = camera
@@ -141,7 +141,7 @@ class CameraController:
         
         # Movement ranges in XYZ, relative to current position
         self.movement_ranges = {
-            'x': (-self.road_width * 0.3, self.road_width * 0.3),
+            'x': (-self.road_width * 0.1, self.road_width * 0.1),
             'y': (-25, 25),  # Forward/back movement range
             'z': (-1, 1)     # Height adjustment range
         }
@@ -164,24 +164,27 @@ class CameraController:
     
     def is_sign_in_view(self):
         """
-        Check if the sign is visible from the current camera position
-        Returns True if sign is in view, False otherwise
+        Check if the entire traffic sign is fully visible from the current camera position.
+        Returns True if all corners are visible, False otherwise.
         """
         scene = bpy.context.scene
         
         # Get sign's bounding box corners in world space
         bbox_corners = [self.sign_obj.matrix_world @ Vector(corner) for corner in self.sign_obj.bound_box]
-        
-        # Check if any corner of the sign is visible in camera view
-        for corner in bbox_corners:
-            # Convert 3D point to 2D screen coordinates
-            co_2d = bpy_extras.object_utils.world_to_camera_view(scene, self.camera, corner)
-            
-            # Check if point is within camera frame (0-1 range for both x and y)
-            if 0 < co_2d.x < 1 and 0 < co_2d.y < 1:
-                return True
-                
-        return False
+
+        # Convert corners to camera space
+        camera_matrix = self.camera.matrix_world.inverted()
+        projected_corners = [bpy_extras.object_utils.world_to_camera_view(scene, self.camera, corner) for corner in bbox_corners]
+
+        # Check if ALL corners are inside the camera frame
+        all_corners_visible = all(0 < co_2d.x < 1 and 0 < co_2d.y < 1 for co_2d in projected_corners)
+
+        # Ensure all corners are in front of the camera (positive Z in camera space)
+        all_corners_in_front = all((camera_matrix @ corner).z > 0 for corner in bbox_corners)
+
+        # The sign is fully visible only if ALL corners are inside the camera frame AND in front of the camera
+        return all_corners_visible and all_corners_in_front
+
     
     def get_sign_direction(self):
         """Get normalized direction vector from camera to sign"""
@@ -203,9 +206,9 @@ class CameraController:
         self.camera.rotation_euler = track_quat.to_euler()
         
         # Add some random variation to rotation (within small range)
-        self.camera.rotation_euler.x += random.uniform(-0.1, 0.1)
-        self.camera.rotation_euler.z += random.uniform(-0.05, 0.05)
-        self.camera.rotation_euler.y += random.uniform(-0.05, 0.05)
+        # self.camera.rotation_euler.x += random.uniform(-0.1, 0.1)
+        self.camera.rotation_euler.z = 0
+        # self.camera.rotation_euler.y += random.uniform(-0.05, 0.05)
     
     def move_towards_road_center(self):
         """Move camera back toward road center if it's too far off"""
@@ -213,7 +216,7 @@ class CameraController:
         
         # Calculate vector to road center
         current_x = self.camera.location.x
-        move_x = (road_center_x - current_x) * 0.2  # Move 30% of the way toward center
+        move_x = (road_center_x - current_x) * 0.05  # Move 20% of the way
         
         # Apply movement
         self.camera.location.x += move_x
@@ -260,10 +263,11 @@ class CameraController:
                 self.move_towards_road_center()
             
             # Adjust camera to look at sign
-            self.adjust_to_view_sign()
+            # self.adjust_to_view_sign()
             
             # Check if sign is visible after adjustment
             if self.is_sign_in_view():
+                
                 self.failed_attempts = 0
                 return True
         
@@ -272,9 +276,10 @@ class CameraController:
         
         if self.failed_attempts >= self.max_failed_attempts:
             # Reset to a known good position near the sign
+            print("Failed to find a good position, resetting to known position")
             self.camera.location = mathutils.Vector((
-                self.sign_position.x - random.uniform(5, 10),
-                self.sign_position.y - random.uniform(20, 30),
+                self.sign_position.x - random.uniform(40, 50),
+                self.sign_position.y - random.uniform(50, 60),
                 self.height_range[0] + random.uniform(2, 4)
             ))
             self.failed_attempts = 0

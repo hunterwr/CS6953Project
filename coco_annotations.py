@@ -4,6 +4,7 @@ import datetime
 import uuid
 from typing import Dict, List, Any, Tuple, Optional, Set
 import bpy
+from functools import partial
 
 class COCOAnnotator:
     def __init__(self, output_dir: str, config: Dict[str, Any], previous_file: Optional[str] = None):
@@ -66,6 +67,18 @@ class COCOAnnotator:
         else:
             # Make sure our current sign is in the categories list
             self._ensure_category_exists(self.sign_category, supercategory="traffic_sign")
+        
+        # Import the dashcam post-processing module
+        try:
+            from dashcam_postprocessing import process_and_save
+            self.process_and_save = process_and_save
+            self.post_processing_available = True
+            # Get post-processing strength from config or use default
+            self.post_processing_strength = float(config.get("post_processing_strength", 0.7))
+            print(f"Post-processing initialized with strength: {self.post_processing_strength}")
+        except ImportError:
+            self.post_processing_available = False
+            print("Warning: dashcam_postprocessing module not found. Post-processing will be skipped.")
     
     def _extract_sign_name(self, sign_file: str) -> str:
         """Extract a clean category name from the sign filename"""
@@ -274,6 +287,14 @@ class COCOAnnotator:
         scene.cycles.samples = samples
         bpy.ops.render.render(write_still=True)
         print(f"Saved image to: {image_path}")
+        
+        # Apply post-processing to make it look like dashcam footage
+        if hasattr(self, 'post_processing_available') and self.post_processing_available:
+            try:
+                print(f"Applying dashcam post-processing effects to {image_path}")
+                self.process_and_save(image_path, strength=self.post_processing_strength)
+            except Exception as e:
+                print(f"Warning: Failed to apply post-processing: {str(e)}")
         
         # Calculate bounding box
         bbox = self.get_bounding_box(bpy.data.objects[obj_name], bpy.data.objects[cam_name])

@@ -128,7 +128,7 @@ def main(args):
     
     # Determine output directory
     base_output_dir = os.path.join(target_directory, "output")
-    output_dir = os.path.join(base_output_dir, "samples8") #get_next_output_directory(base_output_dir)
+    output_dir = os.path.join(base_output_dir, "samples11") #get_next_output_directory(base_output_dir)
     
     previous_annotations = find_previous_annotations(output_dir)
     
