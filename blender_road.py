@@ -216,7 +216,7 @@ def road_presets(scene = 'Two Lane', conditions = 'Dry',target_directory = None)
         bpy.context.view_layer.update()
 
 
-    return road_boundaries,lane_positions, road_width,road_length
+    return road_boundaries,lane_positions
 
 def apply_blenderkit_material(obj_name, asset_base_id):
 
