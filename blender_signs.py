@@ -1,17 +1,18 @@
 import bpy
 import texture_utils as textures
+import blender_utils as utils
 import math
 import bmesh
 from mathutils import Vector
 import os 
 
-def generate_sign(road_boundaries,png_path ='textures/Signs/Signs/PNGs/Loose Gravel.png',scratches =0.25, rust = 0.25,rivets=False,snow = 0.0,mud = 0.0, sign_name = 'Simple Sign', target_directory = None ):
+def generate_sign(road_boundaries,png_path ='textures/Signs/Signs/PNGs/Loose Gravel.png',scratches =0.25, rust = 0.25,rivets=False,snow = 0.0,mud = 0.0, sign_name = 'Simple Sign', target_directory = None, lean_forward_angle=0, lean_left_angle=0, spin=0):
     # Create the pole
 
     print(road_boundaries)
     right_edge = road_boundaries[2][0]
     sign_height = 7
-    pole_end_points = create_pole(
+    pole_end_points, pole_obj = create_pole(
         radius=0.2,
         height=sign_height,
         location=(right_edge + 1.5, 100, sign_height / 1.5),
@@ -40,6 +41,10 @@ def generate_sign(road_boundaries,png_path ='textures/Signs/Signs/PNGs/Loose Gra
 
     textures.apply_sign_png_conditions(sign_obj,png_path = os.path.join(target_directory,png_path),
                                         scratches_on =scratches, rust_minor_on = rust, rust_major_on = False,rivets_on=rivets,snow=snow,mud=mud,target_directory = target_directory)
+    
+    utils.rotate_objects([sign_obj, pole_obj], angle=lean_forward_angle, axis='Y', pivot_point=(pole_end_points[0], pole_end_points[1], 0))
+    utils.rotate_objects([sign_obj, pole_obj], angle=lean_left_angle, axis='X', pivot_point=(pole_end_points[0], pole_end_points[1], 0))
+    utils.rotate_objects([sign_obj, pole_obj], angle=spin, axis='Z', pivot_point=(pole_end_points[0], pole_end_points[1], 0))
 
 def unwrap_uv(obj):
     bpy.context.view_layer.objects.active = obj
@@ -221,7 +226,7 @@ def create_pole(radius,height, location = (0,0,0),texture_path = None):
     # x_out = location[0]+radius
     x_out = location[0]
     y_out = location[1]+radius
-    return [x_out,y_out,z_out]
+    return [x_out,y_out,z_out], obj
 
 
 def create_round_sign(radius, center_location, texture_path=None,thickness = 0.2):
