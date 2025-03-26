@@ -68,7 +68,7 @@ def main(args):
     
        
     # Place road and sign
-    road_boundaries, lane_positions, road_width,road_length = road.road_presets(scene = args.road_scene, conditions = args.road_conditions, target_directory = target_directory)
+    road_boundaries, lane_positions = road.road_presets(scene = args.road_scene, conditions = args.road_conditions, target_directory = target_directory)
     png_path = 'textures/Signs/Signs/PNGs/'
     sign_path = png_path + args.sign + '.png'
     signs.generate_sign(road_boundaries,sign_path, scratches = args.scratches, rust = args.rust, rivets=False, snow = args.snow, mud = args.mud, target_directory = target_directory )
