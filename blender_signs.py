@@ -42,8 +42,8 @@ def generate_sign(road_boundaries,png_path ='textures/Signs/Signs/PNGs/Loose Gra
     textures.apply_sign_png_conditions(sign_obj,png_path = os.path.join(target_directory,png_path),
                                         scratches_on =scratches, rust_minor_on = rust, rust_major_on = False,rivets_on=rivets,snow=snow,mud=mud,target_directory = target_directory)
     
-    utils.rotate_objects([sign_obj, pole_obj], angle=lean_forward_angle, axis='Y', pivot_point=(pole_end_points[0], pole_end_points[1], 0))
-    utils.rotate_objects([sign_obj, pole_obj], angle=lean_left_angle, axis='X', pivot_point=(pole_end_points[0], pole_end_points[1], 0))
+    utils.rotate_objects([sign_obj, pole_obj], angle=lean_forward_angle, axis='X', pivot_point=(pole_end_points[0], pole_end_points[1], 0))
+    utils.rotate_objects([sign_obj, pole_obj], angle=lean_left_angle, axis='Y', pivot_point=(pole_end_points[0], pole_end_points[1], 0))
     utils.rotate_objects([sign_obj, pole_obj], angle=spin, axis='Z', pivot_point=(pole_end_points[0], pole_end_points[1], 0))
 
 def unwrap_uv(obj):

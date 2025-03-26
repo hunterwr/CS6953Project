@@ -56,7 +56,7 @@ utils.clear_scene()
 
 road_boundaries, lane_positions = road.road_presets(scene = 'Highway', conditions = 'Dry',target_directory = target_directory)
 png_path = 'textures/Signs/Signs/PNGs/Loose Gravel.png'
-signs.generate_sign(road_boundaries,png_path,scratches =0.0, rust = 0.0,rivets=False,snow = 0.0,mud = 0.0, target_directory = target_directory, lean_forward_angle=0, lean_side_angle=0, spin=0 )
+signs.generate_sign(road_boundaries,png_path,scratches =0.0, rust = 0.0,rivets=False,snow = 0.0,mud = 0.0, target_directory = target_directory, lean_forward_angle=0, lean_left_angle=0, spin=0 )
 
 
 
