@@ -69,7 +69,10 @@ def main(args):
     bpy.context.scene.render.engine = 'CYCLES'
     prefs = bpy.context.preferences
     cycles_prefs = prefs.addons['cycles'].preferences
-    cycles_prefs.compute_device_type = 'CUDA' 
+    cycles_prefs.compute_device_type = 'CUDA'
+
+    cycles_prefs.get_devices()
+
     for device in cycles_prefs.devices:
         device.use = True
         print(f" $$$$$$$$$$ Enabled device: {device.name}, Type: {device.type}")
