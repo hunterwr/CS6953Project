@@ -1,0 +1,12 @@
+{
+  "road_conditions": "Dry",
+  "sign_type": "No Left Turn On Red",
+  "density": "some trees",
+  "distance": "close",
+  "type": "pine",
+  "snow_type": "moderate",
+  "samples": 64,
+  "num_images_per_scene": 1,
+  "step_size": 5,
+  "post_processing_strength": 0.3
+}
