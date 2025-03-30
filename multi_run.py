@@ -178,10 +178,10 @@ def generate_scene_and_annotate(args):
         print("Creating new annotations file.")
         coco_annotator = COCOAnnotator(output_dir, args_dict)
     
-    for step in range(args.num_steps):
+    for step in range(args.num_images_per_scene):
         # Move camera to next position using the camera controller
         move_success = camera_controller.step()
-        print(f"Step {step+1}/{args.num_steps}: Camera movement {'successful' if move_success else 'adjusted to maintain sign visibility'}")
+        print(f"Step {step+1}/{args.num_images_per_scene}: Camera movement {'successful' if move_success else 'adjusted to maintain sign visibility'}")
         
         base_filename = f"image_{step}"
         try:
@@ -237,9 +237,9 @@ def generate_random_parameters(args_dict):
         "camera_scale": get_value("camera_scale", args_dict, lambda: random.uniform(0.8, 1.2)),
         "light_location": get_value("light_location", args_dict, lambda: "-28.398,59.799,19.12"),
         "light_angle": get_value("light_angle", args_dict, lambda: random.uniform(160, 200)),
-        "time_of_day": get_value("time_of_day", args_dict, lambda: random.choice(["dawn"])),
+        "time_of_day": get_value("time_of_day", args_dict, lambda: random.choice(["dawn", "midday", "dusk", "night"])),
         "ground_plane_size": get_value("ground_plane_size", args_dict, lambda: 1000),
-        "plane": get_value("plane", args_dict, lambda: random.choice(["snow"])),
+        "plane": get_value("plane", args_dict, lambda: random.choice(["snow", "rock", "forest", "mud"])), 
         "tree_density": get_value("tree_density", args_dict, lambda: random.choice(["no trees", "some trees", "many trees"])),
         "tree_distance": get_value("tree_distance", args_dict, lambda: random.choice(["close", "far"])),
         "tree_type": get_value("tree_type", args_dict, lambda: random.choice(["pine", "birch"])),
@@ -262,7 +262,22 @@ def main():
         user_config = json.load(f)
 
     # Extract list-based parameter (sign) and required values
-    signs = user_config.get("sign", ["Stop"])  # Default to "Stop" if not specified
+    # Get all sign files from the directory
+    sign_directory = os.path.join(target_directory, "textures/Signs/Signs/PNGs")
+    if os.path.exists(sign_directory):
+        all_signs = [os.path.splitext(os.path.basename(file))[0] for file in glob.glob(os.path.join(sign_directory, "*.png"))]
+        # Randomly select 5 signs if there are more than 5 available
+        if len(all_signs) > 5:
+            random.shuffle(all_signs)
+            all_signs = all_signs[:5]
+        if all_signs:
+            signs = user_config.get("sign", all_signs)  
+        else:
+            signs = user_config.get("sign", ["Stop"]) 
+    else:
+        print(f"Warning: Sign directory not found at {sign_directory}")
+        signs = user_config.get("sign", ["Stop"])  # Default to "Stop" if directory not found
+    
     num_scenes = user_config.get("num_scenes", 1)
     num_images_per_scene = user_config.get("num_images_per_scene", 1)
 

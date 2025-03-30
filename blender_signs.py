@@ -15,7 +15,7 @@ def generate_sign(road_boundaries,png_path ='textures/Signs/Signs/PNGs/Loose Gra
     pole_end_points, pole_obj = create_pole(
         radius=0.2,
         height=sign_height,
-        location=(right_edge + 1.5, 100, sign_height / 1.5),
+        location=(right_edge + 1.5, 300, sign_height / 1.5),
         texture_path=os.path.join(target_directory, 'textures/Signs/sign_pole_al.PNG')
     )
 
