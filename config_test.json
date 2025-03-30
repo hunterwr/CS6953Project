@@ -7,6 +7,7 @@
   "snow_type": "moderate",
   "samples": 64,
   "num_images_per_scene": 1,
+  "num_scenes": 5,
   "step_size": 5,
   "post_processing_strength": 0.3
 }

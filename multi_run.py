@@ -7,6 +7,24 @@ import json
 import glob
 import itertools
 
+# Path to the directory where the addon is located
+addon_path = "/home/default/workspace/Add-on/add-on-sapling-tree-gen-fixed.zip"
+#addon_path = "/home/default/workspace/Add-on/extra-zip-trees.zip"
+
+# Install the addon
+bpy.ops.preferences.addon_install(filepath=addon_path)
+
+# Print all installed addons
+addon_paths = bpy.utils.script_paths()
+for path in addon_paths:
+    print(f"Checking: {path}")
+    if os.path.exists(path):
+        print("Contents:", os.listdir(path))
+
+#Enable the addon
+bpy.ops.preferences.addon_enable(module="sapling_tree_gen")
+
+
 def get_script_directory():
     """
     Returns the directory of this Python file if __file__ is defined,
@@ -84,7 +102,7 @@ def generate_scene_and_annotate(args):
     road_boundaries, lane_positions = road.road_presets(scene = args.road_scene, conditions = args.road_conditions, target_directory = target_directory)
     png_path = 'textures/Signs/Signs/PNGs/'
     sign_path = png_path + args.sign + '.png'
-    signs.generate_sign(road_boundaries,sign_path, scratches = args.scratches, rust = args.rust, rivets=False, snow = args.snow, mud = args.mud, target_directory = target_directory )
+    signs.generate_sign(road_boundaries,sign_path, scratches = args.sign_scratches, rust = args.sign_rust, rivets=False, snow = args.sign_snow, mud = args.sign_mud, target_directory = target_directory )
 
     
     # # Add trees 
@@ -207,7 +225,7 @@ def generate_random_parameters(args_dict):
         "num_images_per_scene": get_value("num_images_per_scene", args_dict, lambda: 1),
         "light_power": get_value("light_power", args_dict, lambda: random.uniform(3.0, 5.0)),
         "background": get_value("background", args_dict, lambda: random.choice(["sky"])), 
-        "road_scene": get_value("road_scene", args_dict, lambda: random.choice(["Highway"])),
+        "road_scene": get_value("road_scene", args_dict, lambda: random.choice(["Highway", "Two Lane"])),
         "road_conditions": get_value("road_conditions", args_dict, lambda: random.choice(["Dry"])),
         "sign_scratches": get_value("sign_scratches", args_dict, lambda: random.uniform(0.0, 0.5)),
         "sign_rust": get_value("sign_rust", args_dict, lambda: random.uniform(0.0, 0.5)),
