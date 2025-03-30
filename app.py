@@ -46,13 +46,6 @@ importlib.reload(sky_texture)
 utils.clear_scene()
 
 
-# road.create_road_edges(
-#         road_width=50,road_height=1, 
-#         road_length=300,
-#         left_edge_start = (-(50/2),-50,0),
-#         name='Road_Edges',
-#         target_directory=target_directory,
-#         conditions='Dry')
 
 road_boundaries, lane_positions = road.road_presets(scene = 'Highway', conditions = 'Dry',target_directory = target_directory)
 png_path = 'textures/Signs/Signs/PNGs/Loose Gravel.png'
@@ -61,33 +54,6 @@ signs.generate_sign(road_boundaries,png_path,scratches =0.0, rust = 0.0,rivets=F
 
 
 print(f"Road Boundaries: {road_boundaries}")
-# # Create the pole
-# pole_end_points = signs.create_pole(
-#     0.2,
-#     5,
-#     location=(road_boundaries[2][0] + 3, 50, 5 / 2),
-#     texture_path=os.path.join(target_directory, 'textures/Signs/sign_pole_al.PNG')
-# )
-
-# # Create a simple square sign
-# signs.create_sign_square(
-#     5,
-#     5,
-#     text=None,
-#     start_location=(
-#         pole_end_points[0]-5/2,
-#         pole_end_points[1] - 2.5 * 0.2,
-#         pole_end_points[2] - 0.25
-#     ),
-#     name='Simple Sign'
-# )
-
-# # Add a sign texture
-# sign_obj = bpy.data.objects.get('Simple Sign')
-
-# texutils.apply_sign_png_conditions(sign_obj,png_path = os.path.join(target_directory,'textures/Signs/Signs/PNGs/Loose Gravel.png'),
-#                                     scratches_on =0.5, rust_minor_on = 0.0, rust_major_on = False,rivets_on=False,snow=0.5,target_directory = target_directory)
-
 
 
 road_width = 50
@@ -131,6 +97,7 @@ ground_plane_material = 'forrest_ground_01'
 #creates a plane for the ground surfacen
 plane.create_plane(size=ground_plane_size, target_directory=target_directory, material=ground_plane_material)
 
+lane_positions = road.warp_scene(x_warp=1,z_warp=0.5,road_preset='Highway')
 #creates a car object downloaded as gltffile
 car.create_car(target_directory)
 

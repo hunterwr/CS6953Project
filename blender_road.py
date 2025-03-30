@@ -1,10 +1,10 @@
 import bpy
 
-
+import numpy as np
 import math
 import bpy
 import time 
-
+import random
 import texture_utils as textures 
 
 def road_presets(scene = 'Two Lane', conditions = 'Dry',target_directory = None):
@@ -478,82 +478,185 @@ def create_spline_road(width,length,spline_start=(0,0,0),spline_end=(20,20,0), c
     
     return 
     
-def test():
-    print('Test')
-    return 
 
-def create_curved_road(radius=10, angle=90, width=2):
-    """
-    Creates a curved road segment.
 
-    :param radius: Radius of the curve.
-    :param angle: Angle of the curve in degrees.
-    :param width: Width of the road.
-    """
-    pass
+def warp_scene(x_warp, z_warp, road_preset = 'Highway'):
 
-def create_multilane_road(lanes=2, length=10, width_per_lane=2):
-    """
-    Creates a multilane road segment.
+    #subdivide road
+    obj = bpy.data.objects.get('Road_Edges')
+    bpy.context.view_layer.objects.active = obj
+    bpy.ops.object.mode_set(mode='EDIT')  # Switch to Edit Mode
 
-    :param lanes: Number of lanes.
-    :param length: Length of the road.
-    :param width_per_lane: Width of each lane.
-    """
-    pass
+    # Ensure all vertices are selected
+    bpy.ops.mesh.select_all(action='SELECT')
 
-def create_road_with_exit(main_length=10, exit_length=5, width=2, exit_angle=30):
-    """
-    Creates a road segment with an exit.
+    # Apply subdivision
+    bpy.ops.mesh.subdivide(number_cuts=10)
+    bpy.ops.object.mode_set(mode='OBJECT')
 
-    :param main_length: Length of the main road.
-    :param exit_length: Length of the exit road.
-    :param width: Width of the road.
-    :param exit_angle: Angle of the exit road relative to the main road.
-    """
-    pass
+    #get original mesh positions
+    # original_positions = {v.index: obj.matrix_world @ v.co for v in obj.data.vertices}
+    length = 400
 
-def create_intersection(road_count=4, road_width=2):
-    """
-    Creates an intersection with the specified number of connecting roads.
+    if road_preset =='Highway':
+        start_positions = [-28,-9,9,28]
+        nums = np.linspace(-20,length,15)
 
-    :param road_count: Number of roads connecting at the intersection.
-    :param road_width: Width of each connecting road.
-    """
-    pass
+       
+        lane1 = []
+        lane2 = []
+        lane3 = []
+        lane4 = []
+        lanes = [lane1,lane2,lane3,lane4]
+        for i,val in enumerate(start_positions):
+           lanes[i] = [(val, num, 1) for num in nums]
 
-def create_roundabout(radius=10, lane_count=1, lane_width=2):
-    """
-    Creates a roundabout.
+    #    print('POINTS')
+    #    print(lanes)
 
-    :param radius: Radius of the roundabout.
-    :param lane_count: Number of lanes in the roundabout.
-    :param lane_width: Width of each lane.
-    """
-    pass
+    if road_preset == 'Two Lane':
+        start_positions =  [-7.5,7.5]
+        nums = np.linspace(-20,length,15)
+        lane1 = []
+        lane2 = []
+        lanes = [lane1,lane2]
+        for i,val in enumerate(start_positions):
+            lanes[i] = [(val, num, 1) for num in nums]
+       
+    lane_cubes = []
+    for lane in lanes:
+        cubes = []
+        for point in lane:
+            bpy.ops.mesh.primitive_cube_add(size=.1, location=point)  # Create a cube at the point (size=0.1 for tiny cubes)
+            cube = bpy.context.object
+            cubes.append(cube)
+        lane_cubes.append(cubes)
 
-def create_bridge(length=20, width=4, height=5):
-    """
-    Creates a bridge segment.
+    #### Add tracking spheres
 
-    :param length: Length of the bridge.
-    :param width: Width of the bridge.
-    :param height: Height of the bridge above the ground.
-    """
-    pass
 
-def create_tunnel(length=20, width=4, height=3):
-    """
-    Creates a tunnel segment.
 
-    :param length: Length of the tunnel.
-    :param width: Width of the tunnel.
-    :param height: Height of the tunnel.
-    """
-    pass
+    #create lattice structure
+    bpy.ops.object.mode_set(mode='OBJECT')  # Ensure Object Mode before applying modifiers
+    bpy.ops.object.add(type='LATTICE')
+    lattice = bpy.context.object  # Get the created lattice
+    lattice.name = "Road_Lattice"
+    lattice.data.name = "Road_Lattice_Data"
 
-def create_road_network():
-    """
-    Creates a complex road network by combining multiple road elements.
-    """
-    pass
+    #size lattice
+    lattice.scale = (104.741, 450, 50)  # Change values as needed
+
+    # Move the lattice to the correct location
+    lattice.location = (0, 140, 20)  # Adjust based on your road position
+
+    # Add lattice subdivisions (U, V, W → X, Y, Z)
+    lattice.data.points_u = 8  # Horizontal divisions
+    lattice.data.points_v = 8 # Vertical divisions (along length of road)
+    lattice.data.points_w = 2  # Height divisions
+
+    lattice = bpy.data.objects.get('Road_Lattice')
+    
+ 
+
+    # Get the 'Porsche' collection
+    porsche_collection = bpy.data.collections.get('Porsche')
+
+    # Apply the lattice modifier to all objects except those in the 'Porsche' collection
+    for obj in bpy.context.scene.objects:
+        # Skip the lattice object and objects in the 'Porsche' collection
+        if obj is None or obj == lattice or (porsche_collection and obj in porsche_collection.objects):
+            continue
+        
+        if obj.type not in {'MESH', 'CURVE'}:
+            continue  # Skip non-mesh/curve objects like cameras, lights, etc.
+        
+        # Check if the object already has a lattice modifier
+        mod_name = "LatticeDeform"
+        
+        # Apply the lattice modifier if not already present
+        if mod_name not in obj.modifiers:
+            mod = obj.modifiers.new(name=mod_name, type='LATTICE')
+            mod.object = lattice  # Assign the lattice to the modifier
+            print(f"Applied lattice to {obj.name}")
+
+
+    lattice = bpy.data.objects.get("Road_Lattice")
+
+
+
+    target_v = 7
+    if lattice and lattice.type == 'LATTICE':
+        lattice_data = lattice.data
+       
+        # Number of points in each direction (U, V, W)
+        num_u = lattice_data.points_u
+        num_v = lattice_data.points_v
+        num_w = lattice_data.points_w
+       
+        # Create a dictionary to group points by their 'v' value
+        points_by_v = {v: [] for v in range(num_v)}  # Key: v index, Value: List of points at that v level
+       
+        # Loop through the lattice points and group them by 'v' level
+        for i, point in enumerate(lattice_data.points):
+            u = i % num_u
+            v = (i // num_u) % num_v
+            w = i // (num_u * num_v)
+           
+            # Add the point to the corresponding 'v' group
+            points_by_v[v].append(point)
+        direction = random.choice([-1,1])
+        for v, group in points_by_v.items():
+#                rand_val_x = random.uniform(0,0.03*x_warp)
+                rand_val_z = random.uniform(-.03*z_warp,.03*z_warp)
+                # Shift each point in the group by the calculated amount
+                for point in group:
+                    point.co_deform.x +=  direction*0.03*x_warp*v**2 # Shift along the x axis
+                   
+                    point.co_deform.z += rand_val_z*v**2
+           
+                    # If you want to shift along other axes, use point.co_deform.y or point.co_deform.z
+                    # Example: point.co_deform.z += shift_amount
+
+            # Update the scene to apply the changes
+        bpy.context.view_layer.update()
+       
+
+
+    bpy.context.view_layer.update()
+
+    cube_locations_by_lane = []  # List to store cube locations for each lane
+    # Iterate over each lane's cubes
+    for i, lane_cubes_list in enumerate(lane_cubes):
+        lane_locations = []  # List to store the locations of the cubes in the current lane
+        for cube in lane_cubes_list:
+            obj = cube
+
+            # Get evaluated object with modifier effects
+            depsgraph = bpy.context.evaluated_depsgraph_get()
+            eval_obj = obj.evaluated_get(depsgraph)
+            mesh = eval_obj.to_mesh()
+            transformed_verts = np.array([eval_obj.matrix_world @ v.co for v in mesh.vertices])
+            new_location = transformed_verts.mean(axis=0)
+                       
+            lane_locations.append(new_location)
+           
+            eval_obj.to_mesh_clear()
+
+        # Add the list of cube locations for the current lane to the main list
+        cube_locations_by_lane.append(lane_locations)
+
+    ## Print the extracted cube locations for each lane
+    #print("Cube Locations by Lane (post-lattice deformation):")
+    #for i, lane_locations in enumerate(cube_locations_by_lane):
+    #    print(f"Lane {i+1} locations:")
+    #    for loc in lane_locations:
+    #        print(f"  {loc}")
+
+    for lane in lane_cubes:
+        for cube in lane:
+            bpy.data.objects.remove(cube, do_unlink=True)
+
+    # Optional: Clear the lane_cubes list to avoid referencing deleted objects
+    lane_cubes.clear()
+
+    return cube_locations_by_lane
