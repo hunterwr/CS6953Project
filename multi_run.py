@@ -107,7 +107,7 @@ def generate_scene_and_annotate(args):
     
     # # Add trees 
     # #trees.generate_forest(args.road_width, args.road_length, args.min_dist, args.max_dist, args.num_trees)
-    # trees.generate_preset_forest(target_directory, road_width, road_length, args.density, args.distance, args.tree_type)
+    trees.generate_preset_forest(target_directory, road_boundaries, density=args.tree_density, distance_from_road=args.tree_distance, tree_type=args.tree_type)
     
     backgrounds = {
         "city": ["burj_khalifa"],
@@ -159,7 +159,7 @@ def generate_scene_and_annotate(args):
     
     # Determine output directory
     base_output_dir = os.path.join(target_directory, "output")
-    output_dir = os.path.join(base_output_dir, "samples11") #get_next_output_directory(base_output_dir)
+    output_dir = os.path.join(base_output_dir, "samples_multi") #get_next_output_directory(base_output_dir)
     
     previous_annotations = find_previous_annotations(output_dir)
     
