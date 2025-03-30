@@ -163,42 +163,43 @@ def generate_scene_and_annotate(args):
     
     previous_annotations = find_previous_annotations(output_dir)
     
-    # try:
-    #     # Initialize COCO annotator with config and previous annotations if found
-    #     coco_annotator = COCOAnnotator(output_dir, args_dict, previous_annotations)
-    #     print("Successfully initialized COCO annotator" + 
-    #           (f" with previous file: {previous_annotations}" if previous_annotations else ""))
-    # except ValueError as e:
-    #     print(f"ERROR: {str(e)}")
-    #     print("Cannot proceed with invalid previous annotations. Exiting.")
-    #     return
-    # except FileNotFoundError as e:
-    #     print(f"WARNING: {str(e)}")
-    #     print("Creating new annotations file.")
-    #     coco_annotator = COCOAnnotator(output_dir, args_dict)
+    args_dict = vars(args)  # Convert the args object to a dictionary
+    try:
+        # Initialize COCO annotator with config and previous annotations if found
+        coco_annotator = COCOAnnotator(output_dir, args_dict, previous_annotations)
+        print("Successfully initialized COCO annotator" + 
+              (f" with previous file: {previous_annotations}" if previous_annotations else ""))
+    except ValueError as e:
+        print(f"ERROR: {str(e)}")
+        print("Cannot proceed with invalid previous annotations. Exiting.")
+        return
+    except FileNotFoundError as e:
+        print(f"WARNING: {str(e)}")
+        print("Creating new annotations file.")
+        coco_annotator = COCOAnnotator(output_dir, args_dict)
     
-    # for step in range(args.num_steps):
-    #     # Move camera to next position using the camera controller
-    #     move_success = camera_controller.step()
-    #     print(f"Step {step+1}/{args.num_steps}: Camera movement {'successful' if move_success else 'adjusted to maintain sign visibility'}")
+    for step in range(args.num_steps):
+        # Move camera to next position using the camera controller
+        move_success = camera_controller.step()
+        print(f"Step {step+1}/{args.num_steps}: Camera movement {'successful' if move_success else 'adjusted to maintain sign visibility'}")
         
-    #     base_filename = f"image_{step}"
-    #     try:
-    #         # This does everything in one call: renders image, saves bbox, adds to annotations
-    #         image_id = coco_annotator.add_image_with_annotation(
-    #             'Simple Sign', 
-    #             'Camera', 
-    #             base_filename,
-    #             args.frame_number, 
-    #             args.samples
-    #         )
-    #         print(f"Processed image {step} with ID: {image_id}")
-    #     except Exception as e:
-    #         print(f"Error processing image {step}: {str(e)}")
-    #         continue
+        base_filename = f"image_{step}"
+        try:
+            # This does everything in one call: renders image, saves bbox, adds to annotations
+            image_id = coco_annotator.add_image_with_annotation(
+                'Simple Sign', 
+                'Camera', 
+                base_filename,
+                args.frame_number, 
+                args.samples
+            )
+            print(f"Processed image {step} with ID: {image_id}")
+        except Exception as e:
+            print(f"Error processing image {step}: {str(e)}")
+            continue
     
-    # # Save the COCO annotations file
-    # coco_annotator.save("coco_annotations.json")
+    # Save the COCO annotations file
+    coco_annotator.save("coco_annotations.json")
     
     # Ensure proper shading mode
     for area in bpy.context.screen.areas:
