@@ -102,9 +102,21 @@ def generate_scene_and_annotate(args):
     road_boundaries, lane_positions = road.road_presets(scene = args.road_scene, conditions = args.road_conditions, target_directory = target_directory)
     png_path = 'textures/Signs/Signs/PNGs/'
     sign_path = png_path + args.sign + '.png'
-    signs.generate_sign(road_boundaries,sign_path, scratches = args.sign_scratches, rust = args.sign_rust, rivets=False, snow = args.sign_snow, mud = args.sign_mud, target_directory = target_directory )
+    signs.generate_sign(
+        road_boundaries,
+        sign_path, 
+        scratches = args.sign_scratches, 
+        rust = args.sign_rust, 
+        rivets=False, 
+        snow = args.sign_snow, 
+        mud = args.sign_mud, 
+        target_directory = target_directory, 
+        lean_forward_angle=args.sign_lean_forward_angle, 
+        lean_left_angle=args.sign_lean_left_angle, 
+        spin=args.sign_spin,
+        sign_size = 7)
 
-    
+
     # # Add trees 
     # #trees.generate_forest(args.road_width, args.road_length, args.min_dist, args.max_dist, args.num_trees)
     trees.generate_preset_forest(target_directory, road_boundaries, density=args.tree_density, distance_from_road=args.tree_distance, tree_type=args.tree_type)
@@ -229,11 +241,11 @@ def generate_random_parameters(args_dict):
         "light_power": get_value("light_power", args_dict, lambda: random.uniform(3.0, 5.0)),
         "background": get_value("background", args_dict, lambda: random.choice(["sky"])), 
         "road_scene": get_value("road_scene", args_dict, lambda: random.choice(["Highway", "Two Lane"])),
-        "road_conditions": get_value("road_conditions", args_dict, lambda: random.choice(["Dry"])),
-        "sign_scratches": get_value("sign_scratches", args_dict, lambda: random.uniform(0.0, 0.5)),
-        "sign_rust": get_value("sign_rust", args_dict, lambda: random.uniform(0.0, 0.5)),
-        "sign_snow": get_value("sign_snow", args_dict, lambda: random.uniform(0.0, 0.5)),
-        "sign_mud": get_value("sign_mud", args_dict, lambda: random.uniform(0.0, 0.5)),
+        "road_conditions": get_value("road_conditions", args_dict, lambda: random.choice(["Dry", "Wet"])),
+        "sign_scratches": get_value("sign_scratches", args_dict, lambda: random.uniform(0.0, 1)),
+        "sign_rust": get_value("sign_rust", args_dict, lambda: random.uniform(0.0, 1)),
+        "sign_snow": get_value("sign_snow", args_dict, lambda: random.uniform(0.0, 1)),
+        "sign_mud": get_value("sign_mud", args_dict, lambda: random.uniform(0.0, 1)),
         "camera_location": get_value("camera_location", args_dict, lambda: "12.5, -58, 6.68"),
         "camera_rotation": get_value("camera_rotation", args_dict, lambda: "90, 0, 0"),
         "camera_scale": get_value("camera_scale", args_dict, lambda: random.uniform(0.8, 1.2)),
@@ -249,6 +261,9 @@ def generate_random_parameters(args_dict):
         "frame_number": get_value("frame_number", args_dict, lambda: 450),
         "samples": get_value("samples", args_dict, lambda: random.choice([64])),
         "step_size": get_value("step_size", args_dict, lambda: random.choice([5])),
+        "sign_lean_forward_angle": get_value("sign_lean_forward_angle", args_dict, lambda: random.uniform(0, 10)),
+        "sign_lean_left_angle": get_value("sign_lean_left_angle", args_dict, lambda: random.uniform(0,10)),
+        "sign_spin": get_value("sign_spin", args_dict, lambda: random.uniform(0, 10)),
         "post_processing_strength": get_value("post_processing_strength", args_dict, lambda: random.uniform(0.3, 0.4)),
     }
 
