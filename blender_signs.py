@@ -6,21 +6,21 @@ import bmesh
 from mathutils import Vector
 import os 
 
-def generate_sign(road_boundaries,png_path ='textures/Signs/Signs/PNGs/Loose Gravel.png',scratches =0.25, rust = 0.25,rivets=False,snow = 0.0,mud = 0.0, sign_name = 'Simple Sign', target_directory = None, lean_forward_angle=0, lean_left_angle=0, spin=0):
+def generate_sign(road_boundaries,png_path ='textures/Signs/Signs/PNGs/Loose Gravel.png',scratches =0.25, rust = 0.25,rivets=False,snow = 0.0,mud = 0.0, sign_name = 'Simple Sign', target_directory = None, lean_forward_angle=0, lean_left_angle=0, spin=0,sign_size = 7):
     # Create the pole
 
     print(road_boundaries)
     right_edge = road_boundaries[2][0]
-    sign_height = 7
+    sign_height = 15
     pole_end_points, pole_obj = create_pole(
         radius=0.2,
         height=sign_height,
-        location=(right_edge + 1.5, 300, sign_height / 1.5),
+        location=(right_edge + 1.5, 300, 2),
         texture_path=os.path.join(target_directory, 'textures/Signs/sign_pole_al.PNG')
     )
 
 
-    sign_size = 7
+    
     create_sign_square(
         sign_size,
         sign_size,
