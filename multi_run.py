@@ -123,6 +123,9 @@ def generate_scene_and_annotate(args):
 
     lane_positions = road.warp_scene(x_warp=1,z_warp=0.5,road_preset='Highway')
     
+    # Create a car object downloaded as a glTF file
+    car_obj = car.create_car(target_directory)
+
     backgrounds = {
         "city": ["burj_khalifa"],
         "sky" : ["salt_flats", "sky_mountains", "sky1", "sky2"],
@@ -131,10 +134,7 @@ def generate_scene_and_annotate(args):
     # Add a camera
     background = random.choice(backgrounds[args.background])
     camera = cam.add_camera(
-        target_directory, background=background,
-        location=tuple(map(float, args.camera_location.split(','))),
-        rotation=tuple(map(float, args.camera_rotation.split(','))),
-        scale=args.camera_scale
+        target_directory, car_obj, camera_preset=args.camera_preset, background=background
     )
     
     # Initialize the camera controller
@@ -142,7 +142,10 @@ def generate_scene_and_annotate(args):
         camera, 
         road_boundaries,
         sign_name="Simple Sign",
-        height_range=(4, 10)
+        height_range=(4, 10),
+        lane_positions = lane_positions,
+        mode="dashcam",
+        selected_lane_index=2
     )
     
     # Add a light source
@@ -161,9 +164,6 @@ def generate_scene_and_annotate(args):
     }
     
     plane.create_plane(size=args.ground_plane_size, target_directory=target_directory, material=planes[args.plane])
-
-    # Create a car object downloaded as a glTF file
-    car.create_car(target_directory)
 
     # Add sky texture
     sky_texture.create_sky_texture(time_of_day=args.time_of_day)
@@ -246,9 +246,7 @@ def generate_random_parameters(args_dict):
         "sign_rust": get_value("sign_rust", args_dict, lambda: random.uniform(0.0, 1)),
         "sign_snow": get_value("sign_snow", args_dict, lambda: random.uniform(0.0, 1)),
         "sign_mud": get_value("sign_mud", args_dict, lambda: random.uniform(0.0, 1)),
-        "camera_location": get_value("camera_location", args_dict, lambda: "12.5, -58, 6.68"),
-        "camera_rotation": get_value("camera_rotation", args_dict, lambda: "90, 0, 0"),
-        "camera_scale": get_value("camera_scale", args_dict, lambda: random.uniform(0.8, 1.2)),
+        "camera_preset": get_value("camera_preset", args_dict, lambda: random.choice(["behind_car"])),
         "light_location": get_value("light_location", args_dict, lambda: "-28.398,59.799,19.12"),
         "light_angle": get_value("light_angle", args_dict, lambda: random.uniform(160, 200)),
         "time_of_day": get_value("time_of_day", args_dict, lambda: random.choice(["dawn", "midday", "dusk", "night"])),

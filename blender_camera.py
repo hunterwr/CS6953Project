@@ -9,291 +9,501 @@ import bmesh
 import bpy_extras
 import mathutils
 from mathutils import Vector
+from PIL import Image, ImageDraw
+import numpy as np
 
-def add_camera(target_directory, background="dunes" , location=(0.0, -19.409, 14.526), rotation=(69.127, 0.000008, 0.569964), scale=1.0):
+def add_camera(target_directory, car, camera_preset = "behind_car", background="dunes" ):
     """
-    Adds a camera to the scene at a specified location, rotation, and scale.
+    Adds a camera to the scene based on defined preset: "behind_car", "front_car", "top_down", "driver_view")
 
-    :location: Tuple (x, y, z) - Camera position in meters.
-    :rotation: Tuple (x, y, z) - Camera rotation in degrees.
-    :scale: Float - Scale of the camera (default 1.0).
     """
-    # Create a new camera object
+    
+    def get_combined_bounding_box(obj):
+        
+        all_objects = [obj] + list(obj.children_recursive)
+        coords = []
+        for o in all_objects:
+            if o.type == 'MESH':
+                for corner in o.bound_box:
+                    world_corner = o.matrix_world @ Vector(corner)
+                    coords.append(world_corner)
+        if not coords:
+            return None, None
+        min_corner = Vector((min(v[i] for v in coords) for i in range(3)))
+        max_corner = Vector((max(v[i] for v in coords) for i in range(3)))
+        return min_corner, max_corner
+
     bpy.ops.object.camera_add()
     camera = bpy.context.object
     camera.name = "Camera"
 
-    # Set Camera Location
-    camera.location = location
+    if car:
+        #dimensions
+        min_corner, max_corner = get_combined_bounding_box(car)
+        center = (min_corner + max_corner) / 2
+        dimensions = max_corner - min_corner
+        car_length = dimensions.y
+        car_height = dimensions.z
+        car_width = dimensions.x
 
-    # Convert degrees to radians and set rotation, blender uses radians
-    camera.rotation_euler = (
-        math.radians(rotation[0]),  # X Rotation
-        math.radians(rotation[1]),  # Y Rotation
-        math.radians(rotation[2])   # Z Rotation
-    )
+        camera_presets = {
+        "behind_car": {
+            "back_offset_multiplier": -2.0,
+            "side_offset_multiplier": 0.5,
+            "height_offset_multiplier": 0.5
+            },
+        "front_car": {
+            "back_offset_multiplier": 1.0,
+            "side_offset_multiplier": 0.0,
+            "height_offset_multiplier": 0.5
+            },
+        "top_down": {
+            "back_offset_multiplier": 0.0,
+            "side_offset_multiplier": 0.0,
+            "height_offset_multiplier": 5.0
+            },
+        "driver_view": {
+            "back_offset_multiplier": 1.0,
+            "side_offset_multiplier": 1.0,
+            "height_offset_multiplier": 1.0
+            }
+        }       
 
-    # Set Camera Scale
-    camera.scale = (scale, scale, scale)
+        preset = camera_presets.get(camera_preset, camera_presets["behind_car"])
+
+        back_offset = Vector((0, car_length * preset["back_offset_multiplier"], 0))
+        side_offset = Vector((car_width * preset["side_offset_multiplier"], 0, 0))
+        height_offset = Vector((0, 0, car_height * preset["height_offset_multiplier"]))
+
+        camera.location = center + back_offset + side_offset + height_offset
+
+        #camera.location = center + Vector((0, -back_offset, height_offset))
+        direction = (center - camera.location).normalized()
+        camera.rotation_euler = direction.to_track_quat('-Z', 'Y').to_euler()
+
+        print(f"Camera positioned based on car bounds")
+        print(f"Center: {center}")
+        print(f"Car dimensions (W x H x L): {car_width:.2f} x {car_height:.2f} x {car_length:.2f}")
+        print(f"Camera location: {camera.location}")
+        print(f"Camera rotation: {camera.rotation_euler}")
+    else:
+        print("Camera placement Warning: Car object not found — using default position")
+        camera.location = Vector((12.5, -58, 6.68))
+        camera.rotation_euler = (math.radians(90), 0, 0)
 
     # Set as active camera
     bpy.context.scene.camera = camera
-    
-    
-    # Adding a background and attach it to camera
+
+    # Add background plane attached to camera
     bpy.ops.mesh.primitive_plane_add(size=1)
     background_plane = bpy.context.object
     background_plane.name = "Background Plane"
-    
     background_plane.scale = (1200.0, 800.0, 0.0)
     background_plane.rotation_euler = camera.rotation_euler
     background_plane.location = (0.0, 380.0, 280.0)
-    
-    # Set the parent of the background plane to the camera
     background_plane.parent = camera
     background_plane.matrix_parent_inverse = camera.matrix_world.inverted()
-    
-    # Create a new material
+
+    # Add material
     material = bpy.data.materials.new(name="BackgroundMaterial")
     material.use_nodes = True
-
     nodes = material.node_tree.nodes
     links = material.node_tree.links
-
     nodes.clear()
 
     output_node = nodes.new(type='ShaderNodeOutputMaterial')
     principled_node = nodes.new(type='ShaderNodeBsdfPrincipled')
     texture_node = nodes.new(type='ShaderNodeTexImage')
 
-    # Set node locations
     output_node.location = (400, 0)
     principled_node.location = (200, 0)
     texture_node.location = (0, 0)
-    
+
     path = f"{target_directory}/textures/Background/{background}.jpg"
-    
     if os.path.exists(path):
         image = bpy.data.images.load(path)
         texture_node.image = image
     else:
+        print(f"[add_camera] Background image not found at {path}")
         return
 
-    # Link nodes
     links.new(texture_node.outputs["Color"], principled_node.inputs["Base Color"])
     links.new(texture_node.outputs['Color'], principled_node.inputs['Emission Color'])
     principled_node.inputs['Emission Strength'].default_value = 0.3
     links.new(principled_node.outputs['BSDF'], output_node.inputs['Surface'])
 
-    # Assign the material to the background plane
     background_plane.data.materials.append(material)
-    
-    # Enter edit mode on the background plane and perform cube projection UV unwrap
+
     bpy.context.view_layer.objects.active = background_plane
     bpy.ops.object.mode_set(mode='EDIT')
     bpy.ops.uv.cube_project()
     bpy.ops.object.mode_set(mode='OBJECT')
-    
-    #define frames for animation
+
+    # Set animation frames
     scene = bpy.context.scene
     scene.frame_start = 1
-    scene.frame_end = 500
-        
-    return camera
+    scene.frame_end = 1000
 
+    #Motion blur
+    scene.render.use_motion_blur = False
+    scene.render.motion_blur_shutter = 2.0  # 0.5 is standard, tweak for intensity
+
+    #Wide Angle Lens
+    #camera.data.lens = 24  # Wide angle, dashcam-style
+    #camera.data.sensor_width = 36  # Full-frame sensor size
+
+    # --- Depth of Field ---
+    #camera.data.dof.use_dof = True
+    #camera.data.dof.focus_object = car  # Keep the car in focus
+    #camera.data.dof.aperture_fstop = 1.5  # Lower = stronger background blur
+
+    def add_jitter(camera, strength=0.01, scale=15.0):
+        """
+        Adds noise to the camera's rotation to simulate dashcam shake.
+        
+        :param camera: The camera object to apply shake to.
+        :param strength: Intensity of shake (radians). Try 0.01–0.05 for realism.
+        :param scale: How frequently the shake changes. Higher = smoother, lower = more jittery.
+        """
+        if camera.animation_data is None:
+            camera.animation_data_create()
+
+        if camera.animation_data.action is None:
+            camera.animation_data.action = bpy.data.actions.new(name="CameraAction")
+
+
+        for i, axis in enumerate(['rotation_euler']):
+            for axis_idx in range(3):  # X, Y, Z
+                fcurve = camera.animation_data.action.fcurves.find(axis, index=axis_idx)
+                if fcurve is None:
+                    fcurve = camera.animation_data.action.fcurves.new(data_path=axis, index=axis_idx)
+                    fcurve.keyframe_points.insert(1, camera.rotation_euler[axis_idx])
+                
+                # Add a noise modifier
+                noise = fcurve.modifiers.new(type='NOISE')
+                noise.strength = strength
+                noise.scale = scale
+                noise.phase = 0
+                noise.depth = 1
+
+    #add_jitter(camera, strength=0.02, scale=10.0)
+    return camera
 
 class CameraController:
     """
-    Controls camera movement to ensure traffic signs remain in view
-    while providing different perspectives of the scene.
-    """
+    Controls camera movement
     
-    def __init__(self, camera, road_boundaries, sign_name="Simple Sign", height_range=(4, 10)):
+    3 Modes:
+      - random: random camera movement, ensures traffic signs remain in view while providing different perspectives of the scene.
+      - dashcam_linear: moves camera linearly along selected lane
+      - dashcam_curved: uses raw lane points for a warped / curved road
+    """
+
+    def __init__(
+        self,
+        camera,
+        road_boundaries,
+        sign_name="Simple Sign",
+        height_range=(4, 10),
+        lane_positions=None,
+        mode="dashcam",
+        selected_lane_index=2
+    ):
         """
-        Initialize the camera controller.
-        
         Args:
-            camera: Blender camera object to control
-            road_boundaries: List of coordinates defining road boundaries
-            sign_name: Name of the traffic sign object to keep in view
-            height_range: Min and max heights for camera positioning
+            camera: Blender camera object
+            road_boundaries: list of (x, y, z) for road edges
+            sign_name: name of the sign object in Blender
+            height_range: (min_z, max_z) clamp for camera
+            lane_positions: a list of lanes, each a list of (x, y, z) points
+                            e.g. warp_scene returns [ [pt0, pt1, ...], [pt0, pt1, ...], ... ]
+            mode: "random", "dashcam_linear", "dashcam_curved"
+            selected_lane_index: user-chosen lane index (0-based)
         """
         self.camera = camera
         self.road_boundaries = road_boundaries
         self.sign_obj = bpy.data.objects.get(sign_name)
         if not self.sign_obj:
             raise ValueError(f"Sign object '{sign_name}' not found in scene")
-            
-        self.height_range = height_range
-        self.road_start_y = min(p[1] for p in road_boundaries)
-        self.road_end_y = max(p[1] for p in road_boundaries)
-        self.road_left_x = min(p[0] for p in road_boundaries)
-        self.road_right_x = max(p[0] for p in road_boundaries)
-        self.road_width = self.road_right_x - self.road_left_x
-        self.road_length = self.road_end_y - self.road_start_y
         
-        # Store initial position to avoid straying too far
+        self.sign_position = self.sign_obj.location.copy()
+
+         # Store initial position to avoid straying too far
         self.initial_position = self.camera.location.copy()
+
+        self.height_range = height_range
+        self.mode = mode
+
+        # Basic boundary data
+        self.road_start_y = min(p[1] for p in road_boundaries)
+        self.road_end_y   = max(p[1] for p in road_boundaries)
+        self.road_left_x  = min(p[0] for p in road_boundaries)
+        self.road_right_x = max(p[0] for p in road_boundaries)
+        self.road_width   = self.road_right_x - self.road_left_x
+        self.road_length  = self.road_end_y   - self.road_start_y
+
         
-        # Set up tracking history to avoid repeating positions
+        # Lane positions
+        self.lane_positions = lane_positions or []  # list of lanes
+        self.selected_lane_index = selected_lane_index
+
+        #Set up tracking history to avoid repeating positions
         self.position_history = []
         self.max_history = 10
-        
-        # Movement ranges in XYZ, relative to current position
         self.movement_ranges = {
             'x': (-self.road_width * 0.1, self.road_width * 0.1),
-            'y': (-25, 25),  # Forward/back movement range
-            'z': (-1, 1)     # Height adjustment range
+            'y': (-25, 25),
+            'z': (-1, 1)
         }
-        
-        # Track failed attempts to find good positions
         self.failed_attempts = 0
         self.max_failed_attempts = 5
-        
-        # Store the sign's world position for reference
-        self.sign_position = self.sign_obj.location.copy()
-        
-        print(f"Camera controller initialized with road boundaries: {road_boundaries}")
-        print(f"Sign position: {self.sign_position}")
-    
-    def is_position_on_road(self, position):
-        """Check if a position is within the road boundaries"""
-        buffer = self.road_width * 0.1  # Small buffer from edge
-        return (self.road_left_x + buffer <= position[0] <= self.road_right_x - buffer and
-                self.road_start_y <= position[1] <= self.road_end_y)
-    
-    def is_sign_in_view(self):
+
+        # dashcam mode
+        self.use_dashcam_lane = [] #store the lane index
+
+        # curved mode using raw lane points from warp_scene
+        self.curved_lane_points = []
+        if self.lane_positions:
+            if 0 <= self.selected_lane_index < len(self.lane_positions):
+                self.curved_lane_points = self.lane_positions[self.selected_lane_index]
+            else:
+                print(f"[CameraController] Invalid selected_lane_index={self.selected_lane_index}, using lane 3.")
+                self.curved_lane_points = self.lane_positions[2]
+
+        # For the curved approach, track index
+        self.current_lane_point_index = 0
+        self.used_initial_camera_loc = False  # So the first call doesn't jump
+
+        # Store camera’s original location from add_camera
+        self.initial_camera_location = self.camera.location.copy()
+
+        print(f"[CameraController] mode={self.mode}, selected_lane_index={self.selected_lane_index}")
+        if self.lane_positions:
+            print(f" - Found {len(self.lane_positions)} lanes total")
+
+    def step(self, step_size):
         """
-        Check if the entire traffic sign is fully visible from the current camera position.
-        Returns True if all corners are visible, False otherwise.
+        
+        If self.mode=='dashcam', move along the lane with optional jitter.
+        If self.mode=='random', pick a random offset. Then face the sign,
+        check if it’s in view, etc. Return True if sign is in view.
         """
-        scene = bpy.context.scene
-        
-        # Get sign's bounding box corners in world space
-        bbox_corners = [self.sign_obj.matrix_world @ Vector(corner) for corner in self.sign_obj.bound_box]
+        if self.mode == "dashcam_linear" and self.dashcam_lane:
+            return self._dashcam_linear(step_size)
+        elif self.mode == "dashcam":
+            return self.dashcam_curved()
+        else:
+            return self._random_step()
 
-        # Convert corners to camera space
-        camera_matrix = self.camera.matrix_world.inverted()
-        projected_corners = [bpy_extras.object_utils.world_to_camera_view(scene, self.camera, corner) for corner in bbox_corners]
+    # Random movement 
+    def _random_step(self):
+        old_loc = self.camera.location.copy()
+        old_rot = self.camera.rotation_euler.copy()
 
-        # Check if ALL corners are inside the camera frame
-        all_corners_visible = all(0 < co_2d.x < 1 and 0 < co_2d.y < 1 for co_2d in projected_corners)
-
-        # Ensure all corners are in front of the camera (positive Z in camera space)
-        all_corners_in_front = all((camera_matrix @ corner).z > 0 for corner in bbox_corners)
-
-        # The sign is fully visible only if ALL corners are inside the camera frame AND in front of the camera
-        return all_corners_visible and all_corners_in_front
-
-    
-    def get_sign_direction(self):
-        """Get normalized direction vector from camera to sign"""
-        cam_loc = self.camera.location
-        sign_loc = self.sign_obj.location
-        direction = Vector((sign_loc.x - cam_loc.x, 
-                           sign_loc.y - cam_loc.y,
-                           sign_loc.z - cam_loc.z))
-        return direction.normalized()
-    
-    def adjust_to_view_sign(self):
-        """Adjust camera rotation to look at the sign"""
-        direction = self.get_sign_direction()
-        
-        # Create a rotation quaternion that points in the direction of the sign
-        track_quat = direction.to_track_quat('-Z', 'Y')
-        
-        # Convert to Euler rotation
-        self.camera.rotation_euler = track_quat.to_euler()
-        
-        # Add some random variation to rotation (within small range)
-        # self.camera.rotation_euler.x += random.uniform(-0.1, 0.1)
-        self.camera.rotation_euler.z = 0
-        # self.camera.rotation_euler.y += random.uniform(-0.05, 0.05)
-    
-    def move_towards_road_center(self):
-        """Move camera back toward road center if it's too far off"""
-        road_center_x = (self.road_left_x + self.road_right_x) / 2
-        
-        # Calculate vector to road center
-        current_x = self.camera.location.x
-        move_x = (road_center_x - current_x) * 0.05  # Move 20% of the way
-        
-        # Apply movement
-        self.camera.location.x += move_x
-    
-    def step(self):
-        """
-        Move the camera to a new position that keeps the sign in view
-        Returns True if successful, False if couldn't find a valid position
-        """
-        original_location = self.camera.location.copy()
-        original_rotation = self.camera.rotation_euler.copy()
-        
-        # Store current position in history
         if len(self.position_history) >= self.max_history:
             self.position_history.pop(0)
-        self.position_history.append((self.camera.location.x, self.camera.location.y, self.camera.location.z))
-        
-        # Try to find a new valid position
-        for attempt in range(10):  # Try up to 10 times to find a good position
-            # Random movement in all directions
-            new_x = self.camera.location.x + random.uniform(*self.movement_ranges['x'])
-            new_y = self.camera.location.y + random.uniform(*self.movement_ranges['y'])
-            new_z = self.camera.location.z + random.uniform(*self.movement_ranges['z'])
-            
-            # Ensure height stays within reasonable range
-            new_z = max(min(new_z, self.height_range[1]), self.height_range[0])
-            
-            # Check if new position is too similar to recent positions
-            too_similar = False
-            for pos in self.position_history[-3:]:  # Check last 3 positions
-                distance = ((new_x - pos[0])**2 + (new_y - pos[1])**2 + (new_z - pos[2])**2)**0.5
-                if distance < 2.0:  # If too close to a recent position
-                    too_similar = True
-                    break
-            
-            if too_similar:
+        self.position_history.append(tuple(old_loc))
+
+        for attempt in range(10):
+            # random offsets
+            dx = random.uniform(*self.movement_ranges['x'])
+            dy = random.uniform(*self.movement_ranges['y'])
+            dz = random.uniform(*self.movement_ranges['z'])
+
+            new_pos = self.camera.location + Vector((dx, dy, dz))
+            new_pos = self.clamp_position(new_pos)
+
+            # skip if too similar to recent
+            if any((Vector(p) - new_pos).length < 2.0 for p in self.position_history[-3:]):
                 continue
-            
-            # Apply new position
-            self.camera.location = mathutils.Vector((new_x, new_y, new_z))
-            
-            # Check if we're still on the road
-            if not self.is_position_on_road((new_x, new_y, new_z)):
+
+            self.camera.location = new_pos
+            if not self.is_position_on_road(new_pos):
                 self.move_towards_road_center()
-            
-            # Adjust camera to look at sign
-            # self.adjust_to_view_sign()
-            
-            # Check if sign is visible after adjustment
+
+            self.adjust_to_view_sign()
             if self.is_sign_in_view():
-                
                 self.failed_attempts = 0
                 return True
-        
-        # If we couldn't find a good position, adjust camera to directly face the sign
+
+        # fallback
         self.failed_attempts += 1
-        
         if self.failed_attempts >= self.max_failed_attempts:
-            # Reset to a known good position near the sign
-            print("Failed to find a good position, resetting to known position")
-            # Reset to original position with some randomness
-            self.camera.location = mathutils.Vector((
-                self.initial_position.x + random.uniform(-5, 5),
-                self.initial_position.y + random.uniform(-10, 10),
-                self.initial_position.z + random.uniform(0, 2)
+            print("[CameraController] random: failed -> reset near sign")
+            self.camera.location = Vector((
+                self.sign_position.x - random.uniform(40, 50),
+                self.sign_position.y - random.uniform(50, 60),
+                self.height_range[0] + random.uniform(2,4)
             ))
-            # Make sure camera looks at the sign
-            self.adjust_to_view_sign()
             self.failed_attempts = 0
-        else:
-            # Restore original position
-            self.camera.location = original_location
-            self.camera.rotation_euler = original_rotation
-            
-            # Try moving toward the sign
-            sign_dir = self.get_sign_direction()
-            self.camera.location += sign_dir * random.uniform(3, 8)
             self.adjust_to_view_sign()
-        
+        else:
+            # revert
+            self.camera.location = old_loc
+            self.camera.rotation_euler = old_rot
+            sign_dir = self.get_sign_direction()
+            self.camera.location += sign_dir*random.uniform(3,8)
+            self.adjust_to_view_sign()
+
         return self.is_sign_in_view()
+
+    #dashcam movement: straight lane
+    def dashcam_linear(self, step_size=1.0):
+        """
+        - The camera remains at its initial position.
+        - On subsequent calls, camera is moved forward along the y-axis by step_size,
+        - camera rotation stays fixed
+        """
+
+        #initial dashcam location
+        if not hasattr(self, 'used_initial_dashcam_loc'):
+            self.used_initial_dashcam_loc = False
+        if not self.used_initial_dashcam_loc:
+            print("[dashcam_linear] Using the camera's existing location from add_camera for the first step.")
+            self.used_initial_dashcam_loc = True
+
+            # Also store the initial x,z
+            self.dashcam_init_x = self.camera.location.x
+            self.dashcam_init_z = self.camera.location.z
+
+            return True
+
+        # After the first step, just move the camera forward in y,
+        # keeping x and z the same as the initial dashcam location.
+        current_loc = self.camera.location.copy()
+
+        # Increment y by the step_size
+        new_y = current_loc.y + step_size
+
+        new_pos = Vector((self.dashcam_init_x, new_y, self.dashcam_init_z))
+        # clamp it inside the road region or below min_z
+        new_pos = self.clamp_position(new_pos)
+
+        # Assign camera location
+        self.camera.location = new_pos
+
+        # Update the view layer so the camera's transform is applied
+        bpy.context.view_layer.update()
+        return True
+    
+    #dashcam along curved road
+    def dashcam_curved(self, step_size=1, height_offset=7.0, sign_factor=0.3):
+        """
+        Move the camera along self.curved_lane_points, placing it at each point in sequence.
+        Then orient it partly toward the next lane point (forward direction) and partly toward the sign.
+
+        sign_factor: 0.0 = face purely forward along the lane,
+                        1.0 = face purely at the sign
+        """
+
+        #initial cam pos
+        if not self.used_initial_camera_loc:
+            self.used_initial_camera_loc = True
+            bpy.context.view_layer.update()
+            return True
+
+        # Get current lane point
+        current_i = self.current_lane_point_index
+        if current_i < 0 or current_i >= len(self.curved_lane_points):
+            current_i = 0
+        current_pt = self.curved_lane_points[current_i]
+        print(f"[_dashcam_curved] Lane pt index {current_i}: {current_pt}")
+
+        # Position camera above lane
+        cam_x = current_pt[0]
+        cam_y = current_pt[1]
+        cam_z = current_pt[2] + height_offset
+        new_pos = Vector((cam_x, cam_y, cam_z))
+        new_pos = self.clamp_position(new_pos)
+        self.camera.location = new_pos
+
+        # Compute forward direction (lane direction)
+        next_i = (current_i + step_size) % len(self.curved_lane_points)
+        next_pt = self.curved_lane_points[next_i]
+        forward_dir = (Vector(next_pt) - Vector(current_pt)).normalized()
+
+        # Compute sign direction
+        sign_dir = (self.sign_obj.location - self.camera.location).normalized()
+
+        # weighted blend: 
+        # sign_look_factor=0 => 100% forward_dir
+        # sign_look_factor=1 => 100% sign_dir
+        # in between => partial
+        alpha = sign_factor
+        final_dir = (forward_dir * (1 - alpha) + sign_dir * alpha).normalized()
+
+        # Set camera orientation
+        self.camera.rotation_euler = final_dir.to_track_quat('-Z','Y').to_euler()
+        # Optionally clamp roll:
+        # self.camera.rotation_euler.z = 0
+
+        self.current_lane_point_index = next_i
+
+        bpy.context.view_layer.update()
+        return True
+    
+    #camera helper methods
+    def is_position_on_road(self, position):
+        """Check if a position is within the road boundaries (with buffer)."""
+        buffer_x = self.road_width * 0.1
+        return (self.road_left_x + buffer_x <= position[0] <= self.road_right_x - buffer_x
+                and self.road_start_y <= position[1] <= self.road_end_y)
+
+    def is_sign_in_view(self, margin=0.15, eps=1e-3):
+        """
+        Check if the sign is fully visible from the camera location
+        (all bounding-box corners in front & within the camera frustum).
+        """
+        scene = bpy.context.scene
+        bbox_corners = [self.sign_obj.matrix_world @ Vector(corner)
+                        for corner in self.sign_obj.bound_box]
+
+        projected = [
+            bpy_extras.object_utils.world_to_camera_view(scene, self.camera, c)
+            for c in bbox_corners
+        ]
+        camera_matrix = self.camera.matrix_world.inverted()
+
+        # Check corners in view
+        for co in projected:
+            # co.x, co.y in [0..1], but we allow margin
+            if not (-margin - eps <= co.x <= 1+margin+eps and
+                    -margin - eps <= co.y <= 1+margin+eps):
+                return False
+
+        # Check corners are in front (Blender camera sees negative Z)
+        for c in bbox_corners:
+            if (camera_matrix @ c).z > 0:
+                # If z>0 means behind camera in Blender
+                return False
+
+        return True
+
+    def get_sign_direction(self):
+        """Unit vector from camera to sign."""
+        return (self.sign_obj.location - self.camera.location).normalized()
+
+    def adjust_to_view_sign(self):
+        """Rotate camera to face sign, ignoring roll."""
+        direction = self.get_sign_direction()
+        track_quat = direction.to_track_quat('-Z', 'Y')
+        self.camera.rotation_euler = track_quat.to_euler()
+        self.camera.rotation_euler.z = 0  # zero out roll
+
+    def clamp_position(self, pos):
+        """Prevent going off the road region, clamp Z to height_range."""
+        buffer_val = self.road_width * 0.1
+        x = max(self.road_left_x+buffer_val, min(pos.x, self.road_right_x-buffer_val))
+        y = max(self.road_start_y, min(pos.y, self.road_end_y))
+        z_min, z_max = self.height_range
+        z = max(z_min, min(pos.z, z_max))
+        return Vector((x, y, z))
+
+    def move_towards_road_center(self):
+        """Nudge camera back toward center of road if it's off-limits."""
+        rx = (self.road_left_x + self.road_right_x)*0.5
+        ry = (self.road_start_y + self.road_end_y)*0.5
+        loc = self.camera.location
+        self.camera.location.x += (rx - loc.x)*0.05
+        self.camera.location.y += (ry - loc.y)*0.05
+

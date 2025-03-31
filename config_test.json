@@ -5,9 +5,10 @@
   "distance": "close",
   "tree_type": "birch",
   "snow_type": "moderate",
+  "camera_preset": "behind_car",
   "samples": 64,
-  "num_images_per_scene": 15,
-  "num_scenes": 10,
+  "num_images_per_scene": 12,
+  "num_scenes": 2,
   "step_size": 5,
   "post_processing_strength": 0.01
 }
