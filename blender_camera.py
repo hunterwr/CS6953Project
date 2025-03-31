@@ -277,11 +277,14 @@ class CameraController:
         if self.failed_attempts >= self.max_failed_attempts:
             # Reset to a known good position near the sign
             print("Failed to find a good position, resetting to known position")
+            # Reset to original position with some randomness
             self.camera.location = mathutils.Vector((
-                self.sign_position.x - random.uniform(40, 50),
-                self.sign_position.y - random.uniform(50, 60),
-                self.height_range[0] + random.uniform(2, 4)
+                self.initial_position.x + random.uniform(-5, 5),
+                self.initial_position.y + random.uniform(-10, 10),
+                self.initial_position.z + random.uniform(0, 2)
             ))
+            # Make sure camera looks at the sign
+            self.adjust_to_view_sign()
             self.failed_attempts = 0
         else:
             # Restore original position
