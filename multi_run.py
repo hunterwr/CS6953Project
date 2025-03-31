@@ -261,15 +261,11 @@ def main():
     with open(json_path, 'r') as f:
         user_config = json.load(f)
 
-    # Extract list-based parameter (sign) and required values
     # Get all sign files from the directory
     sign_directory = os.path.join(target_directory, "textures/Signs/Signs/PNGs")
     if os.path.exists(sign_directory):
         all_signs = [os.path.splitext(os.path.basename(file))[0] for file in glob.glob(os.path.join(sign_directory, "*.png"))]
         # Randomly select 5 signs if there are more than 5 available
-        if len(all_signs) > 5:
-            random.shuffle(all_signs)
-            all_signs = all_signs[:5]
         if all_signs:
             signs = user_config.get("sign", all_signs)  
         else:
@@ -284,30 +280,30 @@ def main():
     # Identify parameters that are lists (other than "sign" and count-based params)
     list_based_params = {key: value for key, value in user_config.items() 
                          if isinstance(value, list) and key not in ["sign", "num_scenes", "num_images_per_scene"]}
-
     # Generate all possible combinations of list-based parameters
     param_combinations = list(itertools.product(*list_based_params.values())) if list_based_params else [()]
-
+    
     # Iterate over each sign
-    for sign in signs:
-        for combo in param_combinations:
-            # Assign values from combinations
-            combo_args = dict(zip(list_based_params.keys(), combo))
+    # for sign in signs:
+    print(f"Total Number of Images to be generated: {num_scenes * num_images_per_scene * len(param_combinations)}")
+    for combo in param_combinations:
+        # Assign values from combinations
+        combo_args = dict(zip(list_based_params.keys(), combo))
 
-            for scene_index in range(num_scenes):
-                # Generate new random parameters for the scene
-                scene_params = generate_random_parameters(user_config)  # Ensures missing values are randomized
+        for scene_index in range(num_scenes):
+            print(f"Generating scene {scene_index + 1}/{num_scenes}")
+            # Generate new random parameters for the scene
+            scene_params = generate_random_parameters(user_config)  # Ensures missing values are randomized
 
-                # Merge user-defined values & generated values
-                scene_params.update(combo_args)  # Set list-based parameters
-                scene_params["sign"] = sign  # Set current sign
-                
-                # Convert dictionary to object-like structure
-                args_instance = Args(**scene_params)
+            # Merge user-defined values & generated values
+            scene_params.update(combo_args)  # Set list-based parameters
+            
+            scene_params["sign"] = random.choice(signs)  # Set current sign
+            
+            # Convert dictionary to object-like structure
+            args_instance = Args(**scene_params)
 
-                # Generate multiple images per scene
-                for image_index in range(num_images_per_scene):
-                    generate_scene_and_annotate(args_instance)
+            generate_scene_and_annotate(args_instance)
 
 
 if __name__ == '__main__':
