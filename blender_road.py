@@ -480,7 +480,7 @@ def create_spline_road(width,length,spline_start=(0,0,0),spline_end=(20,20,0), c
     
 
 
-def warp_scene(x_warp, z_warp, road_preset = 'Highway'):
+def warp_scene(x_warp, z_warp, road_preset = 'Highway',camera_positions = 15):
 
     #subdivide road
     obj = bpy.data.objects.get('Road_Edges')
@@ -516,7 +516,7 @@ def warp_scene(x_warp, z_warp, road_preset = 'Highway'):
 
     if road_preset == 'Two Lane':
         start_positions =  [-7.5,7.5]
-        nums = np.linspace(-20,length,15)
+        nums = np.linspace(-20,length,camera_positions)
         lane1 = []
         lane2 = []
         lanes = [lane1,lane2]
