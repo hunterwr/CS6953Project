@@ -6,9 +6,7 @@
   "rust": 0.25,
   "snow": 0.0,
   "mud": 0.0,
-  "camera_location": "12.5, -58, 6.68",
-  "camera_rotation": "90, 0, 0",
-  "camera_scale": 1.0,
+  "camera_preset": "behind_car",
   "light_location": "-28.398,59.799,19.12",
   "light_power": 3.0,
   "light_angle": 180,
@@ -22,7 +20,7 @@
   "snow_type": "moderate",
   "frame_number": 450,
   "samples": 64,
-  "num_steps": 25,
+  "num_steps": 2,
   "step_size": 5,
   "post_processing_strength": 0.3
 }

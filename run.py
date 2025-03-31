@@ -69,18 +69,13 @@ def main(args):
     bpy.context.scene.render.engine = 'CYCLES'
     prefs = bpy.context.preferences
     cycles_prefs = prefs.addons['cycles'].preferences
-    cycles_prefs.compute_device_type = 'METAL'
+    cycles_prefs.compute_device_type = 'CUDA'
 
     cycles_prefs.get_devices()
 
     for device in cycles_prefs.devices:
-        if 'GPU' in device.name:
-            device.use = True
-            print(f"Enabled GPU device: {device.name}")
-        else:
-            device.use = False
-            print(f"Disabled non-GPU device: {device.name}")
-            
+        device.use = True
+        print(f" $$$$$$$$$$ Enabled device: {device.name}, Type: {device.type}")
     for scene in bpy.data.scenes:
         scene.cycles.device = 'GPU'
        
@@ -94,28 +89,7 @@ def main(args):
     # # Add trees 
     # #trees.generate_forest(args.road_width, args.road_length, args.min_dist, args.max_dist, args.num_trees)
     # trees.generate_preset_forest(target_directory, road_width, road_length, args.density, args.distance, args.tree_type)
-    
-    backgrounds = {
-        "city": ["burj_khalifa"],
-        "sky" : ["salt_flats", "sky_mountains", "sky1", "sky2"],
-        "desert" : ["dunes"]
-    }
-    # Add a camera
-    background = random.choice(backgrounds[args.background])
-    camera = cam.add_camera(
-        target_directory, background=background,
-        location=tuple(map(float, args.camera_location.split(','))),
-        rotation=tuple(map(float, args.camera_rotation.split(','))),
-        scale=args.camera_scale
-    )
-    
-    # Initialize the camera controller
-    camera_controller = cam.CameraController(
-        camera, 
-        road_boundaries,
-        sign_name="Simple Sign",
-        height_range=(4, 10)
-    )
+
     
     # Add a light source
     light.add_sunlight(
@@ -134,8 +108,32 @@ def main(args):
     
     plane.create_plane(size=args.ground_plane_size, target_directory=target_directory, material=planes[args.plane])
 
+    lane_positions = road.warp_scene(x_warp=1,z_warp=0.5,road_preset='Highway')
+
     # Create a car object downloaded as a glTF file
-    car.create_car(target_directory)
+    car_obj=car.create_car(target_directory)
+
+    backgrounds = {
+        "city": ["burj_khalifa"],
+        "sky" : ["salt_flats", "sky_mountains", "sky1", "sky2"],
+        "desert" : ["dunes"]
+    }
+    # Add a camera
+    background = random.choice(backgrounds[args.background])
+    camera = cam.add_camera(
+        target_directory, car_obj, camera_preset=args.camera_preset, background=background
+    )
+
+     # Initialize the camera controller
+    camera_controller = cam.CameraController(
+        camera, 
+        road_boundaries,
+        sign_name="Simple Sign",
+        height_range=(4, 10),
+        lane_positions = lane_positions,
+        mode="dashcam",
+        selected_lane_index=2
+    )
 
     # Add sky texture
     sky_texture.create_sky_texture(time_of_day=args.time_of_day)
@@ -145,7 +143,7 @@ def main(args):
     
     # Determine output directory
     base_output_dir = os.path.join(target_directory, "output")
-    output_dir = os.path.join(base_output_dir, "samples11") #get_next_output_directory(base_output_dir)
+    output_dir = os.path.join(base_output_dir, "samples12") #get_next_output_directory(base_output_dir)
     
     previous_annotations = find_previous_annotations(output_dir)
     
@@ -164,18 +162,17 @@ def main(args):
         coco_annotator = COCOAnnotator(output_dir, args_dict)
     
     for step in range(args.num_steps):
-        # Move camera to next position using the camera controller
-        move_success = camera_controller.step()
+        move_success = camera_controller.step(args.step_size)
+        #camera_controller._dashcam_step(step_size=1)
         print(f"Step {step+1}/{args.num_steps}: Camera movement {'successful' if move_success else 'adjusted to maintain sign visibility'}")
-        
         base_filename = f"image_{step}"
         try:
             # This does everything in one call: renders image, saves bbox, adds to annotations
             image_id = coco_annotator.add_image_with_annotation(
                 'Simple Sign', 
-                'Camera', 
+                'Camera',
                 base_filename,
-                args.frame_number, 
+                args.frame_number,
                 args.samples
             )
             print(f"Processed image {step} with ID: {image_id}")
