@@ -69,13 +69,18 @@ def main(args):
     bpy.context.scene.render.engine = 'CYCLES'
     prefs = bpy.context.preferences
     cycles_prefs = prefs.addons['cycles'].preferences
-    cycles_prefs.compute_device_type = 'CUDA'
+    cycles_prefs.compute_device_type = 'METAL'
 
     cycles_prefs.get_devices()
 
     for device in cycles_prefs.devices:
-        device.use = True
-        print(f" $$$$$$$$$$ Enabled device: {device.name}, Type: {device.type}")
+        if 'GPU' in device.name:
+            device.use = True
+            print(f"Enabled GPU device: {device.name}")
+        else:
+            device.use = False
+            print(f"Disabled non-GPU device: {device.name}")
+            
     for scene in bpy.data.scenes:
         scene.cycles.device = 'GPU'
        
