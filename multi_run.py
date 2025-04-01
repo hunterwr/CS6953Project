@@ -93,10 +93,12 @@ def generate_scene_and_annotate(args):
     cycles_prefs.get_devices()
 
     for device in cycles_prefs.devices:
-        device.use = True
-        print(f" $$$$$$$$$$ Enabled device: {device.name}, Type: {device.type}")
-    for scene in bpy.data.scenes:
-        scene.cycles.device = 'GPU'
+        if 'NVIDIA' in device.name:
+            device.use = True
+            print(f"Enabled GPU device: {device.name}")
+        else:
+            device.use = False
+            print(f"Disabled non-GPU device: {device.name}")
        
     # Place road and sign
     road_boundaries, lane_positions = road.road_presets(scene = args.road_scene, conditions = args.road_conditions, target_directory = target_directory)
@@ -111,10 +113,10 @@ def generate_scene_and_annotate(args):
         snow = args.sign_snow, 
         mud = args.sign_mud, 
         target_directory = target_directory, 
-        lean_forward_angle=args.sign_lean_forward_angle, 
-        lean_left_angle=args.sign_lean_left_angle, 
-        spin=args.sign_spin,
-        sign_size = 7)
+        lean_forward_angle=random.gauss(0, args.sign_lean_forward_strength), 
+        lean_left_angle=random.gauss(0, args.sign_lean_sideways_strength),   
+        spin=random.gauss(0, args.sign_spin_strength),
+        sign_size=7)
 
 
     # # Add trees 
@@ -259,9 +261,9 @@ def generate_random_parameters(args_dict):
         "frame_number": get_value("frame_number", args_dict, lambda: 450),
         "samples": get_value("samples", args_dict, lambda: random.choice([64])),
         "step_size": get_value("step_size", args_dict, lambda: random.choice([5])),
-        "sign_lean_forward_angle": get_value("sign_lean_forward_angle", args_dict, lambda: random.uniform(0, 10)),
-        "sign_lean_left_angle": get_value("sign_lean_left_angle", args_dict, lambda: random.uniform(0,10)),
-        "sign_spin": get_value("sign_spin", args_dict, lambda: random.uniform(0, 10)),
+        "sign_lean_forward_strength": get_value("sign_lean_forward_strength", args_dict, lambda: random.uniform(0, 10)),
+        "sign_lean_sideways_strength": get_value("sign_lean_sideways_strength", args_dict, lambda: random.uniform(0,10)),
+        "sign_spin_strength": get_value("sign_spin_strength", args_dict, lambda: random.uniform(0, 10)),
         "post_processing_strength": get_value("post_processing_strength", args_dict, lambda: random.uniform(0.3, 0.4)),
     }
 
