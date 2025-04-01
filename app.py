@@ -63,7 +63,7 @@ max_tree_dist = 30
 num_trees = 10
 
 # Add trees 
-trees.generate_preset_forest(target_directory, road_boundaries, density='some trees', distance_from_road='far', tree_type='pine')
+#trees.generate_preset_forest(target_directory, road_boundaries, density='some trees', distance_from_road='far', tree_type='pine')
 # min_dist is the distance from the road to the nearest tree
 # max_dist is the distance from the road to the farthest tree
 
@@ -72,13 +72,7 @@ camera_location= '12.5, -58, 6.68'
 camera_rotation = '90, 0, 0'
 camera_scale = 1.0
 
-# Add a camera
-cam.add_camera(
-    target_directory, background=background,
-    location=tuple(map(float, camera_location.split(','))),
-    rotation=tuple(map(float, camera_rotation.split(','))),
-    scale=camera_scale
-)
+
 
 light_location = '-28.398,59.799,19.12'
 light_angle = 180
@@ -99,7 +93,13 @@ plane.create_plane(size=ground_plane_size, target_directory=target_directory, ma
 
 lane_positions = road.warp_scene(x_warp=1,z_warp=0.5,road_preset='Highway')
 #creates a car object downloaded as gltffile
-car.create_car(target_directory)
+#car.create_car(target_directory)
+
+# Add a camera
+cam.add_camera(
+    target_directory, car = None, lane_positions = lane_positions, selected_lane_index = 2, background=background
+    
+)
 
 #adds sky texture
 sky_texture.create_sky_texture(time_of_day="dawn")

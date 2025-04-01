@@ -122,7 +122,7 @@ def generate_scene_and_annotate(args):
     # Add a camera
     background = random.choice(backgrounds[args.background])
     camera = cam.add_camera(
-        target_directory, car_obj, camera_preset=args.camera_preset, background=background
+        target_directory, car_obj, lane_positions = lane_positions, camera_lane_number=args.camera_lane_number, background=background
     )
     
     # Initialize the camera controller
@@ -133,7 +133,7 @@ def generate_scene_and_annotate(args):
         height_range=(4, 10),
         lane_positions = lane_positions,
         mode="dashcam",
-        selected_lane_index=2
+        camera_lane_number=args.camera_lane_number
     )
     
     # Add a light source
@@ -234,7 +234,7 @@ def generate_random_parameters(args_dict):
         "sign_rust": get_value("sign_rust", args_dict, lambda: random.uniform(0.0, 0.5)),
         "sign_snow": get_value("sign_snow", args_dict, lambda: random.uniform(0.0, 0.5)),
         "sign_mud": get_value("sign_mud", args_dict, lambda: random.uniform(0.0, 0.5)),
-        "camera_preset": get_value("camera_preset", args_dict, lambda: random.choice(["behind_car"])),
+        "camera_lane_number": get_value("camera_lane_number", args_dict, lambda: random.choice([2, 3])),
         "light_location": get_value("light_location", args_dict, lambda: "-28.398,59.799,19.12"),
         "light_angle": get_value("light_angle", args_dict, lambda: random.uniform(160, 200)),
         "time_of_day": get_value("time_of_day", args_dict, lambda: random.choice(["dawn", "midday", "dusk", "night"])),

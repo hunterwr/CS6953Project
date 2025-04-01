@@ -111,7 +111,7 @@ def main(args):
     lane_positions = road.warp_scene(x_warp=1,z_warp=0.5,road_preset='Highway')
 
     # Create a car object downloaded as a glTF file
-    car_obj=car.create_car(target_directory)
+    #car_obj=car.create_car(target_directory)
 
     backgrounds = {
         "city": ["burj_khalifa"],
@@ -121,7 +121,7 @@ def main(args):
     # Add a camera
     background = random.choice(backgrounds[args.background])
     camera = cam.add_camera(
-        target_directory, car_obj, camera_preset=args.camera_preset, background=background
+        target_directory, car=None, lane_positions = lane_positions, camera_lane_number=args.camera_lane_number, background=background
     )
 
      # Initialize the camera controller
@@ -132,7 +132,7 @@ def main(args):
         height_range=(4, 10),
         lane_positions = lane_positions,
         mode="dashcam",
-        selected_lane_index=2
+        camera_lane_number=args.camera_lane_number
     )
 
     # Add sky texture
@@ -143,7 +143,7 @@ def main(args):
     
     # Determine output directory
     base_output_dir = os.path.join(target_directory, "output")
-    output_dir = os.path.join(base_output_dir, "samples12") #get_next_output_directory(base_output_dir)
+    output_dir = os.path.join(base_output_dir, "samples17") #get_next_output_directory(base_output_dir)
     
     previous_annotations = find_previous_annotations(output_dir)
     
@@ -167,7 +167,7 @@ def main(args):
         print(f"Step {step+1}/{args.num_steps}: Camera movement {'successful' if move_success else 'adjusted to maintain sign visibility'}")
         base_filename = f"image_{step}"
         try:
-            # This does everything in one call: renders image, saves bbox, adds to annotations
+           #This does everything in one call: renders image, saves bbox, adds to annotations
             image_id = coco_annotator.add_image_with_annotation(
                 'Simple Sign', 
                 'Camera',
