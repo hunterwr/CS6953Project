@@ -93,18 +93,32 @@ def generate_scene_and_annotate(args):
     cycles_prefs.get_devices()
 
     for device in cycles_prefs.devices:
-        device.use = True
-        print(f" $$$$$$$$$$ Enabled device: {device.name}, Type: {device.type}")
-    for scene in bpy.data.scenes:
-        scene.cycles.device = 'GPU'
+        if 'NVIDIA' in device.name:
+            device.use = True
+            print(f"Enabled GPU device: {device.name}")
+        else:
+            device.use = False
+            print(f"Disabled non-GPU device: {device.name}")
        
     # Place road and sign
     road_boundaries, lane_positions = road.road_presets(scene = args.road_scene, conditions = args.road_conditions, target_directory = target_directory)
     png_path = 'textures/Signs/Signs/PNGs/'
     sign_path = png_path + args.sign + '.png'
-    signs.generate_sign(road_boundaries,sign_path, scratches = args.sign_scratches, rust = args.sign_rust, rivets=False, snow = args.sign_snow, mud = args.sign_mud, target_directory = target_directory )
+    signs.generate_sign(
+        road_boundaries,
+        sign_path, 
+        scratches = args.sign_scratches, 
+        rust = args.sign_rust, 
+        rivets=False, 
+        snow = args.sign_snow, 
+        mud = args.sign_mud, 
+        target_directory = target_directory, 
+        lean_forward_angle=random.gauss(0, args.sign_lean_forward_strength), 
+        lean_left_angle=random.gauss(0, args.sign_lean_sideways_strength),   
+        spin=random.gauss(0, args.sign_spin_strength),
+        sign_size=7)
 
-    
+
     # # Add trees 
     # #trees.generate_forest(args.road_width, args.road_length, args.min_dist, args.max_dist, args.num_trees)
     trees.generate_preset_forest(target_directory, road_boundaries, density=args.tree_density, distance_from_road=args.tree_distance, tree_type=args.tree_type)
@@ -229,11 +243,11 @@ def generate_random_parameters(args_dict):
         "light_power": get_value("light_power", args_dict, lambda: random.uniform(3.0, 5.0)),
         "background": get_value("background", args_dict, lambda: random.choice(["sky"])), 
         "road_scene": get_value("road_scene", args_dict, lambda: random.choice(["Highway", "Two Lane"])),
-        "road_conditions": get_value("road_conditions", args_dict, lambda: random.choice(["Dry"])),
-        "sign_scratches": get_value("sign_scratches", args_dict, lambda: random.uniform(0.0, 0.5)),
-        "sign_rust": get_value("sign_rust", args_dict, lambda: random.uniform(0.0, 0.5)),
-        "sign_snow": get_value("sign_snow", args_dict, lambda: random.uniform(0.0, 0.5)),
-        "sign_mud": get_value("sign_mud", args_dict, lambda: random.uniform(0.0, 0.5)),
+        "road_conditions": get_value("road_conditions", args_dict, lambda: random.choice(["Dry", "Wet"])),
+        "sign_scratches": get_value("sign_scratches", args_dict, lambda: random.uniform(0.0, 1)),
+        "sign_rust": get_value("sign_rust", args_dict, lambda: random.uniform(0.0, 1)),
+        "sign_snow": get_value("sign_snow", args_dict, lambda: random.uniform(0.0, 1)),
+        "sign_mud": get_value("sign_mud", args_dict, lambda: random.uniform(0.0, 1)),
         "camera_lane_number": get_value("camera_lane_number", args_dict, lambda: random.choice([2, 3])),
         "light_location": get_value("light_location", args_dict, lambda: "-28.398,59.799,19.12"),
         "light_angle": get_value("light_angle", args_dict, lambda: random.uniform(160, 200)),
@@ -247,6 +261,9 @@ def generate_random_parameters(args_dict):
         "frame_number": get_value("frame_number", args_dict, lambda: 450),
         "samples": get_value("samples", args_dict, lambda: random.choice([64])),
         "step_size": get_value("step_size", args_dict, lambda: random.choice([5])),
+        "sign_lean_forward_strength": get_value("sign_lean_forward_strength", args_dict, lambda: random.uniform(0, 10)),
+        "sign_lean_sideways_strength": get_value("sign_lean_sideways_strength", args_dict, lambda: random.uniform(0,10)),
+        "sign_spin_strength": get_value("sign_spin_strength", args_dict, lambda: random.uniform(0, 10)),
         "post_processing_strength": get_value("post_processing_strength", args_dict, lambda: random.uniform(0.3, 0.4)),
     }
 
