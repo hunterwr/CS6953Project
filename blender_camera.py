@@ -400,16 +400,7 @@ class CameraController:
     def dashcam_curved(self, step_size=1, height_offset=7.0):# sign_factor=0.1, local_blend=0.4, window_size=1):
         """
         Moves the camera along self.curved_lane_points.
-        
-        Position:
-        - Computes a local lane center from nearby lane points (a window around the current index)
-            and blends the current raw lane x coordinate with this local average.
-        - The camera is then positioned at (adjusted_x, lane_y, lane_z + height_offset).
-        
-        Orientation:
-        - Computes the forward direction along the lane and blends it with the direction toward the sign.
-        
-        On the first call, the camera retains its initial orientation.
+       
         """
         # Ensure lane_positions is available.
         if not (self.lane_positions and len(self.lane_positions) > 0):
@@ -423,7 +414,7 @@ class CameraController:
             print("Selected lane index out of range.")
             return False
 
-        # Initialize a persistent index if it doesn't exist.
+        # Initialize if no index
         if not hasattr(self, 'current_lane_point_index'):
             self.current_lane_point_index = 0
 
@@ -445,7 +436,6 @@ class CameraController:
 
         # Rotate the camera to face the forward direction.
         self.camera.rotation_euler = forward_direction.to_track_quat('-Z', 'Y').to_euler()
-        #self.camera.rotation_euler.z = 0  # Zero out any roll.
 
         # Advance the index by step_size.
         self.current_lane_point_index = (current_index + int(step_size)) % len(lane_points)
