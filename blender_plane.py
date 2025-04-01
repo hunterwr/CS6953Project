@@ -56,7 +56,7 @@ def create_material(size, target_directory, texture_type="snow_03"): # rocky_ter
 
     links.new(tex_coord.outputs["Generated"], mapping.inputs["Vector"])
     links.new(tex_coord.outputs["Generated"], voronoi_texture.inputs["Vector"])
-    voronoi_texture.inputs["Scale"].default_value = size * 0.2
+    voronoi_texture.inputs["Scale"].default_value = size * 0.05
     links.new(voronoi_texture.outputs["Color"],mapping.inputs["Rotation"])
     mapping.inputs["Scale"].default_value[0] = size * 0.04
     mapping.inputs["Scale"].default_value[1] = size * 0.04
