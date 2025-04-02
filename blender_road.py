@@ -18,7 +18,7 @@ def road_presets(scene = 'Two Lane', conditions = 'Dry',target_directory = None)
         conditions= conditions)
         left_edge_start = (-(50/2),-50,0)
         road_width = 50
-        road_length = 300 
+        road_length = 800 
         left_edge_start_x, left_edge_start_y, left_edge_start_z = left_edge_start
         left_edge_end = (left_edge_start_x, left_edge_start_y + road_length, left_edge_start_z)
         right_edge_start = (left_edge_start_x + road_width, left_edge_start_y, left_edge_start_z)
@@ -39,7 +39,7 @@ def road_presets(scene = 'Two Lane', conditions = 'Dry',target_directory = None)
         width = 100
 
         road_width = width
-        road_length = 400         
+        road_length = 800         
         create_road_edges(
         road_width=width,road_height=1, 
         road_length=400,

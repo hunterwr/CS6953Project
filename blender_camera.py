@@ -9,7 +9,7 @@ import bmesh
 import bpy_extras
 import mathutils
 from mathutils import Vector
-from PIL import Image, ImageDraw
+#from PIL import Image, ImageDraw
 import numpy as np
 
 def add_camera(target_directory, car, camera_preset = "behind_car", background="dunes" ):
@@ -98,9 +98,9 @@ def add_camera(target_directory, car, camera_preset = "behind_car", background="
     bpy.ops.mesh.primitive_plane_add(size=1)
     background_plane = bpy.context.object
     background_plane.name = "Background Plane"
-    background_plane.scale = (1200.0, 800.0, 0.0)
+    background_plane.scale = (1600.0, 1200.0, 0.0)
     background_plane.rotation_euler = camera.rotation_euler
-    background_plane.location = (0.0, 380.0, 280.0)
+    background_plane.location = (0.0, 380.0, 750)
     background_plane.parent = camera
     background_plane.matrix_parent_inverse = camera.matrix_world.inverted()
 

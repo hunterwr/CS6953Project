@@ -84,21 +84,8 @@ def find_previous_annotations(output_dir):
 def generate_scene_and_annotate(args):
     # Reset and Clear the Scene
     utils.clear_scene()
-    # Force GPU rendering with Cycles
-    bpy.context.scene.render.engine = 'CYCLES'
-    prefs = bpy.context.preferences
-    cycles_prefs = prefs.addons['cycles'].preferences
-    cycles_prefs.compute_device_type = 'CUDA'
 
-    cycles_prefs.get_devices()
 
-    for device in cycles_prefs.devices:
-        if 'NVIDIA' in device.name:
-            device.use = True
-            print(f"Enabled GPU device: {device.name}")
-        else:
-            device.use = False
-            print(f"Disabled non-GPU device: {device.name}")
        
     # Place road and sign
     road_boundaries, lane_positions = road.road_presets(scene = args.road_scene, conditions = args.road_conditions, target_directory = target_directory)
@@ -274,6 +261,22 @@ class Args:
             self.__dict__.update(entries) # Not good because can't see which parameters got errors, but implicit.
 
 def main():
+    # Force GPU rendering with Cycles
+    bpy.context.scene.render.engine = 'CYCLES'
+    prefs = bpy.context.preferences
+    cycles_prefs = prefs.addons['cycles'].preferences
+    cycles_prefs.compute_device_type = 'CUDA'
+
+    cycles_prefs.get_devices()
+
+    for device in cycles_prefs.devices:
+        if 'NVIDIA' in device.name:
+            device.use = True
+            print(f"Enabled GPU device: {device.name}")
+        else:
+            device.use = False
+            print(f"Disabled non-GPU device: {device.name}")
+
     json_path = os.path.join(target_directory, "config_test.json")  # JSON file path
     with open(json_path, 'r') as f:
         user_config = json.load(f)
