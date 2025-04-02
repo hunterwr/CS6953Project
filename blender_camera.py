@@ -1,6 +1,4 @@
 # Camera position funtions
-
-
 import bpy
 import math
 import os
@@ -12,33 +10,44 @@ from mathutils import Vector
 #from PIL import Image, ImageDraw
 import numpy as np
 
-def add_camera(target_directory, car, camera_preset = "behind_car", background="dunes" ):
+def add_camera(target_directory, car=None, lane_positions=None, camera_lane_number=2, background="dunes", lane_offset_z=5.0):
     """
-    Adds a camera to the scene based on defined preset: "behind_car", "front_car", "top_down", "driver_view")
-
-    """
+    Adds a camera to the scene.
     
-    def get_combined_bounding_box(obj):
-        
-        all_objects = [obj] + list(obj.children_recursive)
-        coords = []
-        for o in all_objects:
-            if o.type == 'MESH':
-                for corner in o.bound_box:
-                    world_corner = o.matrix_world @ Vector(corner)
-                    coords.append(world_corner)
-        if not coords:
-            return None, None
-        min_corner = Vector((min(v[i] for v in coords) for i in range(3)))
-        max_corner = Vector((max(v[i] for v in coords) for i in range(3)))
-        return min_corner, max_corner
-
+    If a car object is provided and exists, the camera is positioned relative to it
+    using presets. Otherwise, if lane_positions is provided, the camera is placed at the
+    center of the selected lane (and oriented forward along that lane). If neither is available,
+    a default position is used.
+    
+    Args:
+        target_directory (str): Directory for background image.
+        car (Object): Car object. If provided, its bounding box is used.
+        lane_positions (list): List of lanes, where each lane is a list of (x, y, z) coordinates.
+        selected_lane_index (int): Lane index (0-based) to place the camera on if car is not provided.
+        background (str): Name of the background image (without extension) in textures/Background.
+        lane_offset_z (float): Vertical offset above the lane for camera placement.
+    """
     bpy.ops.object.camera_add()
     camera = bpy.context.object
     camera.name = "Camera"
+    selected_lane_index = camera_lane_number
 
-    if car:
-        #dimensions
+    if car is not None and bpy.data.objects.get(car.name):
+        # Use car-based placement
+        def get_combined_bounding_box(obj):
+            all_objects = [obj] + list(obj.children_recursive)
+            coords = []
+            for o in all_objects:
+                if o.type == 'MESH':
+                    for corner in o.bound_box:
+                        world_corner = o.matrix_world @ Vector(corner)
+                        coords.append(world_corner)
+            if not coords:
+                return None, None
+            min_corner = Vector((min(v[i] for v in coords) for i in range(3)))
+            max_corner = Vector((max(v[i] for v in coords) for i in range(3)))
+            return min_corner, max_corner
+
         min_corner, max_corner = get_combined_bounding_box(car)
         center = (min_corner + max_corner) / 2
         dimensions = max_corner - min_corner
@@ -47,54 +56,63 @@ def add_camera(target_directory, car, camera_preset = "behind_car", background="
         car_width = dimensions.x
 
         camera_presets = {
-        "behind_car": {
-            "back_offset_multiplier": -2.0,
-            "side_offset_multiplier": 0.5,
-            "height_offset_multiplier": 0.5
+            "behind_car": {
+                "back_offset_multiplier": -2.0,
+                "side_offset_multiplier": 0.5,
+                "height_offset_multiplier": 0.5
             },
-        "front_car": {
-            "back_offset_multiplier": 1.0,
-            "side_offset_multiplier": 0.0,
-            "height_offset_multiplier": 0.5
+            "front_car": {
+                "back_offset_multiplier": 1.0,
+                "side_offset_multiplier": 0.0,
+                "height_offset_multiplier": 0.5
             },
-        "top_down": {
-            "back_offset_multiplier": 0.0,
-            "side_offset_multiplier": 0.0,
-            "height_offset_multiplier": 5.0
+            "top_down": {
+                "back_offset_multiplier": 0.0,
+                "side_offset_multiplier": 0.0,
+                "height_offset_multiplier": 5.0
             },
-        "driver_view": {
-            "back_offset_multiplier": 1.0,
-            "side_offset_multiplier": 1.0,
-            "height_offset_multiplier": 1.0
+            "driver_view": {
+                "back_offset_multiplier": 1.0,
+                "side_offset_multiplier": 1.0,
+                "height_offset_multiplier": 1.0
             }
-        }       
-
-        preset = camera_presets.get(camera_preset, camera_presets["behind_car"])
-
+        }
+        preset = camera_presets["behind_car"]
         back_offset = Vector((0, car_length * preset["back_offset_multiplier"], 0))
         side_offset = Vector((car_width * preset["side_offset_multiplier"], 0, 0))
         height_offset = Vector((0, 0, car_height * preset["height_offset_multiplier"]))
-
         camera.location = center + back_offset + side_offset + height_offset
 
-        #camera.location = center + Vector((0, -back_offset, height_offset))
         direction = (center - camera.location).normalized()
         camera.rotation_euler = direction.to_track_quat('-Z', 'Y').to_euler()
-
-        print(f"Camera positioned based on car bounds")
-        print(f"Center: {center}")
-        print(f"Car dimensions (W x H x L): {car_width:.2f} x {car_height:.2f} x {car_length:.2f}")
-        print(f"Camera location: {camera.location}")
-        print(f"Camera rotation: {camera.rotation_euler}")
+        print("[add_camera] Camera positioned based on car bounds.")
+    elif lane_positions is not None and len(lane_positions) > selected_lane_index:
+        # Use lane-based placement
+        lane = lane_positions[selected_lane_index]
+        if len(lane) < 2:
+            # If only one point exists, use a default orientation
+            pt = lane[0]
+            camera.location = Vector((pt[0], pt[1], pt[2] + lane_offset_z))
+            camera.rotation_euler = (math.radians(90), 0, 0)
+            print("[add_camera] Only one lane point available; using default rotation.")
+        else:
+            first_pt = lane[0]
+            second_pt = lane[1]
+            camera.location = Vector((first_pt[0], first_pt[1], first_pt[2] + lane_offset_z))
+            forward_dir = (Vector(second_pt) - Vector(first_pt)).normalized()
+            camera.rotation_euler = forward_dir.to_track_quat('-Z', 'Y').to_euler()
+            camera.rotation_euler.z += math.radians(-3) #offset by a 3 units in -z
+            print(f"[add_camera] Camera placed at lane {selected_lane_index + 1} center, facing forward along the lane.")
     else:
-        print("Camera placement Warning: Car object not found — using default position")
+        # Fallback default position
+        print("[add_camera] Neither car nor lane positions available. Using default camera position.")
         camera.location = Vector((12.5, -58, 6.68))
         camera.rotation_euler = (math.radians(90), 0, 0)
 
     # Set as active camera
     bpy.context.scene.camera = camera
 
-    # Add background plane attached to camera
+    # Background plane (preserving your existing setup)
     bpy.ops.mesh.primitive_plane_add(size=1)
     background_plane = bpy.context.object
     background_plane.name = "Background Plane"
@@ -104,21 +122,17 @@ def add_camera(target_directory, car, camera_preset = "behind_car", background="
     background_plane.parent = camera
     background_plane.matrix_parent_inverse = camera.matrix_world.inverted()
 
-    # Add material
     material = bpy.data.materials.new(name="BackgroundMaterial")
     material.use_nodes = True
     nodes = material.node_tree.nodes
     links = material.node_tree.links
     nodes.clear()
-
     output_node = nodes.new(type='ShaderNodeOutputMaterial')
     principled_node = nodes.new(type='ShaderNodeBsdfPrincipled')
     texture_node = nodes.new(type='ShaderNodeTexImage')
-
     output_node.location = (400, 0)
     principled_node.location = (200, 0)
     texture_node.location = (0, 0)
-
     path = f"{target_directory}/textures/Background/{background}.jpg"
     if os.path.exists(path):
         image = bpy.data.images.load(path)
@@ -126,20 +140,16 @@ def add_camera(target_directory, car, camera_preset = "behind_car", background="
     else:
         print(f"[add_camera] Background image not found at {path}")
         return
-
     links.new(texture_node.outputs["Color"], principled_node.inputs["Base Color"])
     links.new(texture_node.outputs['Color'], principled_node.inputs['Emission Color'])
     principled_node.inputs['Emission Strength'].default_value = 0.3
     links.new(principled_node.outputs['BSDF'], output_node.inputs['Surface'])
-
     background_plane.data.materials.append(material)
-
     bpy.context.view_layer.objects.active = background_plane
     bpy.ops.object.mode_set(mode='EDIT')
     bpy.ops.uv.cube_project()
     bpy.ops.object.mode_set(mode='OBJECT')
 
-    # Set animation frames
     scene = bpy.context.scene
     scene.frame_start = 1
     scene.frame_end = 1000
@@ -149,7 +159,7 @@ def add_camera(target_directory, car, camera_preset = "behind_car", background="
     scene.render.motion_blur_shutter = 2.0  # 0.5 is standard, tweak for intensity
 
     #Wide Angle Lens
-    #camera.data.lens = 24  # Wide angle, dashcam-style
+    #camera.data.lens = 40  # Wide angle, dashcam-style
     #camera.data.sensor_width = 36  # Full-frame sensor size
 
     # --- Depth of Field ---
@@ -207,7 +217,7 @@ class CameraController:
         height_range=(4, 10),
         lane_positions=None,
         mode="dashcam",
-        selected_lane_index=2
+        camera_lane_number=2
     ):
         """
         Args:
@@ -245,7 +255,7 @@ class CameraController:
         
         # Lane positions
         self.lane_positions = lane_positions or []  # list of lanes
-        self.selected_lane_index = selected_lane_index
+        self.selected_lane_index = camera_lane_number
 
         #Set up tracking history to avoid repeating positions
         self.position_history = []
@@ -387,59 +397,52 @@ class CameraController:
         return True
     
     #dashcam along curved road
-    def dashcam_curved(self, step_size=1, height_offset=7.0, sign_factor=0.3):
+    def dashcam_curved(self, step_size=1, height_offset=7.0):# sign_factor=0.1, local_blend=0.4, window_size=1):
         """
-        Move the camera along self.curved_lane_points, placing it at each point in sequence.
-        Then orient it partly toward the next lane point (forward direction) and partly toward the sign.
-
-        sign_factor: 0.0 = face purely forward along the lane,
-                        1.0 = face purely at the sign
+        Moves the camera along self.curved_lane_points.
+       
         """
+        # Ensure lane_positions is available.
+        if not (self.lane_positions and len(self.lane_positions) > 0):
+            print("No lane positions available; cannot dashcam.")
+            return False
 
-        #initial cam pos
-        if not self.used_initial_camera_loc:
-            self.used_initial_camera_loc = True
-            bpy.context.view_layer.update()
-            return True
+        # Get the list of raw lane points for the selected lane.
+        try:
+            lane_points = self.lane_positions[self.selected_lane_index]
+        except IndexError:
+            print("Selected lane index out of range.")
+            return False
 
-        # Get current lane point
-        current_i = self.current_lane_point_index
-        if current_i < 0 or current_i >= len(self.curved_lane_points):
-            current_i = 0
-        current_pt = self.curved_lane_points[current_i]
-        print(f"[_dashcam_curved] Lane pt index {current_i}: {current_pt}")
+        # Initialize if no index
+        if not hasattr(self, 'current_lane_point_index'):
+            self.current_lane_point_index = 0
 
-        # Position camera above lane
-        cam_x = current_pt[0]
-        cam_y = current_pt[1]
-        cam_z = current_pt[2] + height_offset
-        new_pos = Vector((cam_x, cam_y, cam_z))
-        new_pos = self.clamp_position(new_pos)
-        self.camera.location = new_pos
+        # Get the current lane point.
+        current_index = self.current_lane_point_index
+        current_point = lane_points[current_index]
+        print(f"Camera moving to lane point index {current_index}: {current_point}")
 
-        # Compute forward direction (lane direction)
-        next_i = (current_i + step_size) % len(self.curved_lane_points)
-        next_pt = self.curved_lane_points[next_i]
-        forward_dir = (Vector(next_pt) - Vector(current_pt)).normalized()
+        # Add a height offset to the z coordinate so the camera is above the road.
+        camera_position = Vector((current_point[0], current_point[1], current_point[2] + height_offset))
+        self.camera.location = camera_position
 
-        # Compute sign direction
-        sign_dir = (self.sign_obj.location - self.camera.location).normalized()
+        # Determine the forward direction.
+        if current_index < len(lane_points) - 1:
+            next_point = lane_points[current_index + 1]
+            forward_direction = (Vector(next_point) - Vector(current_point)).normalized()
+        else:
+            forward_direction = Vector((0, 1, 0))  # Default forward if at the last point
 
-        # weighted blend: 
-        # sign_look_factor=0 => 100% forward_dir
-        # sign_look_factor=1 => 100% sign_dir
-        # in between => partial
-        alpha = sign_factor
-        final_dir = (forward_dir * (1 - alpha) + sign_dir * alpha).normalized()
+        # Rotate the camera to face the forward direction.
+        self.camera.rotation_euler = forward_direction.to_track_quat('-Z', 'Y').to_euler()
 
-        # Set camera orientation
-        self.camera.rotation_euler = final_dir.to_track_quat('-Z','Y').to_euler()
-        # Optionally clamp roll:
-        # self.camera.rotation_euler.z = 0
+        # Advance the index by step_size.
+        self.current_lane_point_index = (current_index + int(step_size)) % len(lane_points)
 
-        self.current_lane_point_index = next_i
-
+        # Update the scene so that changes are applied.
         bpy.context.view_layer.update()
+        
         return True
     
     #camera helper methods
