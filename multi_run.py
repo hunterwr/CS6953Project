@@ -183,7 +183,7 @@ def generate_scene_and_annotate(args):
     
     for step in range(args.num_images_per_scene):
         # Move camera to next position using the camera controller
-        move_success = camera_controller.step()
+        move_success = camera_controller.step(args.step_size)
         print(f"Step {step+1}/{args.num_images_per_scene}: Camera movement {'successful' if move_success else 'adjusted to maintain sign visibility'}")
         
         base_filename = f"image_{step}"
