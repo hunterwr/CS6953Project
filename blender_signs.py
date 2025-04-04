@@ -3,19 +3,20 @@ import texture_utils as textures
 import blender_utils as utils
 import math
 import bmesh
+import random
 from mathutils import Vector
 import os 
 
-def generate_sign(road_boundaries,png_path ='textures/Signs/Signs/PNGs/Loose Gravel.png',scratches =0.25, rust = 0.25,rivets=False,snow = 0.0,mud = 0.0, sign_name = 'Simple Sign', target_directory = None, lean_forward_angle=0, lean_left_angle=0, spin=0,sign_size = 7):
+def generate_sign(road_boundaries,png_path ='textures/Signs/Signs/PNGs/Loose Gravel.png',scratches =0.25, rust = 0.25,rivets=False,snow = 0.0,mud = 0.0, sign_name = 'Simple Sign', target_directory = None, lean_forward_angle=0, lean_left_angle=0, spin=0,sign_size = random.randint(5, 10)):
     # Create the pole
 
     print(road_boundaries)
     right_edge = road_boundaries[2][0]
-    sign_height = 15
+    sign_height = random.randint(10, 20)
     pole_end_points, pole_obj = create_pole(
         radius=0.2,
         height=sign_height,
-        location=(right_edge + 1.5, 300, 2),
+        location=(random.choice([-1, 1])*(right_edge + 1.5), 300, 3),
         texture_path=os.path.join(target_directory, 'textures/Signs/sign_pole_al.PNG')
     )
 
