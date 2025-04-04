@@ -9,9 +9,13 @@ import texture_utils as textures
 
 def road_presets(scene = 'Two Lane', conditions = 'Dry',target_directory = None):
     if scene == 'Two Lane': 
+
+        road_width = 50
+        road_length = 400 
+
         create_road_edges(
-        road_width=50,road_height=1, 
-        road_length=400,
+        road_width=road_width,road_height=1, 
+        road_length=road_length,
         left_edge_start = (-(50/2),-50,0),
         name='Road_Edges',
         target_directory=target_directory,
@@ -28,8 +32,7 @@ def road_presets(scene = 'Two Lane', conditions = 'Dry',target_directory = None)
         lane_2 = (0.75*road_width +left_edge_start[0], left_edge_start[1],left_edge_start[2])
         lane_positions = [ lane_1,lane_2]
 
-        road_width = 50
-        road_length = 400 
+
 
 
     
@@ -73,7 +76,6 @@ def road_presets(scene = 'Two Lane', conditions = 'Dry',target_directory = None)
         ### Pull in and place guardrails, lights, and barriers 
         left_edge_start = (-(50/2),-50,0)
         road_width = 50
-        road_length = 300 
 
 
         left_edge_start_x, left_edge_start_y, left_edge_start_z = left_edge_start
