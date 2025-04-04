@@ -12,11 +12,11 @@ def generate_sign(road_boundaries,png_path ='textures/Signs/Signs/PNGs/Loose Gra
 
     print(road_boundaries)
     right_edge = road_boundaries[2][0]
-    sign_height = random.randint(10, 20)
+    sign_height = random.randint(15, 25)
     pole_end_points, pole_obj = create_pole(
         radius=0.2,
         height=sign_height,
-        location=(random.choice([-1, 1])*(right_edge + 1.5), 300, 3),
+        location=(random.choice([-1, 1])*(right_edge + 1.5), 300, 0.1*sign_height),
         texture_path=os.path.join(target_directory, 'textures/Signs/sign_pole_al.PNG')
     )
 
@@ -28,8 +28,8 @@ def generate_sign(road_boundaries,png_path ='textures/Signs/Signs/PNGs/Loose Gra
         text=None,
         start_location=(
             pole_end_points[0]-sign_size/2.0,
-            pole_end_points[1] - 2.5 * 0.2,
-            pole_end_points[2] - 0.25
+            pole_end_points[1] - 3 * 0.2,
+            pole_end_points[2] - 0.5*sign_size
         ),
         name= sign_name
     )
