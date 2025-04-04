@@ -95,10 +95,19 @@ signs.generate_sign(
 # #trees.generate_forest(args.road_width, args.road_length, args.min_dist, args.max_dist, args.num_trees)
 trees.generate_preset_forest(target_directory, road_boundaries, density=args.tree_density, distance_from_road=args.tree_distance, tree_type=args.tree_type)
 
-lane_positions = road.warp_scene(x_warp=1,z_warp=0.5,road_preset='Highway')
+# Create a plane for the ground surface
+planes = {
+    "rock": "rocky_trail",
+    "snow": "snow_03",
+    "forest": "forrest_ground_01",
+    "mud": "brown_mud_leaves_01"
+}
+
+plane.create_plane(size=args.ground_plane_size, target_directory=target_directory, material=planes[args.plane])
+lane_positions = road.warp_scene(x_warp=1,z_warp=0.5,road_preset=args.road_scene)
 
 # Create a car object downloaded as a glTF file
-car_obj = car.create_car(target_directory)
+#car_obj = car.create_car(target_directory)
 
 backgrounds = {
     "city": ["burj_khalifa"],
@@ -108,7 +117,7 @@ backgrounds = {
 # Add a camera
 background = random.choice(backgrounds[args.background])
 camera = cam.add_camera(
-    target_directory, car_obj, lane_positions = lane_positions, camera_lane_number=args.camera_lane_number, background=background
+    target_directory, car=None, lane_positions = lane_positions, camera_lane_number=args.camera_lane_number, background=background
 ) # target_directory, car=None, lane_positions=None, camera_lane_number=2, background="dunes", lane_offset_z=5.0
 
 # Initialize the camera controller
@@ -129,18 +138,12 @@ light.add_sunlight(
     angle=args.light_angle
 )
 
-# Create a plane for the ground surface
-planes = {
-    "rock": "rocky_trail",
-    "snow": "snow_03",
-    "forest": "forrest_ground_01",
-    "mud": "brown_mud_leaves_01"
-}
 
-plane.create_plane(size=args.ground_plane_size, target_directory=target_directory, material=planes[args.plane])
+
+
 
 # Add sky texture
 sky_texture.create_sky_texture(time_of_day=args.time_of_day)
 
 # Add particles
-weather.add_snow(snow_type=args.snow_type)
+#weather.add_snow(snow_type=args.snow_type)

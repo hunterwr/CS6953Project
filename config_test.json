@@ -10,5 +10,6 @@
   "num_images_per_scene": 12,
   "num_scenes": 1,
   "step_size": 5,
-  "post_processing_strength": 0.01
+  "post_processing_strength": 0.01,
+  "ground_plane_size": 1600
 }

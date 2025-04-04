@@ -129,7 +129,7 @@ def road_presets(scene = 'Two Lane', conditions = 'Dry',target_directory = None)
                 
         obj = bpy.data.objects.get('RoadBlockade_02')        
         array_modifier = obj.modifiers.new(name="Array", type='ARRAY')
-        array_modifier.count = 23 # Number of array copies
+        array_modifier.count = math.floor(road_length/18) # Number of array copies
         array_modifier.use_relative_offset = True  # Use constant offset (for linear array)
         array_modifier.relative_offset_displace = (1.0, 0.0, 0.0)  # Offset along the X-axis
 
@@ -153,7 +153,7 @@ def road_presets(scene = 'Two Lane', conditions = 'Dry',target_directory = None)
         #        obj.rotation_euler.z+=math.radians(90)
         obj = bpy.data.objects.get(object_name)        
         array_modifier = obj.modifiers.new(name="Array", type='ARRAY')
-        array_modifier.count = 30  # Number of array copies
+        array_modifier.count = math.floor(road_length/14)  # Number of array copies
         array_modifier.use_relative_offset = True  # Use constant offset (for linear array)
         array_modifier.relative_offset_displace = (0.0, 1.0, 0.0)  # Offset along the X-axis
 
@@ -176,7 +176,7 @@ def road_presets(scene = 'Two Lane', conditions = 'Dry',target_directory = None)
         #        obj.rotation_euler.z+=math.radians(90)
         obj = bpy.data.objects.get(object_name)       
         array_modifier = obj.modifiers.new(name="Array", type='ARRAY')
-        array_modifier.count = 30  # Number of array copies
+        array_modifier.count = math.floor(road_length/14)  # Number of array copies
         array_modifier.use_relative_offset = True  # Use constant offset (for linear array)
         array_modifier.relative_offset_displace = (0.0, -1.0, 0.0)  # Offset along the X-axis
 
@@ -196,7 +196,7 @@ def road_presets(scene = 'Two Lane', conditions = 'Dry',target_directory = None)
 
         obj = bpy.data.objects.get('Street Light 1')        
         array_modifier = obj.modifiers.new(name="Array", type='ARRAY')
-        array_modifier.count =10 # Number of array copies
+        array_modifier.count = math.floor(road_length/40) # Number of array copies
         array_modifier.use_relative_offset = True  # Use constant offset (for linear array)
         array_modifier.relative_offset_displace = (-40, 0.0, 0.0)  # Offset along the X-axis
 
@@ -210,7 +210,7 @@ def road_presets(scene = 'Two Lane', conditions = 'Dry',target_directory = None)
         obj2 = bpy.context.object  
 
         # Move the duplicated object  
-        obj2.location= (-52, 400, 1.0) 
+        obj2.location= (-52, road_length, 1.0) 
         obj2.rotation_euler.z+=math.radians(180)
 
         obj = bpy.data.objects.get('Road_Edges.001')  
