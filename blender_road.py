@@ -11,7 +11,7 @@ def road_presets(scene = 'Two Lane', conditions = 'Dry',target_directory = None)
     if scene == 'Two Lane': 
 
         road_width = 50
-        road_length = 400 
+        road_length = 800 
 
         create_road_edges(
         road_width=road_width,road_height=1, 
@@ -45,7 +45,7 @@ def road_presets(scene = 'Two Lane', conditions = 'Dry',target_directory = None)
         road_length = 800         
         create_road_edges(
         road_width=width,road_height=1, 
-        road_length=400,
+        road_length=road_length,
         left_edge_start = (-(width/2),-50,0),
         name='Road_Edges',
         target_directory=target_directory,
@@ -482,7 +482,7 @@ def create_spline_road(width,length,spline_start=(0,0,0),spline_end=(20,20,0), c
     
 
 
-def warp_scene(x_warp, z_warp, road_preset = 'Highway',camera_positions = 15):
+def warp_scene(x_warp, z_warp, road_preset = 'Highway',camera_positions = 15, road_length = 800):
 
     #subdivide road
     obj = bpy.data.objects.get('Road_Edges')
@@ -498,7 +498,7 @@ def warp_scene(x_warp, z_warp, road_preset = 'Highway',camera_positions = 15):
 
     #get original mesh positions
     # original_positions = {v.index: obj.matrix_world @ v.co for v in obj.data.vertices}
-    length = 400
+    length = road_length
 
     if road_preset =='Highway':
         start_positions = [-28,-9,9,28]
@@ -546,10 +546,10 @@ def warp_scene(x_warp, z_warp, road_preset = 'Highway',camera_positions = 15):
     lattice.data.name = "Road_Lattice_Data"
 
     #size lattice
-    lattice.scale = (104.741, 450, 50)  # Change values as needed
+    lattice.scale = (104.741, length, 50)  # Change values as needed
 
     # Move the lattice to the correct location
-    lattice.location = (0, 140, 20)  # Adjust based on your road position
+    lattice.location = (0, (length/2)-50, 20)  # Adjust based on your road position
 
     # Add lattice subdivisions (U, V, W → X, Y, Z)
     lattice.data.points_u = 8  # Horizontal divisions

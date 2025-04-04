@@ -116,9 +116,9 @@ def add_camera(target_directory, car=None, lane_positions=None, camera_lane_numb
     bpy.ops.mesh.primitive_plane_add(size=1)
     background_plane = bpy.context.object
     background_plane.name = "Background Plane"
-    background_plane.scale = (1600.0, 1200.0, 0.0)
+    background_plane.scale = (900.0, 600.0, 0.0)
     background_plane.rotation_euler = camera.rotation_euler
-    background_plane.location = (0.0, 380.0, 750)
+    background_plane.location = (0.0, 700, 100)
     background_plane.parent = camera
     background_plane.matrix_parent_inverse = camera.matrix_world.inverted()
 
