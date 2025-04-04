@@ -51,9 +51,9 @@ def road_presets(scene = 'Two Lane', conditions = 'Dry',target_directory = None)
         target_directory=target_directory,
         conditions=conditions)
 
-        bpy.data.materials["Patched road 02"].node_tree.nodes["Mapping"].inputs[3].default_value[0] = -15.176
+        bpy.data.materials["Patched road 02"].node_tree.nodes["Mapping"].inputs[3].default_value[0] = -18.776
         bpy.data.materials["Patched road 02"].node_tree.nodes["Mapping"].inputs[1].default_value[0] = 1
-        bpy.data.materials["Patched road 02"].node_tree.nodes["Mapping"].inputs[1].default_value[1] = -0.15
+        bpy.data.materials["Patched road 02"].node_tree.nodes["Mapping"].inputs[1].default_value[1] = 0.52
 
         start = width*0.6031 +0.3643
         
