@@ -121,7 +121,7 @@ def generate_random_parameters(args_dict):
         "sign_rust": get_value("sign_rust", args_dict, lambda: random.uniform(0.0, 0.5)),
         "sign_snow": get_value("sign_snow", args_dict, lambda: random.uniform(0.0, 0.5)),
         "sign_mud": get_value("sign_mud", args_dict, lambda: random.uniform(0.0, 0.5)),
-        "camera_lane_number": get_value("camera_lane_number", args_dict, lambda: random.choice([2, 3])),
+        #"camera_lane_number": get_value("camera_lane_number", args_dict, lambda: random.choice([2, 3])),
         "light_location": get_value("light_location", args_dict, lambda: "-28.398,59.799,19.12"),
         "light_angle": get_value("light_angle", args_dict, lambda: random.uniform(160, 200)),
         "time_of_day": get_value("time_of_day", args_dict, lambda: random.choice(["dawn", "midday", "dusk", "night"])),

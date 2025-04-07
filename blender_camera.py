@@ -414,6 +414,8 @@ class CameraController:
         try:
             lane_points = self.lane_positions[self.selected_lane_index]
         except IndexError:
+            print(f"Invalid lane index {self.selected_lane_index}.")
+            print(f"Available lanes: {len(self.lane_positions)}")
             print("Selected lane index out of range.")
             return False
 
