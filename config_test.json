@@ -1,14 +1,7 @@
 {
-  "road_conditions": "Dry",
-  "sign_type": "No Left Turn On Red",
-  "density": "some trees",
-  "distance": "close",
-  "tree_type": "birch",
-  "snow_type": "moderate",
-  "camera_lane_number": 2,
-  "samples": 64,
-  "num_images_per_scene": 12,
-  "num_scenes": 1,
+  "samples": 32,
+  "num_images_per_scene": 10,
+  "num_scenes": 5,
   "step_size": 5,
   "post_processing_strength": 0.01,
   "ground_plane_size": 1600

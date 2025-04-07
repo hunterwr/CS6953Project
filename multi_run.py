@@ -113,7 +113,14 @@ def generate_scene_and_annotate(args):
     # # Add trees 
     # #trees.generate_forest(args.road_width, args.road_length, args.min_dist, args.max_dist, args.num_trees)
     trees.generate_preset_forest(target_directory, road_boundaries, density=args.tree_density, distance_from_road=args.tree_distance, tree_type=args.tree_type)
-
+    # Create a plane for the ground surface
+    planes = {
+        "rock": "rocky_trail",
+        "snow": "snow_03",
+        "forest": "forrest_ground_01",
+        "mud": "brown_mud_leaves_01"
+    }
+    
     plane.create_plane(size=args.ground_plane_size, target_directory=target_directory, material=planes[args.plane])
     
     lane_positions = road.warp_scene(x_warp=1,z_warp=0.5, road_preset=args.road_scene)
@@ -150,14 +157,7 @@ def generate_scene_and_annotate(args):
         angle=args.light_angle
     )
     
-    # Create a plane for the ground surface
-    planes = {
-        "rock": "rocky_trail",
-        "snow": "snow_03",
-        "forest": "forrest_ground_01",
-        "mud": "brown_mud_leaves_01"
-    }
-    
+
 
 
     # Add sky texture
