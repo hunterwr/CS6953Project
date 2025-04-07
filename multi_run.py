@@ -139,6 +139,7 @@ def generate_scene_and_annotate(args):
         target_directory, car=None, lane_positions = lane_positions, camera_lane_number=args.camera_lane_number, background=background
     ) # target_directory, car=None, lane_positions=None, camera_lane_number=2, background="dunes", lane_offset_z=5.0
     
+    num_lanes=len(lane_positions)
     # Initialize the camera controller
     camera_controller = cam.CameraController(
         camera, 
@@ -147,7 +148,7 @@ def generate_scene_and_annotate(args):
         height_range=(4, 10),
         lane_positions = lane_positions,
         mode="dashcam",
-        camera_lane_number=args.camera_lane_number
+        camera_lane_number=random.randint(0, num_lanes-1)
     )
     
     # Add a light source
