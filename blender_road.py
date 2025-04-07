@@ -8,7 +8,14 @@ import random
 import texture_utils as textures 
 
 def road_presets(scene = 'Two Lane', conditions = 'Dry',target_directory = None):
-    if scene == 'Two Lane': 
+
+    if scene == 'Intersection':
+        create_intersection(target_directory=target_directory)
+        road_boundaries = None
+        lane_positions = None
+        
+
+    elif scene == 'Two Lane': 
 
         road_width = 50
         road_length = 800 
@@ -50,10 +57,15 @@ def road_presets(scene = 'Two Lane', conditions = 'Dry',target_directory = None)
         name='Road_Edges',
         target_directory=target_directory,
         conditions=conditions)
+        if conditions == 'Dry':
+            bpy.data.materials["Patched road 02"].node_tree.nodes["Mapping"].inputs[3].default_value[0] = -18.776
+            bpy.data.materials["Patched road 02"].node_tree.nodes["Mapping"].inputs[1].default_value[0] = 1
+            bpy.data.materials["Patched road 02"].node_tree.nodes["Mapping"].inputs[1].default_value[1] = 0.52
+        elif conditions == 'Wet':
+            bpy.data.materials["4K Wet road 02"].node_tree.nodes["Mapping"].inputs[3].default_value[0] = -18.776
+            bpy.data.materials["4K Wet road 02"].node_tree.nodes["Mapping"].inputs[1].default_value[0] = 1
+            bpy.data.materials["4K Wet road 02"].node_tree.nodes["Mapping"].inputs[1].default_value[1] = 0.52
 
-        bpy.data.materials["Patched road 02"].node_tree.nodes["Mapping"].inputs[3].default_value[0] = -18.776
-        bpy.data.materials["Patched road 02"].node_tree.nodes["Mapping"].inputs[1].default_value[0] = 1
-        bpy.data.materials["Patched road 02"].node_tree.nodes["Mapping"].inputs[1].default_value[1] = 0.52
 
         start = width*0.6031 +0.3643
         
@@ -662,3 +674,73 @@ def warp_scene(x_warp, z_warp, road_preset = 'Highway',camera_positions = 15, ro
     lane_cubes.clear()
 
     return cube_locations_by_lane
+
+
+
+def create_intersection(road_length=300, road_width = 50, road_height = 2, name = 'road1',target_directory = None):
+    left_edge_start = (-road_width/2,-20,0)
+    verts = [(0,0,0),(0,road_length,0),(road_width,road_length,0),(road_width,0,0),(0.15*road_width,0,road_height),
+        (0.15*road_width,road_length,road_height),(.85*road_width,road_length,road_height),(0.85*road_width,0,road_height)]
+    faces = [(0,1,2,3),(7,6,5,4),(0,4,5,1),(1,5,6,2),(2,6,7,3),(3,7,4,0)]
+
+
+    mymesh = bpy.data.meshes.new(name)
+    myobject = bpy.data.objects.new(name, mymesh)
+    mymesh.from_pydata(verts, [], faces)
+    mymesh.update()
+    myobject.data.materials.clear()
+    
+    myobject.location = left_edge_start 
+    bpy.context.collection.objects.link(myobject)
+    bpy.context.view_layer.objects.active = myobject 
+
+    bpy.ops.object.modifier_add(type='BEVEL')
+    bpy.context.object.modifiers["Bevel"].affect = 'EDGES'
+    bpy.context.object.modifiers["Bevel"].segments = 11
+    bpy.context.object.modifiers["Bevel"].angle_limit = 0.0802852
+    bpy.context.object.modifiers["Bevel"].width = 1.89
+
+
+
+    #obj = bpy.data.objects.get('road1')
+    #bpy.context.view_layer.objects.active = obj
+    myobject.select_set(True)
+    # Duplicate the object
+    bpy.ops.object.duplicate()
+
+    # Get the newly duplicated object (it will now be the active object)
+    obj2 = bpy.context.object  
+
+    # Move the duplicated object  
+    obj2.rotation_euler.z = 1.5708
+    obj2.location.y = road_length/2  - road_width
+    obj2.location.x = road_length/2
+
+
+    obj2.select_set(True)
+
+    bpy.context.view_layer.objects.active = obj2
+
+    bpy.ops.object.modifier_add(type='BOOLEAN')
+    bpy.context.object.modifiers["Boolean"].object = bpy.data.objects["road1"]
+
+    bpy.ops.object.modifier_add(type='BOOLEAN')
+    bpy.context.object.modifiers["Boolean.001"].operation = 'UNION'
+    bpy.ops.object.modifier_set_active(modifier="Boolean.001")
+    bpy.context.object.modifiers["Boolean.001"].object = bpy.data.objects["road1"]
+
+
+    # Select both objects
+    myobject.select_set(True)  # Select the original road object (myobject)
+    obj2.select_set(True)      # Select the duplicated road object (obj2)
+
+    # Make sure one object is active (usually, the last selected object becomes active)
+    bpy.context.view_layer.objects.active = myobject  # Set myobject as active
+
+    # Join the objects
+    bpy.ops.object.join()
+    road_object  = bpy.data.objects.get(name)
+    unwrap_uv(road_object)
+    textures.apply_asphalt_nolines(road_object,target_directory=target_directory)
+    # textures.apply_blenderkit_dryRoad(road_object,target_directory=target_directory)
+    return None

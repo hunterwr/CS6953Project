@@ -3154,3 +3154,362 @@ def apply_birch_tree_bark(obj):
         obj.data.materials.append(mat)  # Add new material
     
 
+
+
+
+def apply_asphalt_nolines(obj,target_directory):
+
+    tex_path=target_directory+r'/textures/Roads/asphalt_nolines/'
+
+    color = r'asphalt_12_color.jpg'
+    height = r'asphalt_12_height.jpg'
+    metal = r'asphalt_12_metallic.jpg'
+    normal = r'asphalt_12_normal.jpg'
+    rough = r'asphalt_12_roughness.jpg'
+
+  
+
+
+
+    import bpy, mathutils
+
+    mat = bpy.data.materials.new(name = "Asphalt.003")
+    mat.use_nodes = True
+    #initialize Asphalt.003 node group
+    def asphalt_003_node_group():
+
+        asphalt_003 = mat.node_tree
+        #start with a clean node tree
+        for node in asphalt_003.nodes:
+            asphalt_003.nodes.remove(node)
+        asphalt_003.color_tag = 'NONE'
+        asphalt_003.description = ""
+        asphalt_003.default_group_node_width = 140
+        
+
+        #asphalt_003 interface
+
+        #initialize asphalt_003 nodes
+        #node Principled BSDF
+        principled_bsdf = asphalt_003.nodes.new("ShaderNodeBsdfPrincipled")
+        principled_bsdf.name = "Principled BSDF"
+        principled_bsdf.distribution = 'MULTI_GGX'
+        principled_bsdf.subsurface_method = 'RANDOM_WALK'
+        #IOR
+        principled_bsdf.inputs[3].default_value = 1.5
+        #Alpha
+        principled_bsdf.inputs[4].default_value = 1.0
+        #Diffuse Roughness
+        principled_bsdf.inputs[7].default_value = 0.0
+        #Subsurface Weight
+        principled_bsdf.inputs[8].default_value = 0.0
+        #Subsurface Radius
+        principled_bsdf.inputs[9].default_value = (1.0, 0.20000000298023224, 0.10000000149011612)
+        #Subsurface Scale
+        principled_bsdf.inputs[10].default_value = 0.05000000074505806
+        #Subsurface Anisotropy
+        principled_bsdf.inputs[12].default_value = 0.0
+        #Specular IOR Level
+        principled_bsdf.inputs[13].default_value = 0.019999999552965164
+        #Specular Tint
+        principled_bsdf.inputs[14].default_value = (1.0, 1.0, 1.0, 1.0)
+        #Anisotropic
+        principled_bsdf.inputs[15].default_value = 0.0
+        #Anisotropic Rotation
+        principled_bsdf.inputs[16].default_value = 0.0
+        #Tangent
+        principled_bsdf.inputs[17].default_value = (0.0, 0.0, 0.0)
+        #Transmission Weight
+        principled_bsdf.inputs[18].default_value = 0.0
+        #Coat Weight
+        principled_bsdf.inputs[19].default_value = 0.0
+        #Coat Roughness
+        principled_bsdf.inputs[20].default_value = 0.029999999329447746
+        #Coat IOR
+        principled_bsdf.inputs[21].default_value = 1.5
+        #Coat Tint
+        principled_bsdf.inputs[22].default_value = (1.0, 1.0, 1.0, 1.0)
+        #Coat Normal
+        principled_bsdf.inputs[23].default_value = (0.0, 0.0, 0.0)
+        #Sheen Weight
+        principled_bsdf.inputs[24].default_value = 0.0
+        #Sheen Roughness
+        principled_bsdf.inputs[25].default_value = 0.5
+        #Sheen Tint
+        principled_bsdf.inputs[26].default_value = (1.0, 1.0, 1.0, 1.0)
+        #Emission Color
+        principled_bsdf.inputs[27].default_value = (1.0, 1.0, 1.0, 1.0)
+        #Emission Strength
+        principled_bsdf.inputs[28].default_value = 0.0
+        #Thin Film Thickness
+        principled_bsdf.inputs[29].default_value = 0.0
+        #Thin Film IOR
+        principled_bsdf.inputs[30].default_value = 1.3300000429153442
+
+        #node Material Output
+        material_output = asphalt_003.nodes.new("ShaderNodeOutputMaterial")
+        material_output.name = "Material Output"
+        material_output.is_active_output = True
+        material_output.target = 'ALL'
+        #Thickness
+        material_output.inputs[3].default_value = 0.0
+
+        #node Image Texture
+        image_texture = asphalt_003.nodes.new("ShaderNodeTexImage")
+        image_texture.label = "Displacement"
+        image_texture.name = "Image Texture"
+        image_texture.extension = 'REPEAT'
+        image_texture.image_user.frame_current = 1
+        image_texture.image_user.frame_duration = 1
+        image_texture.image_user.frame_offset = 11
+        image_texture.image_user.frame_start = 1
+        image_texture.image_user.tile = 0
+        image_texture.image_user.use_auto_refresh = False
+        image_texture.image_user.use_cyclic = False
+        image_texture.interpolation = 'Linear'
+        image_texture.projection = 'FLAT'
+        image_texture.projection_blend = 0.0
+        image_texture.image = bpy.data.images.load(tex_path+height)  
+        image_texture.image.colorspace_settings.name = 'Non-Color'
+        image_texture.image.reload()
+
+
+        #node Displacement
+        displacement = asphalt_003.nodes.new("ShaderNodeDisplacement")
+        displacement.name = "Displacement"
+        displacement.space = 'OBJECT'
+        #Midlevel
+        displacement.inputs[1].default_value = 0.5
+        #Scale
+        displacement.inputs[2].default_value = 0.004999999888241291
+        #Normal
+        displacement.inputs[3].default_value = (0.0, 0.0, 0.0)
+
+        #node Image Texture.001
+        image_texture_001 = asphalt_003.nodes.new("ShaderNodeTexImage")
+        image_texture_001.label = "Base Color"
+        image_texture_001.name = "Image Texture.001"
+        image_texture_001.extension = 'REPEAT'
+        image_texture_001.image_user.frame_current = 1
+        image_texture_001.image_user.frame_duration = 1
+        image_texture_001.image_user.frame_offset = 11
+        image_texture_001.image_user.frame_start = 1
+        image_texture_001.image_user.tile = 0
+        image_texture_001.image_user.use_auto_refresh = False
+        image_texture_001.image_user.use_cyclic = False
+        image_texture_001.interpolation = 'Linear'
+        image_texture_001.projection = 'FLAT'
+        image_texture_001.projection_blend = 0.0
+        image_texture_001.image = bpy.data.images.load(tex_path+color)  
+
+        #node Image Texture.002
+        image_texture_002 = asphalt_003.nodes.new("ShaderNodeTexImage")
+        image_texture_002.label = "Roughness"
+        image_texture_002.name = "Image Texture.002"
+        image_texture_002.extension = 'REPEAT'
+        image_texture_002.image_user.frame_current = 1
+        image_texture_002.image_user.frame_duration = 1
+        image_texture_002.image_user.frame_offset = 11
+        image_texture_002.image_user.frame_start = 1
+        image_texture_002.image_user.tile = 0
+        image_texture_002.image_user.use_auto_refresh = False
+        image_texture_002.image_user.use_cyclic = False
+        image_texture_002.interpolation = 'Linear'
+        image_texture_002.projection = 'FLAT'
+        image_texture_002.projection_blend = 0.0
+        image_texture_002.image = bpy.data.images.load(tex_path+rough) 
+        image_texture_002.image.colorspace_settings.name = 'Non-Color' 
+        image_texture_002.image.reload()
+
+        #node Image Texture.003
+        image_texture_003 = asphalt_003.nodes.new("ShaderNodeTexImage")
+        image_texture_003.label = "Normal"
+        image_texture_003.name = "Image Texture.003"
+        image_texture_003.extension = 'REPEAT'
+        image_texture_003.image_user.frame_current = 1
+        image_texture_003.image_user.frame_duration = 1
+        image_texture_003.image_user.frame_offset = 11
+        image_texture_003.image_user.frame_start = 1
+        image_texture_003.image_user.tile = 0
+        image_texture_003.image_user.use_auto_refresh = False
+        image_texture_003.image_user.use_cyclic = False
+        image_texture_003.interpolation = 'Linear'
+        image_texture_003.projection = 'FLAT'
+        image_texture_003.projection_blend = 0.0
+        image_texture_003.image = bpy.data.images.load(tex_path+normal)  
+        image_texture_003.image.colorspace_settings.name = 'Non-Color'
+        image_texture_003.image.reload()
+
+        #node Normal Map
+        normal_map = asphalt_003.nodes.new("ShaderNodeNormalMap")
+        normal_map.name = "Normal Map"
+        normal_map.space = 'TANGENT'
+        normal_map.uv_map = ""
+        #Strength
+        normal_map.inputs[0].default_value = 1.0
+
+        #node Mapping
+        mapping = asphalt_003.nodes.new("ShaderNodeMapping")
+        mapping.name = "Mapping"
+        mapping.vector_type = 'POINT'
+        #Location
+        mapping.inputs[1].default_value = (0.0, 0.0, 0.0)
+        #Rotation
+        mapping.inputs[2].default_value = (0.0, 0.0, 0.0)
+        #Scale
+        mapping.inputs[3].default_value = (0.009999999776482582, 0.009999999776482582, 1.0)
+
+        #node Reroute
+        reroute = asphalt_003.nodes.new("NodeReroute")
+        reroute.name = "Reroute"
+        reroute.socket_idname = "NodeSocketVector"
+        #node Texture Coordinate
+        texture_coordinate = asphalt_003.nodes.new("ShaderNodeTexCoord")
+        texture_coordinate.name = "Texture Coordinate"
+        texture_coordinate.from_instancer = False
+
+        #node Frame
+        frame = asphalt_003.nodes.new("NodeFrame")
+        frame.label = "Mapping"
+        frame.name = "Frame"
+        frame.label_size = 20
+        frame.shrink = True
+
+        #node Frame.001
+        frame_001 = asphalt_003.nodes.new("NodeFrame")
+        frame_001.label = "Textures"
+        frame_001.name = "Frame.001"
+        frame_001.label_size = 20
+        frame_001.shrink = True
+
+        #node Separate XYZ
+        separate_xyz = asphalt_003.nodes.new("ShaderNodeSeparateXYZ")
+        separate_xyz.name = "Separate XYZ"
+
+        #node Math
+        math = asphalt_003.nodes.new("ShaderNodeMath")
+        math.name = "Math"
+        math.operation = 'SUBTRACT'
+        math.use_clamp = False
+        #Value
+        math.inputs[0].default_value = 1.0
+
+        #node Combine XYZ
+        combine_xyz = asphalt_003.nodes.new("ShaderNodeCombineXYZ")
+        combine_xyz.name = "Combine XYZ"
+
+        #node Image Texture.004
+        image_texture_004 = asphalt_003.nodes.new("ShaderNodeTexImage")
+        image_texture_004.label = "Metallic"
+        image_texture_004.name = "Image Texture.004"
+        image_texture_004.extension = 'REPEAT'
+        image_texture_004.image_user.frame_current = 0
+        image_texture_004.image_user.frame_duration = 1
+        image_texture_004.image_user.frame_offset = 11
+        image_texture_004.image_user.frame_start = 1
+        image_texture_004.image_user.tile = 0
+        image_texture_004.image_user.use_auto_refresh = False
+        image_texture_004.image_user.use_cyclic = False
+        image_texture_004.interpolation = 'Linear'
+        image_texture_004.projection = 'FLAT'
+        image_texture_004.projection_blend = 0.0
+        image_texture_004.image = bpy.data.images.load(tex_path+metal)  
+        image_texture_004.image.colorspace_settings.name = 'Non-Color'
+        image_texture_004.image.reload()
+
+        #Set parents
+        image_texture.parent = frame_001
+        image_texture_001.parent = frame_001
+        image_texture_002.parent = frame_001
+        image_texture_003.parent = frame_001
+        mapping.parent = frame
+        reroute.parent = frame_001
+        texture_coordinate.parent = frame
+        image_texture_004.parent = frame_001
+
+        #Set locations
+        principled_bsdf.location = (14.355504035949707, 300.0)
+        material_output.location = (304.3554992675781, 300.0)
+        image_texture.location = (-535.5112915039062, -337.4123840332031)
+        displacement.location = (110.0, -400.0)
+        image_texture_001.location = (-537.376953125, 763.8428955078125)
+        image_texture_002.location = (-540.0, 220.0)
+        image_texture_003.location = (-540.0, -59.21820831298828)
+        normal_map.location = (-203.1016387939453, -19.908761978149414)
+        mapping.location = (-1040.0, 300.0)
+        reroute.location = (-590.0, -56.0)
+        texture_coordinate.location = (-1240.0, 300.0)
+        frame.location = (-473.9312744140625, -155.9008026123047)
+        frame_001.location = (-584.9569091796875, -4.97552490234375)
+        separate_xyz.location = (-769.1375732421875, -50.52463912963867)
+        math.location = (-567.011474609375, -39.67173385620117)
+        combine_xyz.location = (-383.07305908203125, -69.52506256103516)
+        image_texture_004.location = (-539.4737548828125, 491.32952880859375)
+
+        #Set dimensions
+        principled_bsdf.width, principled_bsdf.height = 240.0, 100.0
+        material_output.width, material_output.height = 140.0, 100.0
+        image_texture.width, image_texture.height = 240.0, 100.0
+        displacement.width, displacement.height = 140.0, 100.0
+        image_texture_001.width, image_texture_001.height = 240.0, 100.0
+        image_texture_002.width, image_texture_002.height = 240.0, 100.0
+        image_texture_003.width, image_texture_003.height = 240.0, 100.0
+        normal_map.width, normal_map.height = 150.0, 100.0
+        mapping.width, mapping.height = 140.0, 100.0
+        reroute.width, reroute.height = 16.0, 100.0
+        texture_coordinate.width, texture_coordinate.height = 140.0, 100.0
+        frame.width, frame.height = 400.0, 421.0
+        frame_001.width, frame_001.height = 362.9569091796875, 1442.0
+        separate_xyz.width, separate_xyz.height = 140.0, 100.0
+        math.width, math.height = 140.0, 100.0
+        combine_xyz.width, combine_xyz.height = 140.0, 100.0
+        image_texture_004.width, image_texture_004.height = 240.0, 100.0
+
+        #initialize asphalt_003 links
+        #principled_bsdf.BSDF -> material_output.Surface
+        asphalt_003.links.new(principled_bsdf.outputs[0], material_output.inputs[0])
+        #image_texture.Color -> displacement.Height
+        asphalt_003.links.new(image_texture.outputs[0], displacement.inputs[0])
+        #displacement.Displacement -> material_output.Displacement
+        asphalt_003.links.new(displacement.outputs[0], material_output.inputs[2])
+        #image_texture_001.Color -> principled_bsdf.Base Color
+        asphalt_003.links.new(image_texture_001.outputs[0], principled_bsdf.inputs[0])
+        #image_texture_002.Color -> principled_bsdf.Roughness
+        asphalt_003.links.new(image_texture_002.outputs[0], principled_bsdf.inputs[2])
+        #combine_xyz.Vector -> normal_map.Color
+        asphalt_003.links.new(combine_xyz.outputs[0], normal_map.inputs[1])
+        #normal_map.Normal -> principled_bsdf.Normal
+        asphalt_003.links.new(normal_map.outputs[0], principled_bsdf.inputs[5])
+        #reroute.Output -> image_texture_001.Vector
+        asphalt_003.links.new(reroute.outputs[0], image_texture_001.inputs[0])
+        #reroute.Output -> image_texture_002.Vector
+        asphalt_003.links.new(reroute.outputs[0], image_texture_002.inputs[0])
+        #reroute.Output -> image_texture.Vector
+        asphalt_003.links.new(reroute.outputs[0], image_texture.inputs[0])
+        #reroute.Output -> image_texture_003.Vector
+        asphalt_003.links.new(reroute.outputs[0], image_texture_003.inputs[0])
+        #mapping.Vector -> reroute.Input
+        asphalt_003.links.new(mapping.outputs[0], reroute.inputs[0])
+        #texture_coordinate.UV -> mapping.Vector
+        asphalt_003.links.new(texture_coordinate.outputs[2], mapping.inputs[0])
+        #image_texture_003.Color -> separate_xyz.Vector
+        asphalt_003.links.new(image_texture_003.outputs[0], separate_xyz.inputs[0])
+        #separate_xyz.X -> combine_xyz.X
+        asphalt_003.links.new(separate_xyz.outputs[0], combine_xyz.inputs[0])
+        #separate_xyz.Z -> combine_xyz.Z
+        asphalt_003.links.new(separate_xyz.outputs[2], combine_xyz.inputs[2])
+        #separate_xyz.Y -> math.Value
+        asphalt_003.links.new(separate_xyz.outputs[1], math.inputs[1])
+        #math.Value -> combine_xyz.Y
+        asphalt_003.links.new(math.outputs[0], combine_xyz.inputs[1])
+        #mapping.Vector -> image_texture_004.Vector
+        asphalt_003.links.new(mapping.outputs[0], image_texture_004.inputs[0])
+        #image_texture_004.Color -> principled_bsdf.Metallic
+        asphalt_003.links.new(image_texture_004.outputs[0], principled_bsdf.inputs[1])
+        return asphalt_003
+
+    asphalt_003 = asphalt_003_node_group()
+    obj.data.materials.append(mat)
+
+
+  
