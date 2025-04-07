@@ -140,4 +140,8 @@ def generate_random_parameters(args_dict):
         "post_processing_strength": get_value("post_processing_strength", args_dict, lambda: random.uniform(0.3, 0.4)),
     }
 
+    print("[generate_random_parameters] Final scene parameters:")
+    for key, value in scene_params.items():
+        print(f"  {key}: {value}")
+
     return scene_params
