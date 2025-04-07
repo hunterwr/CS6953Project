@@ -2,7 +2,7 @@
   "samples": 32,
   "num_images_per_scene": 10,
   "num_scenes": 5,
-  "step_size": 5,
+  "step_size": 1,
   "post_processing_strength": 0.01,
   "ground_plane_size": 1600
 }

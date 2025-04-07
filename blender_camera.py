@@ -30,7 +30,8 @@ def add_camera(target_directory, car=None, lane_positions=None, camera_lane_numb
     bpy.ops.object.camera_add()
     camera = bpy.context.object
     camera.name = "Camera"
-    selected_lane_index = camera_lane_number
+    num_lanes = len(lane_positions)
+    selected_lane_index = random.randint(0, num_lanes-1)
 
     if car is not None and bpy.data.objects.get(car.name):
         # Use car-based placement
@@ -217,7 +218,7 @@ class CameraController:
         height_range=(4, 10),
         lane_positions=None,
         mode="dashcam",
-        camera_lane_number=2
+        camera_lane_number=1
     ):
         """
         Args:
