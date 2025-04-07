@@ -312,15 +312,16 @@ class COCOAnnotator:
         Returns (x, y, width, height) in COCO format
         """
         import bpy_extras
-        
+        lattice = obj = bpy.data.objects.get('Road_Lattice')
         scene = bpy.context.scene
         w, h = scene.render.resolution_x, scene.render.resolution_y
         
         min_x, min_y, max_x, max_y = float("inf"), float("inf"), float("-inf"), float("-inf")
         
         for vertex in obj.data.vertices:
-            world_coord = obj.matrix_world @ vertex.co
-            projected2d = bpy_extras.object_utils.world_to_camera_view(scene, cam, world_coord)
+            world_coord_prewarp = obj.matrix_world @ vertex.co
+            world_coord_postwarp = lattice.matrix_world @ world_coord_prewarp 
+            projected2d = bpy_extras.object_utils.world_to_camera_view(scene, cam, world_coord_postwarp)
             x, y = int(projected2d.x * w), int((1 - projected2d.y) * h)
             min_x, min_y = min(min_x, x), min(min_y, y)
             max_x, max_y = max(max_x, x), max(max_y, y)
