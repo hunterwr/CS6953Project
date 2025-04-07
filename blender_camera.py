@@ -277,8 +277,10 @@ class CameraController:
             if 0 <= self.selected_lane_index < len(self.lane_positions):
                 self.curved_lane_points = self.lane_positions[self.selected_lane_index]
             else:
+                print(f"lane positions: {self.lane_positions}")
                 print(f"[CameraController] Invalid selected_lane_index={self.selected_lane_index}, using lane 3.")
-                self.curved_lane_points = self.lane_positions[2]
+                num_lanes = len(self.lane_positions)
+                self.curved_lane_points = self.lane_positions[int(num_lanes/2)]
 
         # For the curved approach, track index
         self.current_lane_point_index = 0
