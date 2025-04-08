@@ -7,7 +7,7 @@ import random
 from mathutils import Vector
 import os 
 
-def generate_sign(road_boundaries,png_path ='textures/Signs/Signs/PNGs/Loose Gravel.png',scratches =0.25, rust = 0.25,rivets=False,snow = 0.0,mud = 0.0, sign_name = 'Simple Sign', target_directory = None, lean_forward_angle=0, lean_left_angle=0, spin=0,sign_size = random.randint(5, 10)):
+def generate_sign(road_boundaries,png_path ='textures/Signs/Signs/PNGs/Loose Gravel.png',scratches =0.25, rust = 0.25,rivets=False,snow = 0.0,mud = 0.0, sign_name = 'Simple Sign', target_directory = None, lean_forward_angle=0, lean_left_angle=0, spin=0,sign_width = random.randint(5, 10)):
     # Create the pole
 
     print(road_boundaries)
@@ -16,20 +16,30 @@ def generate_sign(road_boundaries,png_path ='textures/Signs/Signs/PNGs/Loose Gra
     pole_end_points, pole_obj = create_pole(
         radius=0.2,
         height=sign_height,
-        location=(random.choice([-1, 1])*(right_edge + 1.5), 300, 0.1*sign_height),
+        location=(random.choice([-1, 1])*(right_edge + 1.5), 600, 0.1*sign_height),
         texture_path=os.path.join(target_directory, 'textures/Signs/sign_pole_al.PNG')
     )
 
 
-    
+    img = bpy.data.images.load(png_path)
+    img_width = img.size[0]
+    img_height = img.size[1]
+
+    print(f"width: {img_width}, height: {img_height}")
+
+    aspect_ratio = img_width / img_height
+    sign_height = sign_width / aspect_ratio
+
+    #print new width and height
+    print(f"new width: {sign_width}, new height: {sign_height}")
     create_sign_square(
-        sign_size,
-        sign_size,
+        width=sign_width,
+        height=sign_height,
         text=None,
         start_location=(
-            pole_end_points[0]-sign_size/2.0,
+            pole_end_points[0]-sign_height/2.0,
             pole_end_points[1] - 3 * 0.2,
-            pole_end_points[2] - 0.5*sign_size
+            pole_end_points[2] - 0.5*sign_width
         ),
         name= sign_name
     )
@@ -97,9 +107,10 @@ def square_unwrap(obj):
 
 
 
-def create_sign_square(width,height,text=None,start_location = (0,0,0),name='Sign'):
+def create_sign_square(width, height, text=None,start_location = (0,0,0),name='Sign'):
     
-# Create a cube
+
+    # Create a cube
     thickness =0.1
     verts = [(0,0,0),(0,thickness,0),(width,thickness,0),(width,0,0),(0,0,height),(0,thickness,height),(width,thickness,height),(width,0,height)]
     faces = [(0,1,2,3),(7,6,5,4),(0,4,5,1),(1,5,6,2),(2,6,7,3),(3,7,4,0)]

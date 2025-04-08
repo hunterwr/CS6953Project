@@ -107,7 +107,7 @@ def generate_scene_and_annotate(args):
         lean_forward_angle=random.gauss(0, args.sign_lean_forward_strength), 
         lean_left_angle=random.gauss(0, args.sign_lean_sideways_strength),   
         spin=random.gauss(0, args.sign_spin_strength),
-        sign_size=7)
+        sign_width=args.sign_width)
 
 
     # # Add trees 
@@ -165,7 +165,7 @@ def generate_scene_and_annotate(args):
     sky_texture.create_sky_texture(time_of_day=args.time_of_day)
     
     # Add particles
-    weather.add_snow(snow_type=args.snow_type)
+    # weather.add_snow(snow_type=args.snow_type)
     
     # Determine output directory
     base_output_dir = os.path.join(target_directory, "output")

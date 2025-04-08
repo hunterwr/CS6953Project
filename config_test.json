@@ -1,4 +1,5 @@
 {
+  "sign": "Street Name 2",
   "samples": 32,
   "num_images_per_scene": 10,
   "num_scenes": 5,

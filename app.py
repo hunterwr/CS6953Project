@@ -88,7 +88,7 @@ signs.generate_sign(
     lean_forward_angle=random.gauss(0, args.sign_lean_forward_strength), 
     lean_left_angle=random.gauss(0, args.sign_lean_sideways_strength),   
     spin=random.gauss(0, args.sign_spin_strength),
-    sign_size=7)
+    sign_width=args.sign_width)
 
 
 # # Add trees 

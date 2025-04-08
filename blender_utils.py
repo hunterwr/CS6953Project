@@ -138,6 +138,7 @@ def generate_random_parameters(args_dict):
         "sign_lean_sideways_strength": get_value("sign_lean_sideways_strength", args_dict, lambda: random.uniform(0,10)),
         "sign_spin_strength": get_value("sign_spin_strength", args_dict, lambda: random.uniform(0, 10)),
         "post_processing_strength": get_value("post_processing_strength", args_dict, lambda: random.uniform(0.3, 0.4)),
+        "sign_width": get_value("sign_width", args_dict, lambda: random.uniform(5, 10)),
     }
 
     print("[generate_random_parameters] Final scene parameters:")
