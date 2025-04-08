@@ -21,7 +21,7 @@ def generate_sign(road_boundaries,png_path ='textures/Signs/Signs/PNGs/Loose Gra
     )
 
 
-    img = bpy.data.images.load(png_path)
+    img = bpy.data.images.load(os.path.join(target_directory,png_path))
     img_width = img.size[0]
     img_height = img.size[1]
 
@@ -37,9 +37,9 @@ def generate_sign(road_boundaries,png_path ='textures/Signs/Signs/PNGs/Loose Gra
         height=sign_height,
         text=None,
         start_location=(
-            pole_end_points[0]-sign_height/2.0,
+            pole_end_points[0]-sign_width/2.0,
             pole_end_points[1] - 3 * 0.2,
-            pole_end_points[2] - 0.5*sign_width
+            pole_end_points[2] - 0.5*sign_height
         ),
         name= sign_name
     )
