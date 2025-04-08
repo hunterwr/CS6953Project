@@ -260,6 +260,9 @@ def main():
     else:
         print(f"Warning: Sign directory not found at {sign_directory}")
         signs = user_config.get("sign", ["Stop"])  # Default to "Stop" if directory not found
+
+    if isinstance(signs, str):
+        signs = [signs]
     
     num_scenes = user_config.get("num_scenes", 1)
     num_images_per_scene = user_config.get("num_images_per_scene", 1)
