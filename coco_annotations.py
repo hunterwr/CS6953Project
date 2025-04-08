@@ -5,6 +5,8 @@ import uuid
 from typing import Dict, List, Any, Tuple, Optional, Set
 import bpy
 from functools import partial
+import numpy as np
+from mathutils import Vector
 
 class COCOAnnotator:
     def __init__(self, output_dir: str, config: Dict[str, Any], previous_file: Optional[str] = None):
@@ -312,20 +314,35 @@ class COCOAnnotator:
         Returns (x, y, width, height) in COCO format
         """
         import bpy_extras
-        lattice = obj = bpy.data.objects.get('Road_Lattice')
+        # lattice = bpy.data.objects.get('Road_Lattice')
         scene = bpy.context.scene
         w, h = scene.render.resolution_x, scene.render.resolution_y
+
+        depsgraph = bpy.context.evaluated_depsgraph_get()
+        eval_obj = obj.evaluated_get(depsgraph)
+        mesh = eval_obj.to_mesh()
+        transformed_verts = np.array([eval_obj.matrix_world @ v.co for v in mesh.vertices])
         
         min_x, min_y, max_x, max_y = float("inf"), float("inf"), float("-inf"), float("-inf")
         
-        for vertex in obj.data.vertices:
-            world_coord_prewarp = obj.matrix_world @ vertex.co
-            world_coord_postwarp = lattice.matrix_world @ world_coord_prewarp 
-            projected2d = bpy_extras.object_utils.world_to_camera_view(scene, cam, world_coord_postwarp)
+        # for vertex in obj.data.vertices:
+        #     world_coord = obj.matrix_world @ vertex.co
+        #     # world_coord_postwarp = lattice.matrix_world @ world_coord_prewarp 
+        #     projected2d = bpy_extras.object_utils.world_to_camera_view(scene, cam, world_coord)
+        #     x, y = int(projected2d.x * w), int((1 - projected2d.y) * h)
+        #     min_x, min_y = min(min_x, x), min(min_y, y)
+        #     max_x, max_y = max(max_x, x), max(max_y, y)
+
+        for vert in transformed_verts:
+        # Project the transformed world coordinate to camera space
+
+            if isinstance(vert, np.ndarray):
+                vert = Vector(vert)  # Convert numpy array to Blender Vector
+            projected2d = bpy_extras.object_utils.world_to_camera_view(scene, cam, vert)
             x, y = int(projected2d.x * w), int((1 - projected2d.y) * h)
             min_x, min_y = min(min_x, x), min(min_y, y)
             max_x, max_y = max(max_x, x), max(max_y, y)
-        
+
         # Convert to COCO format: [x, y, width, height]
         x = min_x
         y = min_y

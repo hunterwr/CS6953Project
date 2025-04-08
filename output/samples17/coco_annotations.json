@@ -842,6 +842,70 @@
         "distance": "close",
         "tree_type": "pine"
       }
+    },
+    {
+      "id": 51,
+      "file_name": "image_0_20250407235438_588670.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-04-07 23:54:58",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 52,
+      "file_name": "image_1_20250407235458_4b9a10.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-04-07 23:55:19",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 53,
+      "file_name": "image_0_20250408001349_fc46e8.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-04-08 00:14:10",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
+    },
+    {
+      "id": 54,
+      "file_name": "image_1_20250408001410_a9cb23.png",
+      "width": 1920,
+      "height": 1080,
+      "date_captured": "2025-04-08 00:14:30",
+      "license": 1,
+      "metadata": {
+        "time_of_day": "dawn",
+        "plane": "snow",
+        "background": "sky",
+        "density": "some trees",
+        "distance": "close",
+        "tree_type": "pine"
+      }
     }
   ],
   "annotations": [
@@ -1806,6 +1870,82 @@
         424,
         1432,
         697
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "No Left Turn On Red"
+      }
+    },
+    {
+      "id": 51,
+      "image_id": 51,
+      "category_id": 2,
+      "segmentation": [],
+      "area": 884,
+      "bbox": [
+        1266,
+        494,
+        26,
+        34
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "No Left Turn On Red"
+      }
+    },
+    {
+      "id": 52,
+      "image_id": 52,
+      "category_id": 2,
+      "segmentation": [],
+      "area": 1102,
+      "bbox": [
+        1366,
+        503,
+        29,
+        38
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "No Left Turn On Red"
+      }
+    },
+    {
+      "id": 53,
+      "image_id": 53,
+      "category_id": 2,
+      "segmentation": [],
+      "area": 1938,
+      "bbox": [
+        818,
+        499,
+        38,
+        51
+      ],
+      "iscrowd": 0,
+      "metadata": {
+        "sign_width": "",
+        "sign_height": "",
+        "sign_texture": "No Left Turn On Red"
+      }
+    },
+    {
+      "id": 54,
+      "image_id": 54,
+      "category_id": 2,
+      "segmentation": [],
+      "area": 2408,
+      "bbox": [
+        869,
+        506,
+        43,
+        56
       ],
       "iscrowd": 0,
       "metadata": {
