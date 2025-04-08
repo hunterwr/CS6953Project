@@ -24,7 +24,7 @@ def overlay_bbox(image_path, bbox_file):
     plt.show()
 
 # Example usage:
-image_path = r'./output/samples17/images/image_0_20250408001349_fc46e8.png'  # Replace with the path to your image
-bbox_file = r'output/samples17/labels/image_0_20250408001349_fc46e8_bbox.txt'  # Replace with the path to your bounding box file
+image_path = r'./output/samples17/images/image_1_20250408001410_a9cb23.png'  # Replace with the path to your image
+bbox_file = r'output/samples17/labels/image_1_20250408001410_a9cb23_bbox.txt'  # Replace with the path to your bounding box file
 overlay_bbox(image_path, bbox_file)
 

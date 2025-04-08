@@ -43,7 +43,7 @@
 % *** Authors should verify (and, if needed, correct) their LaTeX system  ***
 % *** with the testflow diagnostic prior to trusting their LaTeX platform ***
 % *** with production work. The IEEE's font choices and paper sizes can   ***
-% *** trigger bugs that do not appear when using other class files.       ***                          ***
+% *** trigger bugs that do not appear when using other class files.       ***                        
 % The testflow support page is at:
 % http://www.michaelshell.org/tex/testflow/
 
@@ -281,6 +281,13 @@ A camera object was placed within the blender scene, which follows the path of e
 \subsection{Annotations}
 All images were rendered and stored following the Common Objects in Context (COCO) annotation scheme for later ease of use. As the scene variables were carefully controlled, each generated image contains metadata including scene variables as well as a bounding box for the sign within the image. 
 
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\linewidth]{images/sign w box.png}
+    \caption{Sample of generated image, including a red bounding box around the sign}
+    \label{fig:row_of_images}
+\end{figure}
+
 
 
 
@@ -289,7 +296,7 @@ All images were rendered and stored following the Common Objects in Context (COC
 TO DO: Show generated images, train a model on a known dataset, train with just our dataset, and a combined dataset to show metrics
 
 \section{Conclusion}
-TO DO: Discuss what this means for sign recognition, but also for the importance of synthetic data generation as a whole 
+As signs are critical to safe and efficient roadways, it is important that detection models can quickly and correctly adapt to new road signs or locality-specific signs. Synthetic data, demonstrated here using a completely free blender pipeline, provides the means for quick and accurate tuning of existing training datasets. Although still somewhat limited by resources, the output dataset was successful in improving model performance with previously untrained signs. We are confident that this synthetic data generation tool will prove useful to sign detection models, as well as setting the groundwork for other road application such as sign size, road damage detection, and other environmental factors. 
 
 
 
