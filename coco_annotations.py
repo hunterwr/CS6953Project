@@ -5,6 +5,8 @@ import uuid
 from typing import Dict, List, Any, Tuple, Optional, Set
 import bpy
 from functools import partial
+from mathutils import Vector
+import bpy_extras
 
 class COCOAnnotator:
     def __init__(self, output_dir: str, config: Dict[str, Any], previous_file: Optional[str] = None):
@@ -239,72 +241,124 @@ class COCOAnnotator:
         
         return unique_name
 
-    def save_image_and_bbox(self, obj_name: str, cam_name: str, base_filename: str = "image", 
-                           frame_number: int = 450, samples: int = 128) -> Tuple[str, Tuple[float, float, float, float]]:
-        """
-        Renders, saves an image and its bounding box, and returns paths and bbox data
+    # def save_image_and_bbox(self, obj_name: str, cam_name: str, base_filename: str = "image", 
+    #                        frame_number: int = 450, samples: int = 128) -> Tuple[str, Tuple[float, float, float, float]]:
+    #     """
+    #     Renders, saves an image and its bounding box, and returns paths and bbox data
         
-        Args:
-            obj_name: Name of the object to track with bounding box
-            cam_name: Name of the camera to render from
-            base_filename: Base name for the saved files
-            samples: Render samples
+    #     Args:
+    #         obj_name: Name of the object to track with bounding box
+    #         cam_name: Name of the camera to render from
+    #         base_filename: Base name for the saved files
+    #         samples: Render samples
             
-        Returns:
-            Tuple of (image_path, bbox_data)
-        """
-        # Check if objects exist
+    #     Returns:
+    #         Tuple of (image_path, bbox_data)
+    #     """
+    #     # Check if objects exist
+    #     if obj_name not in bpy.data.objects or cam_name not in bpy.data.objects:
+    #         raise ValueError(f"Object '{obj_name}' or camera '{cam_name}' not found in scene")
+        
+    #     # Get a unique filename
+    #     filename = self.generate_unique_filename(base_filename)
+        
+    #     # Set paths
+    #     image_path = os.path.join(self.image_dir, f"{filename}.png")
+    #     bbox_path = os.path.join(self.labels_dir, f"{filename}_bbox.txt")
+        
+    #     # Check that we don't have this exact filename already
+    #     while os.path.exists(image_path):
+    #         filename = self.generate_unique_filename(base_filename)
+    #         image_path = os.path.join(self.image_dir, f"{filename}.png")
+    #         bbox_path = os.path.join(self.labels_dir, f"{filename}_bbox.txt")
+            
+    #     # Render and save image
+    #     scene = bpy.context.scene
+    #     #Continue animation to update particles in scene
+    #     #frame_number = 450 set to arbitrary value
+        
+    #     for i in range(1, frame_number + 1):
+    #         scene.frame_set(i)
+
+    #     scene.frame_set(frame_number) #set desired frame for output
+
+    #     scene.render.filepath = image_path
+    #     scene.render.engine = 'CYCLES'
+    #     scene.cycles.device = 'GPU'
+    #     scene.render.image_settings.file_format = 'PNG'
+    #     scene.cycles.samples = samples
+    #     bpy.ops.render.render(write_still=True)
+    #     print(f"Saved image to: {image_path}")
+        
+    #     # Apply post-processing to make it look like dashcam footage
+    #     if hasattr(self, 'post_processing_available') and self.post_processing_available:
+    #         try:
+    #             print(f"Applying dashcam post-processing effects to {image_path}")
+    #             self.process_and_save(image_path, strength=self.post_processing_strength)
+    #         except Exception as e:
+    #             print(f"Warning: Failed to apply post-processing: {str(e)}")
+        
+    #     # Calculate bounding box
+    #     bbox = self.get_bounding_box(bpy.data.objects[obj_name], bpy.data.objects[cam_name])
+        
+    #     # Save bounding box as text file
+    #     with open(bbox_path, "w") as f:
+    #         f.write(f"{bbox[0]} {bbox[1]} {bbox[2]} {bbox[3]}\n")
+    #     print(f"Saved bounding box to: {bbox_path}")
+        
+    #     return image_path, bbox
+    
+    def save_image_and_bbox(self, obj_name: str, cam_name: str, base_filename: str = "image", 
+                        frame_number: int = 450, samples: int = 128) -> Tuple[str, Tuple[float, float, float, float]]:
         if obj_name not in bpy.data.objects or cam_name not in bpy.data.objects:
             raise ValueError(f"Object '{obj_name}' or camera '{cam_name}' not found in scene")
-        
-        # Get a unique filename
+
+        obj = bpy.data.objects[obj_name]
+        cam = bpy.data.objects[cam_name]
+
+        # Check visibility BEFORE rendering
+        if not self.is_bbox_fully_in_view(obj, cam, bpy.context.scene.render.resolution_x, bpy.context.scene.render.resolution_y):
+            print(f"Skipping image render — '{obj_name}' bounding box not fully in camera view.")
+            raise ValueError("Bounding box not fully in frame")
+
         filename = self.generate_unique_filename(base_filename)
-        
-        # Set paths
         image_path = os.path.join(self.image_dir, f"{filename}.png")
         bbox_path = os.path.join(self.labels_dir, f"{filename}_bbox.txt")
-        
-        # Check that we don't have this exact filename already
+
         while os.path.exists(image_path):
             filename = self.generate_unique_filename(base_filename)
             image_path = os.path.join(self.image_dir, f"{filename}.png")
             bbox_path = os.path.join(self.labels_dir, f"{filename}_bbox.txt")
-            
-        # Render and save image
+
         scene = bpy.context.scene
-        #Continue animation to update particles in scene
-        #frame_number = 450 set to arbitrary value
-        
         for i in range(1, frame_number + 1):
             scene.frame_set(i)
-
-        scene.frame_set(frame_number) #set desired frame for output
+        scene.frame_set(frame_number)
 
         scene.render.filepath = image_path
         scene.render.engine = 'CYCLES'
         scene.cycles.device = 'GPU'
         scene.render.image_settings.file_format = 'PNG'
         scene.cycles.samples = samples
+
         bpy.ops.render.render(write_still=True)
         print(f"Saved image to: {image_path}")
-        
-        # Apply post-processing to make it look like dashcam footage
+
         if hasattr(self, 'post_processing_available') and self.post_processing_available:
             try:
                 print(f"Applying dashcam post-processing effects to {image_path}")
                 self.process_and_save(image_path, strength=self.post_processing_strength)
             except Exception as e:
                 print(f"Warning: Failed to apply post-processing: {str(e)}")
-        
-        # Calculate bounding box
-        bbox = self.get_bounding_box(bpy.data.objects[obj_name], bpy.data.objects[cam_name])
-        
-        # Save bounding box as text file
+
+        bbox = self.get_bounding_box(obj, cam)
+
         with open(bbox_path, "w") as f:
             f.write(f"{bbox[0]} {bbox[1]} {bbox[2]} {bbox[3]}\n")
         print(f"Saved bounding box to: {bbox_path}")
-        
+
         return image_path, bbox
+
     
     def get_bounding_box(self, obj, cam):
         """
@@ -332,6 +386,25 @@ class COCOAnnotator:
         width = max_x - min_x
         height = max_y - min_y
         return x, y, width, height
+    
+    def is_bbox_fully_in_view(obj, camera_obj, image_width, image_height) -> bool:
+        """
+        Check if the object's bounding box is fully within the camera frame.
+        """
+        depsgraph = bpy.context.evaluated_depsgraph_get()
+        obj_eval = obj.evaluated_get(depsgraph)
+
+        coords_2d = [
+            bpy_extras.object_utils.world_to_camera_view(bpy.context.scene, camera_obj, obj_eval.matrix_world @ Vector(corner))
+            for corner in obj_eval.bound_box
+        ]
+
+        for coord in coords_2d:
+            x, y = coord.x, coord.y
+            if coord.z < 0 or x < 0.0 or y < 0.0 or x > 1.0 or y > 1.0:
+                return False
+
+        return True
         
     def get_image_dimensions(self):
         """Return the current render resolution as (width, height)"""

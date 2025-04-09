@@ -449,8 +449,8 @@ def generate_preset_forest(target_directory, road_boundaries, density="some tree
     elif density == "many trees":
         trees = 32
     if distance_from_road == "close":
-        min_dist=7
-        max_dist=30
+        min_dist=15
+        max_dist=40
     elif distance_from_road == "far":
         min_dist = 40
         max_dist = 100
