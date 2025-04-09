@@ -10,43 +10,60 @@
 
 **road_width**
 Road width.
+
 **road_length**
 
 **camera_location**
+
 **camera_rotation**
+
 **camera_scale**
+
 **light_location**
+
 **light_power**
+
 **light_angle**
+
 **time_of_day**
 Time of day. E.g. day, midday, dusk
+
 **ground_plane_size:**
 Land ground plane size.
+
 **plane:**
 Land ground texture. E.g. rock, snow, mud, forest
+
 **background:**
 Background scene. E.g. sky, desert, city
+
 **density:**
-How many trees. E.g. 'no trees', 'some trees', 'many trees'
+How many trees. E.g. no trees, some trees, many trees
+
 **distance:** 
 How far the trees are from the road.
+
 **tree_type:**
 Type of tree.
+
 **particle_density:**
 The density of rain or snow.
-**start_frame:**
-**end_frame:**
-**samples:**
+
+**start_frame**
+
+**end_frame**
+
+**samples**
 Rendering samples.
+
 **num_steps:**
 How many steps the camera will move toward the sign.
+
 **step_size:**
 The step size camera move toward the sign.
 
 # How to run blender headless with python script.
-/path/to/Blender \
-    -b \
-    --python run.py \
+```bash /path/to/Blender -b --python run.py```
 
 # Scene Generation Parameter List
 
