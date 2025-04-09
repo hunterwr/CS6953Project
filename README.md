@@ -63,7 +63,9 @@ How many steps the camera will move toward the sign.
 The step size camera move toward the sign.
 
 # How to run blender headless with python script.
-```bash /path/to/Blender -b --python run.py```
+```bash
+/path/to/Blender -b --python run.py
+```
 
 # Scene Generation Parameter List
 
