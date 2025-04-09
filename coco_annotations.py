@@ -316,7 +316,9 @@ class COCOAnnotator:
             raise ValueError(f"Object '{obj_name}' or camera '{cam_name}' not found in scene")
 
         obj = bpy.data.objects[obj_name]
+        print(f"Object: {obj}")
         cam = bpy.data.objects[cam_name]
+        print(f"Camera: {cam}")
 
         # Check visibility BEFORE rendering
         if not self.is_bbox_fully_in_view(obj, cam, bpy.context.scene.render.resolution_x, bpy.context.scene.render.resolution_y):
@@ -404,7 +406,7 @@ class COCOAnnotator:
         height = max_y - min_y
         return x, y, width, height
     
-    def is_bbox_fully_in_view(obj, camera_obj, image_width, image_height) -> bool:
+    def is_bbox_fully_in_view(self, obj, camera_obj, image_width, image_height) -> bool:
         """
         Check if the object's bounding box is fully within the camera frame.
         """
