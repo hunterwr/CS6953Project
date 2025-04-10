@@ -275,6 +275,22 @@ Each road was placed on a plane which may be changed between various pre-set ima
 
 One of the main benefits of using a free platform such as Blender is that there are a wide variety of plugins, both free and paid, which can be used to improve scene creation. Here, a tree add-on was used to generate different styles of trees, which were then randomly scattered in the scene. 
 
+\subsection{Trees}
+To add a sense of realism to the scene, we added the option to randomly generate trees on the sides of the road. We used the Sapling Tree Gen blender add-on which was available for free online. Assets and materials used to make the tree look more realistic were obtained for free online from popular material and asset blender add-on 'blenderkit'. We wanted to limit the amount of set up required to begin generating images so the final tree function has limited optionality. These limited options were chosen to give sufficient variety, remain reasonably efficient to render, and to occasionally partially oclude the sign to improve model robustness. 
+
+Presets include: "Many trees," "Some trees," and "No trees" for density; and "Close" or "Far" for distance from the road.
+
+Tree Density:
+"No trees" disables tree generation entirely, leaving the sides of the road clear.
+"Some trees" generates 16 trees along the road, providing moderate environmental clutter.
+"Many trees" doubles the count to 32 trees, increasing realism and the chance that trees may partially obscure the road signs. This supports the goal of improving model robustness to occlusions.
+
+Tree Distance from Road:
+"Close" places trees between 15 to 40 units from the road, allowing for potential sign occlusion.
+"Far" increases the placement range to 40–100 units, ensuring trees remain purely background elements and do not interfere with the road or signs.
+
+This balance of simplicity and variability allows quick scene generation with enough randomness to train models that generalize better to real-world occlusions and backgrounds.
+
 \subsection{Camera and Lighting}
 A camera object was placed within the blender scene, which follows the path of each road lane for a user-specified number of steps. An image was placed in the distance, attached to the camera, such that there was always a simulated sky behind the sign. Lighting was also added via Blender's light object, which allowed for simulations of shadows, reflections, and other lighting aberations, a significant improvement from previous Blender image-generation strategies\cite{blender_paper}. 
 
