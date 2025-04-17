@@ -54,6 +54,7 @@
 % *** GRAPHICS RELATED PACKAGES ***
 %
 \usepackage{graphicx} 
+\usepackage{subcaption} 
 \ifCLASSINFOpdf
   % \usepackage[pdftex]{graphicx}
   % declare the path(s) where your graphic files are
@@ -126,6 +127,7 @@
     Yi-Kai Lee\textsuperscript{1},
     David Sacharny\textsuperscript{2},
     Thomas~C.~Henderson\textsuperscript{1}
+    Ziad Al-Halah\textsuperscript{1}
     \thanks{1: University of Utah, Salt Lake City, Utah, email: \tt\small tch@cs.utah.edu}
     \thanks{2: Add david's info, email: }
 }
@@ -326,8 +328,61 @@ All images were rendered and stored following the Common Objects in Context (COC
 \subsection{Effect on Real World Datasets}
 To evaluate the effect on real world datasets, both DETR and YOLO (INSERT REFERENCES HERE) models were trained with several different datasets. Initially, they were trained with an open source sign dataset (XXXXX), which contained 2817 street signs from various global locations. Next, the models were trained on a completely synthetic dataset containing 3061 images generated using the Blender pipeline outlined here. Finally, the models were trained on a combined dataset containing equal parts synthetic and real data. Each model was tested using a validation set collected from a local neighborhood, with 114 images. 
 
-\section{Results}
-TO DO: Show generated images, train a model on a known dataset, train with just our dataset, and a combined dataset to show metrics
+\section{Data Exploration}
+We have three distinct traffic sign datasets:
+
+\subsection{Open Images V7}
+A large, public dataset that includes a variety range of traffic sign images and their corresponding annotations. However, very few of those images are taken from a dash-cam view, so their viewpoint differs from our target domain.
+
+\subsection{Synthetic Data}
+We generated around 3k synthetic images through Blender script, rendering traffic sign scenes that mimic dash-cam optics (motion blur, road curvature, varying lighting, etc.). This synthetic dataset not only matches the viewpoint we care about but also save our time and cost to collect data.
+
+\begin{figure}[h]
+    \centering
+    %----------- Open Images V7 ------------------
+    \begin{subfigure}[t]{0.48\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{images/open_source.jpg}
+        \caption{Open Images V7}
+        \label{fig:open_images}
+    \end{subfigure}\hfill
+    %----------- Synthetic -----------------------
+    \begin{subfigure}[t]{0.48\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{images/synthetic.jpg}
+        \caption{Synthetic (Blender‑rendered)}
+        \label{fig:synthetic}
+    \end{subfigure}
+
+    \caption{Representative samples from the two training datasets used in this study.}
+    \label{fig:datasets_overview}
+\end{figure}
+
+\subsection{Blyncsy Data}
+Provided by Blyncsy, a Utah-based transportation-analytics company, and used for validation. This collection consists of real dash-cam images captured on roads and professionally annotated.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\linewidth]{images/dashcam.jpg}
+    \caption{Samples of validation dataset}
+    \label{fig:row_of_images}
+\end{figure}
+
+\section{Methods Exploration}
+%TO DO: Show generated images, train a model on a known dataset, train with just our dataset, and a combined dataset to show metrics
+Detecting and recognizing traffic signs from dash-cam views is essential for companies like Blyncsy, which support cities and state Departments of Transportation in automating roadway maintenance and asset inventory tasks. However, this task presents numerous challenges: the camera is constantly in motion, traffic signs often occupy only a small fraction of the frame, lighting and weather conditions can change abruptly, and signs are frequently occluded by foreground objects. Bridging this "viewpoint gap" typically requires large, well-curated dash-cam datasets—resources that remain scarce in the public domain.
+
+Using a Blender script, we can efficiently render thousands of synthetic, dash-cam-style images within a few hours. These images can be generated with varied sign types, distances, lighting conditions, weather, motion blur, and backgrounds. Despite this, it remains uncertain to what extent such synthetic data can enhance a model’s ability to detect traffic signs.
+
+In this study, we conduct a controlled investigation using YOLOv5 and DETR to address a straightforward question: Does incorporating synthetic data improve traffic sign detection performance? To answer this, we train three models separately under identical hyperparameter settings:
+
+\begin{enumerate}
+  \item \textbf{Open‑source only}: real images from the Open Images V7 traffic sign subset ($\approx3\,k$).
+  \item \textbf{Synthetic only}: Blender‑rendered dash‑cam scenes ($\approx3\,k$).
+  \item \textbf{Combined}: Combine the above two datasets ($\approx6\,k$).
+\end{enumerate}
+
+\subsection{YOLOv5}
 
 \section{Conclusion}
 As signs are critical to safe and efficient roadways, it is important that detection models can quickly and correctly adapt to new road signs or locality-specific signs. Synthetic data, demonstrated here using a completely free blender pipeline, provides the means for quick and accurate tuning of existing training datasets. Although still somewhat limited by resources, the output dataset was successful in improving model performance with previously untrained signs. We are confident that this synthetic data generation tool will prove useful to sign detection models, as well as setting the groundwork for other road application such as sign size, road damage detection, and other environmental factors. 
