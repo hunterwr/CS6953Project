@@ -441,11 +441,11 @@ In summary, we are confident that this synthetic data generation tool will prove
 \section{Future Work}
 While our experiments validate the effectiveness of combining synthetic and real data for traffic sign detection, there are several directions for future work to improve realism and model performance.
 
-One major area is enhancing the diversity of the synthetic data. Currently every scene contains just a single road and one traffic sign. In the future, we will introduce more complex layouts such as intersections and urban street scenes. Also, we plan to generate multiple traffic signs in each scene, including overlapping or occluded signs, to better mimic real-world situations.
+One major area is improving the diversity of synthetic data. Currently, every scene contains only one road and one traffic sign. In the future, we will introduce more complex layouts, such as intersections and urban street scenes. Also, we plan to generate multiple traffic signs in each scene, including overlapping or occluded signs, to better mimic real-world situations.
 
-Another important area will be improving the post-processing and data-cleaning pipeline. Currently, raw output often includes similar images or misplaced objects. Automating post-processing and quality control will ensure that the dataset is consistently usable and reduces the risk of hampering the model performance.
+Additionally, we can improve the post-processing and data-cleaning pipeline. Currently, raw output often includes similar images or misplaced objects. Automating post-processing and quality control will ensure that the dataset is consistently usable and reduces the risk of hampering the model performance.
 
-Finally, we plan to develop a more robust post-processing pipeline to clean and curate the synthetic data. This includes automatically filtering out low-quality or redundant images, and correcting object placement errors. By ensuring high-quality and diverse training samples, we aim to maximize the utility of synthetic data and improve the performance of the model. These improvements will make the dataset more reliable and scalable.
+Finally, we plan to develop a post-processing pipeline to clean the generated images. This includes automatically filtering out low-quality or redundant images, and correcting object placement errors. In order to ensure high-quality and diverse training data, we aim to maximize the utility of synthetic data and improve the performance of the model. The above enhancements will make the dataset more reliable and scalable.
 
 
 % use section* for acknowledgment
@@ -540,5 +540,3 @@ Sridhar, U of U Deep Learning Certificate program, state of Utah....
 
 % that's all folks
 \end{document}
-
-
