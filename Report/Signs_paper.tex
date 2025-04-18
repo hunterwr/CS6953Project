@@ -430,8 +430,22 @@ Precision = 1.00 at & \textbf{0.576} & 0.889 & 0.806 \\
 \end{table}
 
 \section{Conclusion}
-As signs are critical to safe and efficient roadways, it is important that detection models can quickly and correctly adapt to new road signs or locality-specific signs. Synthetic data, demonstrated here using a completely free blender pipeline, provides the means for quick and accurate tuning of existing training datasets. Although still somewhat limited by resources, the output dataset was successful in improving model performance with previously untrained signs. We are confident that this synthetic data generation tool will prove useful to sign detection models, as well as setting the groundwork for other road application such as sign size, road damage detection, and other environmental factors. 
+As signs are critical to safe and efficient roadways, it is important that detection models can quickly and correctly adapt to new road signs or locality-specific signs. Synthetic data, demonstrated here using a completely free blender pipeline, provides the means for quick and accurate tuning of existing training datasets. 
 
+Our results show that while the model trained solely on real images achieved the highest recall and mAP, the combined model performed nealry as well and demonstrated better alignment with the dash-cam validation data. On the other hand, the model trained only on synthetic data underperformed in terms of recall and overall mAP, but still achieved perfect precision at a high confidence threshold, suggesting the potential for highly reliable detections in some cases.
+
+These findings indicates that synthetic data alone may not be sufficient to train a robust model, but will become highly valuable when used in combination with real data. It not only provides specific viewpoint consistency but also significantly reduces the cost and effort of manual data collection and labeling.
+
+In summary, we are confident that this synthetic data generation tool will prove useful to sign detection models, as well as setting the groundwork for other road application such as sign size, road damage detection, and other environmental factors. 
+
+\section{Future Work}
+While our experiments validate the effectiveness of combining synthetic and real data for traffic sign detection, there are several directions for future work to improve realism and model performance.
+
+One major area is enhancing the diversity of the synthetic data. Currently every scene contains just a single road and one traffic sign. In the future, we will introduce more complex layouts such as intersections and urban street scenes. Also, we plan to generate multiple traffic signs in each scene, including overlapping or occluded signs, to better mimic real-world situations.
+
+Another important area will be improving the post-processing and data-cleaning pipeline. Currently, raw output often includes similar images or misplaced objects. Automating post-processing and quality control will ensure that the dataset is consistently usable and reduces the risk of hampering the model performance.
+
+Finally, we plan to develop a more robust post-processing pipeline to clean and curate the synthetic data. This includes automatically filtering out low-quality or redundant images, and correcting object placement errors. By ensuring high-quality and diverse training samples, we aim to maximize the utility of synthetic data and improve the performance of the model. These improvements will make the dataset more reliable and scalable.
 
 
 % use section* for acknowledgment
