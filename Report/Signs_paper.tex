@@ -392,11 +392,11 @@ Detecting and recognizing traffic signs from dash-cam views is essential for com
 
 Using a Blender script, we can efficiently render thousands of synthetic, dash-cam-style images within a few hours. These images can be generated with varied sign types, distances, lighting conditions, weather, motion blur, and backgrounds. Despite this, it remains uncertain to what extent such synthetic data can enhance a model’s ability to detect traffic signs.
 
-In this study, we conduct a controlled investigation using YOLOv5 and DETR to address a straightforward question: Does incorporating synthetic data improve traffic sign detection performance? To answer this, we train three models separately under identical hyperparameter settings:
+In this study, we conduct a controlled investigation using YOLOv5 and DETR to address a straightforward question: How will the synthetic data affect the performance of traffic sign detection model? To answer this, we train three models separately under the same hyperparameter settings:
 
 \begin{enumerate}
   \item \textbf{Open‑source only}: real images from the Open Images V7 traffic sign subset ($\approx3\,k$).
-  \item \textbf{Synthetic only}: Blender‑rendered dash‑cam scenes ($\approx3\,k$).
+  \item \textbf{Synthetic only}: dash‑cam views from Blender script ($\approx3\,k$).
   \item \textbf{Combined}: Combine the above two datasets ($\approx6\,k$).
 \end{enumerate}
 
