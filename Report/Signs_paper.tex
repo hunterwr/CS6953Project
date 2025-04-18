@@ -399,6 +399,33 @@ In this study, we conduct a controlled investigation using YOLOv5 and DETR to ad
 \end{enumerate}
 
 \subsection{YOLOv5}
+YOLOv5 is an efficient and widely adopted one-stage object detector, well known for its speed, accuracy, and ease of deployment. In our experiment, we employed the YOLOv5s architecture and maintained identical hyperparameter settings across all three training regimes to ensure a fair and controlled comparison.
+
+To prepare our synthetic dataset for training, we first needed to convert its bounding box annotations into the YOLOv5 format. Initially, our annotation files recorded bounding boxes using top-left corner coordinates along with height and width. However, YOLOv5 expects bounding boxes in a different structure: the $(x, y)$ coordinates of the bounding box center followed by the width and height, all normalized with respect to image dimensions. We implemented a preprocessing step to convert each annotation accordingly, ensuring compatibility with YOLOv5’s training pipeline.
+
+Each model was trained for 10 epochs. All input images were resized to 640×640, and we kept the learning rate, data augmentation policies, and confidence thresholds consistent across experiments. Performance was evaluated on the Blyncsy validation set, which consists of real dash-cam imagery.
+
+As shown in Table~\ref{tab:model_comparison}, the model trained solely on open-source data (Model 1) achieved the highest mAP@0.5 and recall, demonstrating strong generalization despite the domain mismatch in viewpoint. Model 3, trained on the combined dataset, followed closely and benefited from the complementary strengths of both real and synthetic data. Interestingly, while the model trained solely on synthetic data (Model 2) underperformed in overall mAP and recall, it still reached perfect precision at a high confidence threshold. This suggests that synthetic data can produce highly accurate but sparse detections when used in isolation.
+
+These findings indicate that although synthetic data alone may be insufficient for robust real-world performance, it proves highly valuable when used to augment real datasets. By aligning better with the dash-cam viewpoint and enabling large-scale generation at low cost, synthetic data helps bridge the domain gap—particularly important in applications where consistent camera perspective is critical.
+
+
+
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{Metric} & \textbf{Model 1} & \textbf{Model 2} & \textbf{Model 3} \\
+\hline
+mAP@0.5 & \textbf{0.782} & 0.586 & 0.771 \\
+Max Recall & \textbf{0.90} & 0.74 & 0.89 \\
+Precision = 1.00 at & \textbf{0.576} & 0.889 & 0.806 \\
+\hline
+\end{tabular}
+\caption{Comparison of model performance metrics.}
+\label{tab:model_comparison}
+\end{table}
 
 \section{Conclusion}
 As signs are critical to safe and efficient roadways, it is important that detection models can quickly and correctly adapt to new road signs or locality-specific signs. Synthetic data, demonstrated here using a completely free blender pipeline, provides the means for quick and accurate tuning of existing training datasets. Although still somewhat limited by resources, the output dataset was successful in improving model performance with previously untrained signs. We are confident that this synthetic data generation tool will prove useful to sign detection models, as well as setting the groundwork for other road application such as sign size, road damage detection, and other environmental factors. 
