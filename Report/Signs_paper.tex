@@ -254,14 +254,50 @@ This shift in focus led us to consider not only the sign itself but also its sur
 
  Synthetic data generation for sign detection is not an entirely novel approach. Several groups have explored using synthetic data to augment existing training data sets. Villalonga et al. proposed the use of Generative Adversarial Networks (GANs) to rapidly add new sign classes to datasets, which while effective, additionally employed a generative adversarial network to close the domain gap \cite{GAN_artificial_data}. In contrast, here we use no GAN, but rather focus on increasing scene complexity to minimize domain gaps. Independent of synthesizing pipeline differences, this work further emphasizes the need for both rapid and specific data generation to improve training data sets. Soans et al. created a similar Blender approach, in which signs were created with various software and placed on a real image background \cite{blender_paper}. In contrast, our proposed approach requires that we create an entirely synthetic scene, which we hypothesize will adequately capture perspective and geometry nuances as the camera moves along a synthetic road. Following this line of reasoning, there are existing packages that create 3D road scenes, namely CARLA simulator \cite{Dosovitskiy17}. However, the process of creating custom sign objects to place into CARLA may be more involved than many potential users are interested in, as it requires users to adjust object mesh directly. While significant efforts have been made to synthesize sign data, improvements to both performance and workflow are needed to optimize dataset comprehensiveness and real-world applicability. 
 
- \section{Scene Building}
- We began by attempting to create basic elements of the scene using Blender's user interface, downloading pre-made assets, and installing useful add-ons to speed up the process. After successfully creating the object in blender, the basic functions needed to recreate that object via API are printed in blender scripting tab. After replicating the creation of the object with code, the parameters can be tuned so to fit our scripts needs. 
+ \section{Initial Scene Generation}
+ We began by attempting to create basic elements of the scene using Blender's user interface, downloading pre-made assets, and installing useful add-ons to speed up the process. After successfully creating the object in Blender, the basic functions needed to recreate that object via API are printed in Blender's scripting tab. After replicating the creation of the object with code, the parameters can be tuned to fit our script's needs.
  
- We placed all functions related to each piece of the scene in their own script (for example: \texttt{blender\_signs.py}
-, \texttt{blender\_trees.py}, \texttt{blender\_road.py}
-, ect). After we had built out basic creation functions for trees, road, and signs, we created a scene generator script we called \texttt{app.py}. Our first iteration of \texttt{app.py} just created a static scene with a road, a plane underneath the road, a few trees, and a rudimentary exit sign. 
+ We placed all functions related to each piece of the scene in their own script (for example: \texttt{blender\_signs.py}, \texttt{blender\_trees.py}, \texttt{blender\_road.py}, etc). After we had built out basic creation functions for trees, road, and signs, we created a scene generator script we called \texttt{app.py}. Our first iteration of \texttt{app.py} just created a static scene with a road, a plane underneath the road, a few trees, and a rudimentary exit sign.
  
- Insert picture here. 
+ \begin{figure}[H]
+     \centering
+     \includegraphics[width=0.8\textwidth]{images/initial_scene.png} % Update path as needed
+     \caption{Initial scene created using app.py}
+     \label{fig:initial_scene}
+ \end{figure}
+ 
+ From here we focused on making each function more modular so it could be controlled with general numbers and phrases rather than explicitly defining precise coordinates in the Blender world. Functions had to be adjusted to use other objects as reference points so that the end user would not need to know anything about Blender or the size of each object in order to create a realistic scene. We have listed some of these changes below as examples:
+ 
+ \begin{itemize}
+     \item \texttt{generate\_forest} replaced \texttt{create\_tree}, spawning a defined number of trees at random locations near the road.
+     \item Road and camera positions now defaulted to \texttt{(0, 0, 0)} in the scene to ensure alignment.
+     \item The sign was always placed on the right side of the road at a fixed distance.
+     \item A background PNG was placed a fixed distance away from the camera to add more realism.
+ \end{itemize}
+ 
+ These types of changes set the foundation for the next phase of our project. A more detailed description of the methods used for each aspect of the scene can be found in the methods section. 
+ 
+ 
+ \section{Headless Scene Generation}
+ 
+ While we had initially considered developing a lightweight UI using Streamlit, this idea was quickly abandoned in favor of a more streamlined and developer-friendly approach. Instead, we created a single entry-point script called \texttt{run.py}, which executes all of our modular scene generation functions in sequence while running Blender in headless mode.
+ 
+ To ensure flexibility and reproducibility, all necessary parameters for a scene generation run are stored in a centralized \texttt{config.json} file. This JSON configuration file includes values for terrain type, sign appearance, weather effects, background selection, lighting conditions, and more. This allowed us to easily adjust scenes without altering the Python code, and also made the generation pipeline more portable and scriptable.
+ 
+ At runtime, \texttt{run.py} loads these parameters from \texttt{config.json}, dynamically builds the scene using the corresponding modules, and exports the rendered images along with COCO-style annotations. This modular structure enables quick iteration and experimentation with various scene setups.
+ 
+ Some key features of this approach include:
+ 
+ \begin{itemize}
+     \item Modular components for different scene elements (e.g., \texttt{blender\_road.py}, \texttt{blender\_signs.py}, \texttt{blender\_trees.py}, etc.).
+     \item Automatic GPU acceleration setup using Blender's Cycles renderer.
+     \item Dynamic camera placement and movement, optimized for capturing objects of interest (e.g., traffic signs).
+     \item Procedural asset placement and randomized backgrounds for realistic and diverse outputs.
+     \item Built-in support for snow and lighting effects using parameterized controls.
+     \item Output image annotations formatted in COCO style for machine learning training and evaluation.
+ \end{itemize}
+ 
+ By combining headless execution with configuration-based customization, our scene generation workflow is both efficient and highly extensible.
 
  \section{Methods}
 Blender may be controlled without using a user interface via the Blender Python API, which allows for python scripting to replace traditional blender inputs. As the intention of this tool is to allow users to easily integrate data generation into a deep learning pipeline, all scene generation was created using Blender scripting, with the input being a simple JSON file that a user may adjust within certain presets to adjust various scene variables, listed below. Images are output already correctly labeled, and ready to be added to training datasets. 
