@@ -126,8 +126,9 @@
     William J. Anderl\textsuperscript{1},
     Yi-Kai Lee\textsuperscript{1},
     David Sacharny\textsuperscript{2},
+    Ziad Al-Halah\textsuperscript{1},
     Thomas~C.~Henderson\textsuperscript{1}
-    Ziad Al-Halah\textsuperscript{1}
+    
     \thanks{1: University of Utah, Salt Lake City, Utah, email: \tt\small tch@cs.utah.edu}
     \thanks{2: Add david's info, email: }
 }
@@ -251,9 +252,9 @@ This shift in focus led us to consider not only the sign itself but also its sur
 
 \section{Previous Work}
 
- Synthetic data generation for sign detection is not an entirely novel approach. Several groups have explored using synthetic data to augment existing training data sets. Villalonga et al. proposed the use of Generative Adversarial Networks (GANs) to rapidly add new sign classes to datasets, which while effective, was limited by the choice of classification and generation models \cite{GAN_artificial_data}. This differs from our approach because XXXXXXXX. Similarly, Soans et al. created a similar Blender approach, in which signs were created with various software and placed on a real image background \cite{blender_paper}. This differs significantly from our proposed approach, in which we create an entirely synthetic scene. There are existing packages that create 3D road scenes, namely CARLA simulator [XXXXX]. However, the process of creating custom sign objects to place into CARLA is generally complicated, and requires users to adjust object mesh directly. While significant efforts have been made to synthesize sign data, improvements to both performance and workflow are needed to optimize dataset comprehensiveness and real-world applicability. 
+ Synthetic data generation for sign detection is not an entirely novel approach. Several groups have explored using synthetic data to augment existing training data sets. Villalonga et al. proposed the use of Generative Adversarial Networks (GANs) to rapidly add new sign classes to datasets, which while effective, additionally employed a generative adversarial network to close the domain gap \cite{GAN_artificial_data}. In contrast, here we use no GAN, but rather focus on increasing scene complexity to minimize domain gaps. Independent of synthesizing pipeline differences, this work further emphasizes the need for both rapid and specific data generation to improve training data sets. Soans et al. created a similar Blender approach, in which signs were created with various software and placed on a real image background \cite{blender_paper}. In contrast, our proposed approach requires that we create an entirely synthetic scene, which we hypothesize will adequately capture perspective and geometry nuances as the camera moves along a synthetic road. Following this line of reasoning, there are existing packages that create 3D road scenes, namely CARLA simulator \cite{Dosovitskiy17}. However, the process of creating custom sign objects to place into CARLA may be more involved than many potential users are interested in, as it requires users to adjust object mesh directly. While significant efforts have been made to synthesize sign data, improvements to both performance and workflow are needed to optimize dataset comprehensiveness and real-world applicability. 
 
- \section{Initial Methods}
+ \section{Scene Building}
  We began by attempting to create basic elements of the scene using Blender's user interface, downloading pre-made assets, and installing useful add-ons to speed up the process. After successfully creating the object in blender, the basic functions needed to recreate that object via API are printed in blender scripting tab. After replicating the creation of the object with code, the parameters can be tuned so to fit our scripts needs. 
  
  We placed all functions related to each piece of the scene in their own script (for example: \texttt{blender\_signs.py}
@@ -284,7 +285,7 @@ Signs were created by collecting a variety of images of common signs in the Unit
         \includegraphics[width=\linewidth]{images/Minimum Speed 40.png}
 
     \end{minipage}
-    \caption{Representative samples of signs input images}
+    \caption{Representative samples of sign input images}
     \label{fig:row_of_images}
 \end{figure}
 
@@ -348,7 +349,7 @@ All images were rendered and stored following the Common Objects in Context (COC
 
 
 \subsection{Effect on Real World Datasets}
-To evaluate the effect on real world datasets, both DETR and YOLO (INSERT REFERENCES HERE) models were trained with several different datasets. Initially, they were trained with an open source sign dataset (XXXXX), which contained 2817 street signs from various global locations. Next, the models were trained on a completely synthetic dataset containing 3061 images generated using the Blender pipeline outlined here. Finally, the models were trained on a combined dataset containing equal parts synthetic and real data. Each model was tested using a validation set collected from a local neighborhood, with 114 images. 
+To evaluate the effect on real world datasets, both DETR \cite{DETR} and YOLO\cite{glenn_jocher_2022_7347926} models were trained with several different datasets. Initially, they were trained with an open source sign dataset (XXXXX), which contained 2817 street signs from various global locations. Next, the models were trained on a completely synthetic dataset containing 3061 images generated using the Blender pipeline outlined here. Finally, the models were trained on a combined dataset containing equal parts synthetic and real data. Each model was tested using a validation set collected from a local neighborhood, with 114 images. 
 
 \section{Data Exploration}
 We have three distinct traffic sign datasets:
@@ -405,7 +406,7 @@ In this study, we conduct a controlled investigation using YOLOv5 and DETR to ad
 \end{enumerate}
 
 \subsection{YOLOv5}
-YOLOv5 is an efficient and widely adopted one-stage object detector, well known for its speed, accuracy, and simple deployment. In our experiment, we employed the YOLOv5s architecture and maintained identical hyperparameter settings across all three training regimes to ensure a fair and controlled comparison.
+YOLOv5 is an efficient and widely adopted one-stage object detector, well known for its speed, accuracy, and simple deployment \cite{glenn_jocher_2022_7347926}. In our experiment, we employed the YOLOv5s architecture and maintained identical hyperparameter settings across all three training regimes to ensure a fair and controlled comparison.
 
 To prepare our synthetic dataset for training, we first needed to convert its bounding box annotations into the YOLOv5 format. Initially, our annotation files recorded bounding boxes using top-left corner coordinates along with height and width. However, YOLOv5 expects bounding boxes in a different structure: the $(x, y)$ coordinates of the bounding box center followed by the width and height, all normalized with respect to image dimensions. We implemented a preprocessing step to convert each annotation accordingly, ensuring compatibility with YOLOv5’s training pipeline.
 
@@ -452,7 +453,7 @@ These results further support the conclusion that synthetic data, while less eff
 \hline % Top rule
 \textbf{Metric} & \textbf{Model 1} & \textbf{Model 2} & \textbf{Model 3} \\
 \hline % Rule below header
-AP@[IoU=0.50:0.95] & 0.292 & 0.179 & \textbf{0.31} \\
+AP@[IoU=0.50:0.95] & 0.292 & 0.179 & \textbf{0.310} \\
 AP@[IoU=0.50] (mAP@0.5) & 0.581 & 0.402 & \textbf{0.608} \\
 AR@[IoU=0.50:0.95, maxDets=100] & 0.376 & 0.235 & \textbf{0.405}\\
 AP@[IoU=0.50:0.95, large objects] & 0.491 & 0.326 & \textbf{0.537} \\
@@ -461,6 +462,9 @@ AP@[IoU=0.50:0.95, large objects] & 0.491 & 0.326 & \textbf{0.537} \\
 \caption{Comparison of DETR model performance metrics.}
 \label{tab:detr_model_comparison}
 \end{table}
+\section{Limitations}
+While promising, the methods and results outlined here have several important limitations. Perhaps the most critical being the currently limited scenes that are being generated. No city-scapes, complex roads, or difficult terrain is being synthesized here. However, the framework for such expansions has been clearly layed out. The improvement to model performance demonstrated with a relatively limited range of scenes, however, is encouraging and suggests wide applicability to model improvement, particularly when more targeted scene creation is employed. Similarly, the complexity of the scenes is currently minimal, especially when compared to existing simulation software such as CARLA. Our team attempted to utilize CARLA to generate training images, but ultimately abandoned that route due to the complexity of sign generation and placement within CARLA's synthetic scene. However, images obtained from CARLA are almost certainly more realistic than those generated with our blender pipeline, and future work should include an investigation of how best to merge synthetic outputs. Currently, the sign models created in Blender may be exported to be used in other synthetic data frameworks, as needed.
+
 
 \section{Conclusion}
 As signs are critical to safe and efficient roadways, it is important that detection models can quickly and correctly adapt to new road signs or specific signs. Synthetic data, generated using a free Blender pipeline, provides a fast and effective way to augment existing image datasets for better model performance.
