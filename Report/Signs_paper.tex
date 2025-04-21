@@ -525,10 +525,9 @@ While our experiments validate the effectiveness of combining synthetic and real
 
 One major area is improving the diversity of synthetic data. Currently, every scene contains only one road and one traffic sign. In the future, we will introduce more complex layouts, such as intersections and urban street scenes. Also, we plan to generate multiple traffic signs in each scene, including overlapping or occluded signs, to better mimic real-world situations.
 
-Additionally, we can improve the post-processing and data-cleaning pipeline. Currently, raw output often includes similar images or misplaced objects. Automating post-processing and quality control will ensure that the dataset is consistently usable and reduces the risk of hampering the model performance.
+Additionally, we can improve the post-processing and data-cleaning pipeline. Currently, raw output may include similar images or misplaced objects. Automating post-processing and quality control will ensure that the dataset is consistently usable and reduces the risk of hampering the model performance.
 
-Finally, we plan to develop a post-processing pipeline to clean the generated images. This includes automatically filtering out low-quality or redundant images, and correcting object placement errors. In order to ensure high-quality and diverse training data, we aim to maximize the utility of synthetic data and improve the performance of the model. The above enhancements will make the dataset more reliable and scalable.
-
+Finally, once we generate high quality synthetic images, we can explore their utility beyond simple object detection. This include training models for more advanced tasks such as traffic sign recognition, estimating sign distance and size, or even detecting road features like lane markings and guardrails damages. 
 
 % use section* for acknowledgment
 \section*{Acknowledgment}
