@@ -311,6 +311,10 @@ Tree Distance from Road:
 
 This balance of simplicity and variability allows quick scene generation with enough randomness to train models that generalize better to real-world occlusions and backgrounds.
 
+\subsection{Background Plane} A background plane is employed to simulate realistic environmental elements such as skies, mountains, and urban landscapes. The plane’s texture is randomly chosen from a collection of user-supplied images. The orientation of the plane is dynamically linked to the camera, ensuring the background continuously aligns with the camera's viewpoint and preventing the background from ever going out of frame. Users can easily customize the scene by providing their own images, which are automatically incorporated into the scene, significantly enhancing flexibility and personalization of the generated data.
+
+\subsection{Terrain} Each road scene includes a terrain plane, with textures randomly selected from a folder containing materials formatted according to the Polyhaven specification. The process for applying these textures is automated; users simply place new texture folders into the terrain directory to seamlessly incorporate additional terrain types. Currently available terrains include rocky, snowy, and grassy textures, automatically enhancing the realism and variability of generated scenes.
+
 \subsection{Camera and Lighting}
 Our camera setup aimed to simulate realistic dash cam footage, capturing a vehicle traveling along a roadway while allowing significant flexibility regarding the placement and movement of the camera in order to create diverse visual scenarios. To achieve this goal, we implemented a comprehensive camera system in blender. The system includes detailed functions to automate how the camera is placed and its movement modes, adding visual effects that enhance realism.
 
@@ -429,6 +433,33 @@ Precision & \textbf{0.844} & 0.671& 0.811 \\
 \end{tabular}
 \caption{Comparison of three yolov5s models' performance metrics.}
 \label{tab:model_comparison}
+\end{table}
+
+\subsection{DETR - Detection Transformer}
+DEtection TRansformer (DETR) is a transformer-based object detection model that reformulates object detection as a direct set prediction problem. Unlike traditional detectors, DETR eliminates the need for anchor boxes and non-max suppression by using a global attention mechanism to directly predict object positions and classes. Though computationally heavier, DETR has been shown to perform well on tasks requiring structured reasoning and benefits from longer training durations.
+
+For this study, we used the standard DETR architecture and followed the same experimental setup as described for YOLOv5, using the same dataset splits and identical data preprocessing pipelines. Bounding box annotations were converted from the original top-left format to the required format expected by DETR, with normalized coordinates and class labels. To account for DETR’s slower convergence, we trained each model for 60 epochs, compared to 10 for YOLOv5.
+
+Performance was evaluated using the COCO-style evaluation metrics on the Blyncsy validation set. As shown in Table~\ref{tab:detr_model_comparison}, the model trained on the combined dataset (Model 3) again outperformed both other configurations across all key metrics. It achieved the highest overall mAP (0.31), the best mAP@0.5 (0.608), and the highest recall (0.405), consistent with the YOLOv5 results. This suggests that combining real and synthetic data also improves performance for transformer-based models, not just convolutional ones.
+
+Model 1, trained exclusively on real images, performed reasonably well and achieved competitive scores, especially in terms of AP@0.5. Model 2, trained only on synthetic images, lagged behind the others in all aspects, reinforcing the earlier finding that synthetic data alone is not sufficient to ensure generalization to real-world traffic sign imagery.
+
+These results further support the conclusion that synthetic data, while less effective on its own, provides meaningful value when integrated with real-world datasets. The consistent performance gains seen in both DETR and YOLOv5 underscore the benefit of leveraging synthetic dash-cam imagery for enhancing traffic sign detection models.
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{|l|c|c|c|}
+\hline % Top rule
+\textbf{Metric} & \textbf{Model 1} & \textbf{Model 2} & \textbf{Model 3} \\
+\hline % Rule below header
+AP@[IoU=0.50:0.95] & 0.292 & 0.179 & \textbf{0.31} \\
+AP@[IoU=0.50] (mAP@0.5) & 0.581 & 0.402 & \textbf{0.608} \\
+AR@[IoU=0.50:0.95, maxDets=100] & 0.376 & 0.235 & \textbf{0.405}\\
+AP@[IoU=0.50:0.95, large objects] & 0.491 & 0.326 & \textbf{0.537} \\
+\hline % Bottom rule (added for consistency)
+\end{tabular}
+\caption{Comparison of DETR model performance metrics.}
+\label{tab:detr_model_comparison}
 \end{table}
 
 \section{Conclusion}
