@@ -259,12 +259,12 @@ This shift in focus led us to consider not only the sign itself but also its sur
  
  We placed all functions related to each piece of the scene in their own script (for example: \texttt{blender\_signs.py}, \texttt{blender\_trees.py}, \texttt{blender\_road.py}, etc). After we had built out basic creation functions for trees, road, and signs, we created a scene generator script we called \texttt{app.py}. Our first iteration of \texttt{app.py} just created a static scene with a road, a plane underneath the road, a few trees, and a rudimentary exit sign.
  
- \begin{figure}[H]
-     \centering
-     \includegraphics[width=0.8\textwidth]{images/initial_scene.png} % Update path as needed
-     \caption{Initial scene created using app.py}
-     \label{fig:initial_scene}
- \end{figure}
+ \begin{figure}[ht]
+  \centering
+  \includegraphics[width=\linewidth]{images/initial_scene.png}
+  \caption{    \caption{Initial scene created using app.py}}
+  \label{fig:row_of_images}
+\end{figure}
  
  From here we focused on making each function more modular so it could be controlled with general numbers and phrases rather than explicitly defining precise coordinates in the Blender world. Functions had to be adjusted to use other objects as reference points so that the end user would not need to know anything about Blender or the size of each object in order to create a realistic scene. We have listed some of these changes below as examples:
  
