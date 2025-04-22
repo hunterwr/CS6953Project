@@ -297,7 +297,22 @@ This shift in focus led us to consider not only the sign itself but also its sur
      \item Output image annotations formatted in COCO style for machine learning training and evaluation.
  \end{itemize}
  
- By combining headless execution with configuration-based customization, our scene generation workflow is both efficient and highly extensible.
+ \section{Generating New Datasets}
+
+ To generate a large and diverse dataset for machine learning applications, we extended our initial single-image Blender script into a comprehensive multi-parameter image generation pipeline. This new script enables the automatic creation of entire scenes populated with signs, roads, trees, and varied weather or lighting conditions. Each scene is then used to generate a sequence of images by stepping a virtual camera through predefined positions—effectively simulating dashcam footage.
+ 
+ The script begins by reading a user-specified configuration file, which defines the number of scenes to generate, the number of images per scene, and optionally, specific values for scene parameters. For parameters not specified by the user, random values are sampled using a helper function. This allows for controlled variability in the dataset.
+ 
+ To increase diversity, the script automatically generates all combinations of list-based configuration options (e.g., background types, road conditions, tree types), and then loops over each combination to generate a new scene. Within each scene, a camera controller moves the camera in small increments, capturing a series of images that reflect real-world perspective shifts. Each frame is rendered, annotated, and added to a COCO-style dataset.
+ 
+ The output includes:
+ \begin{itemize}
+     \item Rendered images of scenes with randomized conditions.
+     \item COCO-format annotations containing object bounding boxes.
+     \item Metadata capturing the parameters used in scene generation.
+ \end{itemize}
+ 
+ This modular and extensible approach enables rapid generation of large datasets with high variability, critical for training robust computer vision models. Additionally, all assets and metadata are automatically saved into a structured output directory, ensuring reproducibility and ease of downstream processing.
 
  \section{Methods}
 Blender may be controlled without using a user interface via the Blender Python API, which allows for python scripting to replace traditional blender inputs. As the intention of this tool is to allow users to easily integrate data generation into a deep learning pipeline, all scene generation was created using Blender scripting, with the input being a simple JSON file that a user may adjust within certain presets to adjust various scene variables, listed below. Images are output already correctly labeled, and ready to be added to training datasets. 
