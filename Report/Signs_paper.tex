@@ -271,7 +271,7 @@ This shift in focus led us to consider not only the sign itself but also its sur
      \item Output image annotations formatted in COCO style for machine learning training and evaluation.
  \end{itemize}
  
- \section{Generating New Datasets}
+\section{Methods: Generating New Datasets}
 
  To generate a large and diverse dataset for machine learning applications, we extended our initial single-image Blender script into a comprehensive multi-parameter image generation pipeline. This new script enables the automatic creation of entire scenes populated with signs, roads, trees, and varied weather or lighting conditions. Each scene is then used to generate a sequence of images by stepping a virtual camera through predefined positions—effectively simulating dashcam footage.
  
@@ -287,6 +287,7 @@ This shift in focus led us to consider not only the sign itself but also its sur
  \end{itemize}
  
  This modular and extensible approach enables rapid generation of large datasets with high variability, critical for training robust computer vision models. Additionally, all assets and metadata are automatically saved into a structured output directory, ensuring reproducibility and ease of downstream processing.
+
 
  \section{Methods: Final Scene Generation}
 
@@ -512,8 +513,8 @@ These results further support the conclusion that synthetic data, while less eff
 \hline % Rule below header
 AP@[IoU=0.50:0.95] & 0.292 & 0.179 & \textbf{0.310} \\
 AP@[IoU=0.50] (mAP@0.5) & 0.581 & 0.402 & \textbf{0.608} \\
-AR@[IoU=0.50:0.95, maxDets=100] & 0.376 & 0.235 & \textbf{0.405}\\
-AP@[IoU=0.50:0.95, large objects] & 0.491 & 0.326 & \textbf{0.537} \\
+Recall & 0.376 & 0.235 & \textbf{0.405}\\
+Precision & 0.582 & 0.326 & \textbf{0.612} \\
 \hline % Bottom rule (added for consistency)
 \end{tabular}
 \caption{Comparison of DETR model performance metrics.}
@@ -526,9 +527,9 @@ While promising, the methods and results outlined here have several important li
 \section{Conclusion}
 As signs are critical to safe and efficient roadways, it is important that detection models can quickly and correctly adapt to new road signs or specific signs. Synthetic data, generated using a free Blender pipeline, provides a fast and effective way to augment existing image datasets for better model performance.
 
-Our results show that the models trained on the combined dataset of both real-world and synthetic data achieved the highest mAP@0.5, mAP@0.5:0.95, and recall, indicating a noticeable improvement with the addition of the synthetic data. While the model trained solely on real images (Model 1) achieved the highest precision, its slightly lower mAP and recall suggest that it may be more conservative in detections. In contrast, the model trained only on synthetic data (Model 2) significantly underperformed in both mAP and recall, though it still maintained a high precision, highlighting its potential for producing accurate but sparse detections in specific scenarios.
+Our results show that for both YOLOv5s and DETR, the models trained on the combined dataset of real-world and synthetic data (Model 3) achieved the highest mAP@0.5, mAP@0.5:0.95, and recall. This indicates a consistent and noticeable improvement in detection performance with the addition of synthetic data across both model architectures. While the YOLOv5s model trained solely on real images (Model 1) achieved the highest precision, DETR’s Model 1 also exhibited a relatively high precision. However, both saw slightly lower mAP and recall compared to their respective combined-data counterparts, suggesting more conservative detection behavior when trained on real data alone.
 
-These findings indicate that synthetic data alone may not be sufficient to train a robust model for real-world deployment. However, when used in combination with real data, it becomes highly valuable by introducing viewpoint consistency, reducing domain gaps, and significantly lowering the cost and effort of data collection and annotation.
+In contrast, the models trained only on synthetic data (Model 2) underperformed across most metrics in both YOLOv5s and DETR, especially in terms of mAP and recall. However, the synthetic-only DETR model retained a moderate precision score, reinforcing the observation that synthetic data can lead to accurate, albeit sparse, detections. These consistent trends across two very different architectures strengthen the conclusion that synthetic data alone is not sufficient for robust real-world performance, but becomes highly effective when used in conjunction with real data—enhancing viewpoint diversity, closing domain gaps, and substantially reducing the burden of data collection and annotation.
 
 
 While our experiments validate the effectiveness of combining synthetic and real data for traffic sign detection, there are several directions for future work to improve realism and model performance. One major area is improving the diversity of synthetic data. Currently, every scene contains only one road and one traffic sign. In the future, we will introduce more complex layouts, such as intersections and urban street scenes. Also, we plan to generate multiple traffic signs in each scene, including overlapping or occluded signs, to better mimic real-world situations. Additionally, we can improve the post-processing and data-cleaning pipeline. Currently, raw output may include similar images or misplaced objects. Automating post-processing and quality control will ensure that the dataset is consistently usable and reduces the risk of hampering the model performance.
