@@ -55,6 +55,11 @@
 %
 \usepackage{graphicx} 
 \usepackage{subcaption} 
+\usepackage{caption}
+
+\captionsetup[figure]{font=footnotesize}
+\captionsetup[table]{font=small}
+
 \ifCLASSINFOpdf
   % \usepackage[pdftex]{graphicx}
   % declare the path(s) where your graphic files are
@@ -130,7 +135,7 @@
     Thomas~C.~Henderson\textsuperscript{1}
     
     \thanks{1: University of Utah, Salt Lake City, Utah, email: \tt\small tch@cs.utah.edu}
-    \thanks{2: Add david's info, email: }
+    \thanks{2: Industry Partner, email: \tt\small sacharny@cs.utah.edu }
 }
 
 
@@ -189,80 +194,49 @@
 % As a general rule, do not put math, special symbols or citations
 % in the abstract or keywords.
 \begin{abstract}
-Road-sign condition and content is critically important globally for drivers safety and critical infrastructure maintenence. Several groups have developed methods to detect and evaluate various sign metrics. Additionally, growing interest in autonomous driving requires input from road-signs for critical decision making. Data acquisition and cleaning is an ongoing challenge when training deep learning models, and is commonly a limiting factor of model performance. In sign recognition, this problem is exacerbated by the many different variations in typical signage between geographic locations. Here, we establish the validity of using synthetic data, generated using Blender, to improve sign detection and discuss the advantages of using synthetically generated datatsets for deep learning tasks.    
+Road-sign condition and content is critically important globally for drivers safety and critical infrastructure maintenance. Several groups have developed methods to detect and evaluate various sign metrics. Additionally, growing interest in autonomous driving requires input from road-signs for critical decision making. Data acquisition and cleaning is an ongoing challenge when training deep learning models, and is commonly a limiting factor of model performance. In sign recognition, this problem is exacerbated by the many different variations in typical signage between geographic locations, differences in sign conditions, and difficulty in collecting adequate quality data. To improve training datasets, we created an image generation pipeline using only free resources and Blender, a common 3D modeling software. To test our synthetic data, we trained both  YOLOv5 and DETR models with synthetic, real, and a combination of datasets and validated performance on real-world data. We found a significant improvement in both model's performance metrics when synthetic data is used to supplement real-world images during model training. Our results establish the validity of using synthetic data, generated using Blender, to improve sign detection and demonstrate the advantages of using synthetically generated datatsets for deep learning tasks.     
 \end{abstract}
 
-% Note that keywords are not normally used for peerreview papers.
-% \begin{IEEEkeywords}
-% IEEE, IEEEtran, journal, \LaTeX, paper, template.
-% \end{IEEEkeywords}
 
-
-
-
-
-
-% For peer review papers, you can put extra information on the cover
-% page as needed:
-% \ifCLASSOPTIONpeerreview
-% \begin{center} \bfseries EDICS Category: 3-BBND \end{center}
-% \fi
-%
-% For peerreview papers, this IEEEtran command inserts a page break and
-% creates the second title. It will be ignored for other modes.
 \IEEEpeerreviewmaketitle
 
 
 
 \section{Introduction}
-% The very first letter is a 2 line initial drop letter followed
-% by the rest of the first word in caps.
-% 
-% form to use if the first word consists of a single letter:
-% \IEEEPARstart{A}{demo} file is ....
-% 
-% form to use if you need the single drop letter followed by
-% normal text (unknown if ever used by the IEEE):
-% \IEEEPARstart{A}{}demo file is ....
-% 
-% Some journals put the first two words in caps:
-% \IEEEPARstart{T}{his demo} file is ....
-% 
-% Here we have the typical use of a "T" for an initial drop letter
-% % and "HIS" in caps to complete the first word.
-% \IEEEPARstart{T}{his} demo file is intended to serve as a ``starter file''
-% for IEEE journal papers produced under \LaTeX\ using
-% IEEEtran.cls version 1.8b and later.
-% % You must have at least 2 lines in the paragraph with the drop letter
-% % (should never be an issue)
-% I wish you the best of success.
+
 
 % \hfill mds
  
 % \hfill August 26, 2015
-Road signs are an invaluable component of global transportation infrastructure. Signs provide information concerning local transportation laws and regulations such as road speed and required stopping points, as well as tailored instructions for drivers on a specific section of road. As such, signs may be both standardized and vary widely depending on region. Due to the complexity and importance of road signage, the recognition, classification, and interpretation of road signs is applicable to a variety of deep learning goals[Insert citation here]. Data acquisition, cleaning, and labeling is commonly recognized as a major limiting factor when training deep learning models\cite{Whang_datacollection}, with sign data being no exception. Dashboard cameras (dashcams) are commonly used both to collect training data and provide continously up to date images which are then passed to pre-trained models. Dashcam footage has its own inherent drawbacks however including motion artifacts and debris obstruction. Perhaps the most limiting factor, however, is the time and resources required to obtain dashcam footage of the desired sign in a specific location and orientation, as well as labeling the collected images correctly. We hypothesize that artifical data, generated with a free modeling software, can fill the data acquisition gap by providing rapidly produced labeled images featuring custom or pre-built signs in various locations, orientations, and conditions. 
+Road signs are an invaluable component of global transportation infrastructure. Signs provide information concerning local transportation laws and regulations such as road speed and required stopping points, as well as tailored instructions for drivers on a specific section of road. As such, signs may be both standardized and vary widely depending on region and circumstance. Due to the complexity and importance of road signage, the recognition, classification, and interpretation of road signs is applicable to a variety of deep learning goals. Data acquisition, cleaning, and labeling is commonly recognized as a major limiting factor when training deep learning models\cite{Whang_datacollection}, with sign data being no exception. Dashboard cameras (dashcams) are commonly used both to collect training data and provide continously up-to-date images which are then passed to pre-trained models. Dashcam footage has its own inherent drawbacks including motion artifacts and debris obstruction. Perhaps the most limiting factor, however, is the time and resources required to obtain dashcam footage of the desired sign in a specific location and orientation, as well as labeling the collected images correctly. We hypothesize that artifical data, generated with a free modeling software, can fill the data acquisition gap by providing rapidly produced labeled images featuring custom or pre-built signs in various locations, orientations, and conditions. 
+
+
+Blyncsy, a company focused on supporting road maintenance and monitoring, is interested in developing methods to assist in sign recognition model training. Datasets are typically collected from dashcam footage, and commonly include noise resulting from lighting, weather, and obstructions, among other difficulties. Using a Blender script, it may be possible to rapidly expand training sets to include custom signs with a wide range of scene and camera conditions. Here, we develop a tool to rapidly create synthetic data, and quantify its impact on two common detection models. 
+
 
 \section{Initial Problem}
-We were initially tasked with estimating the size of road signs from visual inputs, using deep learning techniques applied to both synthetic and real-world image data. The project was to focus on building a 3D sign synthesis tool in Blender and training a model to estimate sign dimensions based on these images. However, as we began designing our approach, we recognized a critical limitation in attempting to estimate sign size from isolated images of the signs alone.
+The applications of deep learning in sign data are varied, with existing research including sign recognition, classification, and optical character recognition (OCR). Our group was initially tasked with estimating the size of road signs from visual inputs, using deep learning techniques applied to both synthetic and real-world image data. The project was to focus on building a 3D sign synthesis tool in Blender and training a model to estimate sign dimensions based on these images. However, as we began designing our approach, we recognized a critical limitation in attempting to estimate sign size from isolated images of the signs alone.
 
-Through reasoning and analysis of the problem, we concluded that size estimation without additional context—such as the distance from the camera, angle of the sign, and environmental cues—would likely result in poor performance and high ambiguity. For example, a small sign viewed up close can appear visually similar to a large sign seen at a distance. To address this, we decided that our model would need to incorporate the full road scene to make reliable predictions.
+After further analysis of the problem, it became clear that size estimation without additional context—such as the distance from the camera, angle of the sign, and environmental cues—would likely result in poor performance and high ambiguity. For example, a small sign viewed up close can appear visually similar to a large sign seen at a distance. To address this, we concluded that our model would need to incorporate the full road scene to make reliable predictions. In creating entire road scenes, we expected to produce a more robust synthesizing environment which could be applicable for a variety of deep learning applications. 
 
 This shift in focus led us to consider not only the sign itself but also its surroundings within the road environment. By leveraging broader contextual information, we aimed to improve the model’s ability to infer sign size accurately and support additional tasks like OCR of sign text (e.g., identifying posted speed limits). This reasoning informed our design of both the dataset generation process and the structure of the model itself.
 
 
 \section{Previous Work}
 
- Synthetic data generation for sign detection is not an entirely novel approach. Several groups have explored using synthetic data to augment existing training data sets. Villalonga et al. proposed the use of Generative Adversarial Networks (GANs) to rapidly add new sign classes to datasets, which while effective, additionally employed a generative adversarial network to close the domain gap \cite{GAN_artificial_data}. In contrast, here we use no GAN, but rather focus on increasing scene complexity to minimize domain gaps. Independent of synthesizing pipeline differences, this work further emphasizes the need for both rapid and specific data generation to improve training data sets. Soans et al. created a similar Blender approach, in which signs were created with various software and placed on a real image background \cite{blender_paper}. In contrast, our proposed approach requires that we create an entirely synthetic scene, which we hypothesize will adequately capture perspective and geometry nuances as the camera moves along a synthetic road. Following this line of reasoning, there are existing packages that create 3D road scenes, namely CARLA simulator \cite{Dosovitskiy17}. However, the process of creating custom sign objects to place into CARLA may be more involved than many potential users are interested in, as it requires users to adjust object mesh directly. While significant efforts have been made to synthesize sign data, improvements to both performance and workflow are needed to optimize dataset comprehensiveness and real-world applicability. 
+ Synthetic data generation for sign detection is not an entirely novel approach. Several groups have explored using synthetic data to augment existing training data sets. Villalonga et al. proposed the use of Generative Adversarial Networks (GANs) to rapidly add new sign classes to datasets, which while effective, additionally employed a generative adversarial network to close the domain gap \cite{GAN_artificial_data}. In contrast, here we use no GAN, but rather focus on increasing scene complexity and physical properties of the modeled objects to minimize domain gaps. Independent of synthesizing pipeline differences, this work further emphasizes the need for both rapid and specific data generation to improve training data sets. Soans et al. created a Blender approach similar to our own, in which signs were created with various software and placed on a real image background \cite{blender_paper}. In contrast, our proposed approach requires that we create an entirely synthetic scene, which we hypothesize will adequately capture perspective and geometry nuances as the camera moves along a synthetic road. Following this line of reasoning, there are existing packages that create 3D road scenes, namely  the Car Learning Act (CARLA) simulator \cite{Dosovitskiy17}. CARLA is a complex and well maintained vehicle simulation tool, which has the potential to create highly realistic synthetic images, with a wide range of scenes and variables.  However, the process of creating custom sign objects to place into CARLA may be more involved than many potential users are interested in, as it requires users to adjust object mesh directly. Our approach here, while more rudimentary, may be more accessible for users specifically interested in roadsign simulations. While significant efforts have been made to synthesize sign data, improvements to both performance and workflow are needed to optimize dataset comprehensiveness and real-world applicability. 
 
- \section{Initial Scene Generation}
- We began by attempting to create basic elements of the scene using Blender's user interface, downloading pre-made assets, and installing useful add-ons to speed up the process. After successfully creating the object in Blender, the basic functions needed to recreate that object via API are printed in Blender's scripting tab. After replicating the creation of the object with code, the parameters can be tuned to fit our script's needs.
+ \section{Methods: Initial Scene Generation}
+ Blender may be controlled without using a user interface via the Blender Python API, \texttt{bpy}, which allows for Python scripting to replace traditional blender inputs. Blender version 4.3 was used for all components of this project\cite{blender}. 
  
- We placed all functions related to each piece of the scene in their own script (for example: \texttt{blender\_signs.py}, \texttt{blender\_trees.py}, \texttt{blender\_road.py}, etc). After we had built out basic creation functions for trees, road, and signs, we created a scene generator script we called \texttt{app.py}. Our first iteration of \texttt{app.py} just created a static scene with a road, a plane underneath the road, a few trees, and a rudimentary exit sign.
+ We began by attempting to create basic elements of the scene using Blender's user interface, downloading pre-made assets, and installing useful add-ons to speed up the process. After successfully creating the object in Blender, the basic functions needed to recreate that object via API are printed in Blender's scripting tab. After replicating the creation of the object with code, the parameters can be tuned to fit our script's needs. 
+ 
+ We placed all functions related to each piece of the scene in their own script (for example: \texttt{blender\_signs.py}, \texttt{blender\_trees.py}, \texttt{blender\_road.py}, etc). After we had built out basic creation functions for trees, road, and signs, we created a scene generator script we called \texttt{app.py}. Our first iteration of \texttt{app.py} simply created a static scene with a road, a plane underneath the road, a few trees, and a rudimentary exit sign (see Figure 1).
  
  \begin{figure}[ht]
   \centering
   \includegraphics[width=\linewidth]{images/initial_scene.png}
-  \caption{    \caption{Initial scene created using app.py}}
+  \caption{ Initial scene created using app.py. Subsequent changes were completed to create more realistic scenes}
   \label{fig:row_of_images}
 \end{figure}
  
@@ -278,7 +252,7 @@ This shift in focus led us to consider not only the sign itself but also its sur
  These types of changes set the foundation for the next phase of our project. A more detailed description of the methods used for each aspect of the scene can be found in the methods section. 
  
  
- \section{Headless Scene Generation}
+ \section{Methods: Headless Scene Generation}
  
  While we had initially considered developing a lightweight UI using Streamlit, this idea was quickly abandoned in favor of a more streamlined and developer-friendly approach. Instead, we created a single entry-point script called \texttt{run.py}, which executes all of our modular scene generation functions in sequence while running Blender in headless mode.
  
@@ -299,10 +273,14 @@ This shift in focus led us to consider not only the sign itself but also its sur
  
  By combining headless execution with configuration-based customization, our scene generation workflow is both efficient and highly extensible.
 
- \section{Methods}
-Blender may be controlled without using a user interface via the Blender Python API, which allows for python scripting to replace traditional blender inputs. As the intention of this tool is to allow users to easily integrate data generation into a deep learning pipeline, all scene generation was created using Blender scripting, with the input being a simple JSON file that a user may adjust within certain presets to adjust various scene variables, listed below. Images are output already correctly labeled, and ready to be added to training datasets. 
+ \section{Methods: Final Scene Generation}
+
+ The final scene generation is a combination of the variables described below, including signs, roads, environment, and lighting. Examples of the generated images can be seen below in Figure 3.
+ 
 \subsection{Signs}
-Signs were created by collecting a variety of images of common signs in the United States. These signs were then converted to a portable network graphic (PNG) format with a transparent background. In Blender, the sign is applied to a mesh object such that the background of the object is transparent, leaving only the sign in place. This allows for seamless scaling, as well as allowing the user to prepare any PNG as a sign. In order for more realistic images, various damage states and sign orientations may be randomly applied to the sign. Finally, various weather conditions such as snow and mud may be added to the front of the sign, as obstruction due to environmental factors is common in harsher climates. Signs are placed on a simple pole, and positioned correctly within the scene relative to a camera object. 
+Initially, signs were created as individual mesh objects, each with a shape that would have to be specified by the user. As mesh generation and image scaling add unnecessary complexity to sign creation, we transitioned to using only a portable network graphic (PNG) with a transparent background, placed on a single mesh cube. Signs were then created by collecting  or creating a variety of images of common signs in the United States (seen in Figure 4). These signs were then converted to PNG format with a transparent background. In Blender, the sign is applied to a mesh object such that the background of the object is transparent, leaving only the sign in place. This allows for seamless scaling, as well as allowing the user to prepare any PNG as a sign.
+
+In order for more realistic images, we added capabilites for various damage states and sign orientations to be randomly applied to the signa. Finally, various weather conditions such as snow and mud were added to the front of the sign, as obstruction due to environmental factors is common in harsher climates. Signs were placed on a simple pole, and positioned correctly within the scene relative to a camera object. 
 
 \begin{figure}[ht]
     \centering
@@ -321,19 +299,24 @@ Signs were created by collecting a variety of images of common signs in the Unit
         \includegraphics[width=\linewidth]{images/Minimum Speed 40.png}
 
     \end{minipage}
-    \caption{Representative samples of sign input images}
+    \setcounter{figure}{1}
+    \caption{Representative samples of sign input images. All signs are placed on a transparent background, and input as a PNG.}
     \label{fig:row_of_images}
 \end{figure}
 
 \subsection{Roads}
-Preset road scenes were similarly created via Python scripting. A simple two-lane road, as well as a highway scene were constructed using free mesh objects and textures from BlenderKit[XXXX], but could be recreated using a variety of available Blender resources. Roads include concrete barriers, guardrails, lighting, and lane divisions. Optionally, the road was curved in the 3D space, with lane coordinates returned to allow the camera object to move along each lane to correctly imitate real-world roads. 
-\subsection{Environment}
-Each road was placed on a plane which may be changed between various pre-set images to simulate diverse environments. Similar to the road objects, this plane was randomly curved in the 3D space to match the orientation of the road, effectively simulating topological changes, which affect both camera placement and sign visualization as the camera moves through the simulated scene. Additionally, different weather conditions including snow, rain, and fog were used to expand the dataset to include environmental obstructions of the sign directly within the camera field of view. 
+Preset road scenes were similarly created via Python scripting.  A simple two-lane road, as well as a highway scene were constructed by creating simple rectangular mesh objects, and shaping them into roads with beveled edges. Realism was added using free mesh objects and textures from BlenderKit\cite{blenderkit_platform} using royalty-free and CC0 licenses, but could be recreated using any available Blender resources. Roads include concrete barriers, guardrails, lighting, and lane divisions. 
 
-One of the main benefits of using a free platform such as Blender is that there are a wide variety of plugins, both free and paid, which can be used to improve scene creation. Here, a tree add-on was used to generate different styles of trees, which were then randomly scattered in the scene. 
+Although initially images were created using only straight roads, preliminary data suggested that adding curvature would improve model performance. To add road curvature, we initially attempted to implement a bayesian curve spline to direct the road object. However, as much of the scene references the road during placmeent of supplementary scene objects, a lattice modifier was selected as a more appropriate curvature tool. Using the lattice modifier, the road and all associated objects (ground plane, trees, etc.) were curved in the 3D space, with lane coordinates returned to allow the camera object to move along each lane, correctly imitating a dashcam traveling on real-world roads. This method of curvature preserves object relative positions, which may be additionally useful for future synthetic data applications.
+
+
+Another benefit of Blender is the ability to rapidly change scene conditions. During road generation, the user was allowed to select wet or dry roads, which were implemented using a simple change of shader applied to the previously created road object. This feature could be easily expanded to include various different shaders to simulate a broad selection of road conditions such as weather, damage, and materials. 
+
+\subsection{Environment}
+Each road was placed on a plane which may be changed between various pre-set images to simulate diverse environments. Similar to the road objects, this plane was randomly curved in the 3D space to match the orientation of the road, effectively simulating topological changes, which affect both camera placement and sign visualization as the camera moves through the simulated scene. Additionally, different weather conditions including snow, rain, and fog were used to expand the dataset to include environmental obstructions of the sign directly within the camera field of view.  
 
 \subsection{Trees}
-To add a sense of realism to the scene, we added the option to randomly generate trees on the sides of the road. We used the Sapling Tree Gen blender add-on which was available for free online. Assets and materials used to make the tree look more realistic were obtained for free online from popular material and asset blender add-on 'blenderkit'. We wanted to limit the amount of set up required to begin generating images so the final tree function has limited optionality. These limited options were chosen to give sufficient variety, remain reasonably efficient to render, and to occasionally partially oclude the sign to improve model robustness. 
+To add a sense of realism to the scene, we added the option to randomly generate trees on the sides of the road. We used the free Sapling Tree Gen blender add-on, one of many free and paid blender add-ons which may be used to increase scene complexity\cite{sapling_blender_addon}. Assets and materials used to make the tree look more realistic were obtained for free online from popular material and asset blender add-on 'blenderkit'. We wanted to limit the amount of set up required to begin generating images so the final tree function has limited optionality. These limited options were chosen to give sufficient variety, remain reasonably efficient to render, and to occasionally partially occlude the sign to improve model robustness. 
 
 Presets include: "Many trees," "Some trees," and "No trees" for density; and "Close" or "Far" for distance from the road.
 
@@ -348,9 +331,9 @@ Tree Distance from Road:
 
 This balance of simplicity and variability allows quick scene generation with enough randomness to train models that generalize better to real-world occlusions and backgrounds.
 
-\subsection{Background Plane} A background plane is employed to simulate realistic environmental elements such as skies, mountains, and urban landscapes. The plane’s texture is randomly chosen from a collection of user-supplied images. The orientation of the plane is dynamically linked to the camera, ensuring the background continuously aligns with the camera's viewpoint and preventing the background from ever going out of frame. Users can easily customize the scene by providing their own images, which are automatically incorporated into the scene, significantly enhancing flexibility and personalization of the generated data.
+\subsection{Background Plane} A background plane was employed to simulate realistic environmental elements such as skies, mountains, and urban landscapes. The plane’s texture was randomly chosen from a collection of user-supplied images. The orientation of the plane was dynamically linked to the camera, ensuring the background continuously aligns with the camera's viewpoint and preventing the background from ever going out of frame. Users can easily customize the scene by providing their own images, which are automatically incorporated into the scene, significantly enhancing flexibility and personalization of the generated data.
 
-\subsection{Terrain} Each road scene includes a terrain plane, with textures randomly selected from a folder containing materials formatted according to the Polyhaven specification. The process for applying these textures is automated; users simply place new texture folders into the terrain directory to seamlessly incorporate additional terrain types. Currently available terrains include rocky, snowy, and grassy textures, automatically enhancing the realism and variability of generated scenes.
+\subsection{Terrain} Each road scene includes a terrain plane, with textures randomly selected from a folder containing materials formatted according to the Polyhaven specification \cite{polyhaven}. The process for applying these textures was automated; users simply place new texture folders into the terrain directory to seamlessly incorporate additional terrain types. Currently available terrains include rocky, snowy, and grassy textures, automatically enhancing the realism and variability of generated scenes.
 
 \subsection{Camera}
 Our camera setup aimed to simulate realistic dashcam footage, capturing a vehicle traveling along a roadway while allowing significant flexibility regarding the placement and movement of the camera to create diverse visual scenarios. 
@@ -379,31 +362,47 @@ Using Blender's particle system, weather conditions like rain and snow were adde
 
 Snow effects were integrated into the scene using predefined weather condition presets, including light, moderate, and heavy snow and hailstorms. Each preset configured specific particle density, count, sizes, gravity settings, and random movements (Brownian factor) to simulate realistic snowfall. Particles were emitted from a large plane above the scene, with particle lifetime, gravity, and particle randomness adjustments to achieve authentic snowfall dynamics.
 
-The Rainfall effect was simulated through a similar particle system with customizable density settings. Smaller than snow particles, raindrops were released from a plane over the scene with higher gravity settings. Raindrops traveled straight downhill with little random movement, in contrast to snow. The shorter particle lifespan reflected the characteristics of semi-realistic rain.
+The rainfall effect was simulated through a similar particle system with customizable density settings. Smaller than snow particles, raindrops were released from a plane over the scene with higher gravity settings. Raindrops traveled straight downhill with little random movement, in contrast to snow. The shorter particle lifespan reflected the characteristics of semi-realistic rain.
 
 \subsection{Annotations}
-All images were rendered and stored following the Common Objects in Context (COCO) annotation scheme for later ease of use. As the scene variables were carefully controlled, each generated image contains metadata including scene variables as well as a bounding box for the sign within the image. 
+All images were rendered and stored following the Common Objects in Context (COCO) annotation scheme for later ease of use\cite{COCO}. As the scene variables were carefully controlled, each generated image contains metadata including scene variables as well as a bounding box for the sign within the image. 
+
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=\linewidth]{images/sign w box.png}
-    \caption{Sample of generated image, including a red bounding box around the sign}
+    \begin{minipage}{0.5\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{images/road1.png}
+
+    \end{minipage}\hfill
+    \begin{minipage}{0.5\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{images/road2.png}
+
+    \end{minipage}\hfill
+    \begin{minipage}{0.5\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{images/road3.png}
+
+    \end{minipage}
+    \caption{Representative samples of final generated images. The top image shows the highway scene, with road warping to simulate hills and curves. The middle image shows the two-lane road, with a severely weathered sign. The bottom image shows the two-lane road, with road curvature and slight damage to the sign.  }
     \label{fig:row_of_images}
 \end{figure}
 
 
 
-\subsection{Effect on Real World Datasets}
-To evaluate the effect on real world datasets, both DETR \cite{DETR} and YOLO\cite{glenn_jocher_2022_7347926} models were trained with several different datasets. Initially, they were trained with an open source sign dataset (XXXXX), which contained 2817 street signs from various global locations. Next, the models were trained on a completely synthetic dataset containing 3061 images generated using the Blender pipeline outlined here. Finally, the models were trained on a combined dataset containing equal parts synthetic and real data. Each model was tested using a validation set collected from a local neighborhood, with 114 images. 
 
-\section{Data Exploration}
+\section{Effect on Real World Datasets}
+
+To evaluate the effect on real world datasets, both DETR \cite{DETR} and YOLO\cite{glenn_jocher_2022_7347926} models were trained with several different datasets. Initially, they were trained with an open source sign dataset, which contained 2817 street signs from various global locations. Next, the models were trained on a completely synthetic dataset containing 3061 images generated using the Blender pipeline outlined here. Finally, the models were trained on a combined dataset containing equal parts synthetic and real data. Each model was tested using a validation set collected from a local neighborhood, with 114 images. 
+
 We have three distinct traffic sign datasets:
 
 \subsection{Open Images V7}
-A large, public dataset that includes a variety range of traffic sign images and their corresponding annotations. However, very few of those images are taken from a dash-cam view, so their viewpoint differs from our target domain.
+A large, public dataset \cite{OID_Dataset} that includes a variety range of traffic sign images and their corresponding annotations. However, very few of those images are taken from a dash-cam view, so their viewpoint differs from our target domain.
 
 \subsection{Synthetic Data}
-We generated around 3k synthetic images through Blender script, rendering traffic sign scenes that mimic dash-cam optics (motion blur, road curvature, varying lighting, etc.). This synthetic dataset not only matches the viewpoint we care about but also save our time and cost to collect data.
+We generated around 3k synthetic images through Blender script, rendering traffic sign scenes that mimic dash-cam optics (motion blur, road curvature, varying lighting, etc.). This synthetic dataset not only matches the viewpoint we care about but also saves our time and cost to collect data.
 
 \begin{figure}[h]
     \centering
@@ -432,22 +431,20 @@ Provided by Blyncsy, a Utah-based transportation-analytics company, and used for
 \begin{figure}[h]
     \centering
     \includegraphics[width=\linewidth]{images/dashcam.jpg}
-    \caption{Samples of validation dataset}
+    \caption{Samples of validation dataset, obtained from Blyncsy}
     \label{fig:row_of_images}
 \end{figure}
 
 \section{Methods Exploration}
 %TO DO: Show generated images, train a model on a known dataset, train with just our dataset, and a combined dataset to show metrics
-Detecting and recognizing traffic signs from dash-cam views is essential for companies like Blyncsy, which support cities and state Departments of Transportation in automating roadway maintenance and asset inventory tasks. However, this task presents numerous challenges: the camera is constantly in motion, traffic signs often occupy only a small fraction of the frame, lighting and weather conditions can change abruptly, and signs are frequently occluded by foreground objects. Bridging this "viewpoint gap" typically requires large, well-curated dash-cam datasets—resources that remain scarce in the public domain.
 
-Using a Blender script, we can efficiently render thousands of synthetic, dash-cam-style images within a few hours. These images can be generated with varied sign types, distances, lighting conditions, weather, motion blur, and backgrounds. Despite this, it remains uncertain to what extent such synthetic data can enhance a model’s ability to detect traffic signs.
 
-In this study, we conduct a controlled investigation using YOLOv5 and DETR to address a straightforward question: How will the synthetic data affect the performance of traffic sign detection model? To answer this, we train three models separately under the same hyperparameter settings:
+In this study, we conducted a controlled investigation using YOLOv5 and DETR to address a straightforward question: How will the synthetic data affect the performance of traffic sign detection model? To answer this, we trained three models separately under the same hyperparameter settings:
 
 \begin{enumerate}
-  \item \textbf{Open‑source only}: real images from the Open Images V7 traffic sign subset ($\approx3\,k$).
-  \item \textbf{Synthetic only}: dash‑cam views from Blender script ($\approx3\,k$).
-  \item \textbf{Combined}: Combine the above two datasets ($\approx6\,k$).
+  \item \textbf{Model 1: Open‑source only}: real images from the Open Images V7 traffic sign subset ($\approx3\,k$).
+  \item \textbf{Model 2: Synthetic only}: dash‑cam views from Blender script ($\approx3\,k$).
+  \item \textbf{Model 3: Combined}: Combine the above two datasets ($\approx6\,k$).
 \end{enumerate}
 
 \subsection{YOLOv5}
@@ -514,27 +511,20 @@ While promising, the methods and results outlined here have several important li
 \section{Conclusion}
 As signs are critical to safe and efficient roadways, it is important that detection models can quickly and correctly adapt to new road signs or specific signs. Synthetic data, generated using a free Blender pipeline, provides a fast and effective way to augment existing image datasets for better model performance.
 
-Our results show that the model trained on the combined dataset achieved the highest mAP@0.5, mAP@0.5:0.95, and recall, indicating strong overall performance and effective generalization across data. While the model trained solely on real images (Model 1) achieved the highest precision, its slightly lower mAP and recall suggest that it may be more conservative in detections. In contrast, the model trained only on synthetic data (Model 2) significantly underperformed in both mAP and recall, though it still maintained a high precision, highlighting its potential for producing accurate but sparse detections in specific scenarios.
+Our results show that the models trained on the combined dataset of both real-world and synthetic data achieved the highest mAP@0.5, mAP@0.5:0.95, and recall, indicating a noticeable improvement with the addition of the synthetic data. While the model trained solely on real images (Model 1) achieved the highest precision, its slightly lower mAP and recall suggest that it may be more conservative in detections. In contrast, the model trained only on synthetic data (Model 2) significantly underperformed in both mAP and recall, though it still maintained a high precision, highlighting its potential for producing accurate but sparse detections in specific scenarios.
 
 These findings indicate that synthetic data alone may not be sufficient to train a robust model for real-world deployment. However, when used in combination with real data, it becomes highly valuable by introducing viewpoint consistency, reducing domain gaps, and significantly lowering the cost and effort of data collection and annotation.
 
+
+While our experiments validate the effectiveness of combining synthetic and real data for traffic sign detection, there are several directions for future work to improve realism and model performance. One major area is improving the diversity of synthetic data. Currently, every scene contains only one road and one traffic sign. In the future, we will introduce more complex layouts, such as intersections and urban street scenes. Also, we plan to generate multiple traffic signs in each scene, including overlapping or occluded signs, to better mimic real-world situations. Additionally, we can improve the post-processing and data-cleaning pipeline. Currently, raw output may include similar images or misplaced objects. Automating post-processing and quality control will ensure that the dataset is consistently usable and reduces the risk of hampering the model performance.
+
+Once we generate high quality synthetic images, we can explore their utility beyond simple object detection. This include training models for more advanced tasks such as traffic sign recognition, estimating sign distance and size, or even detecting road features like lane markings and guardrails damages. 
+
 In summary, we are confident that our synthetic data generation pipeline not only enhances traffic sign detection models but also lays the foundation for broader roadway applications, including sign size estimation, road damage detection, and analysis of environmental conditions.
-
-\section{Future Work}
-While our experiments validate the effectiveness of combining synthetic and real data for traffic sign detection, there are several directions for future work to improve realism and model performance.
-
-One major area is improving the diversity of synthetic data. Currently, every scene contains only one road and one traffic sign. In the future, we will introduce more complex layouts, such as intersections and urban street scenes. Also, we plan to generate multiple traffic signs in each scene, including overlapping or occluded signs, to better mimic real-world situations.
-
-Additionally, we can improve the post-processing and data-cleaning pipeline. Currently, raw output may include similar images or misplaced objects. Automating post-processing and quality control will ensure that the dataset is consistently usable and reduces the risk of hampering the model performance.
-
-Finally, once we generate high quality synthetic images, we can explore their utility beyond simple object detection. This include training models for more advanced tasks such as traffic sign recognition, estimating sign distance and size, or even detecting road features like lane markings and guardrails damages. 
 
 % use section* for acknowledgment
 \section*{Acknowledgment}
-
-
-Sridhar, U of U Deep Learning Certificate program, state of Utah.... 
-
+We would like to acknowledge The Deep Learning Certificate Program at the University of Utah for providing the framework for this project, as well as our industry partner at Blyncsy, Sridhar Kundur, for his support and guidance. 
 
 % Can use something like this to put references on a page
 % by themselves when using endfloat and the captionsoff option.

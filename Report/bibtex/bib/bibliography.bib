@@ -15,7 +15,34 @@ month = jan,
 pages = {791–813},
 numpages = {23},}
 
+@misc{OID_Dataset,
+      title={From colouring-in to pointillism: revisiting semantic segmentation supervision}, 
+      author={Rodrigo Benenson and Vittorio Ferrari},
+      year={2022},
+      eprint={2210.14142},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2210.14142}, 
+}
 
+@article{DETR,
+  author       = {Nicolas Carion and
+                  Francisco Massa and
+                  Gabriel Synnaeve and
+                  Nicolas Usunier and
+                  Alexander Kirillov and
+                  Sergey Zagoruyko},
+  title        = {End-to-End Object Detection with Transformers},
+  journal      = {CoRR},
+  volume       = {abs/2005.12872},
+  year         = {2020},
+  url          = {https://arxiv.org/abs/2005.12872},
+  eprinttype    = {arXiv},
+  eprint       = {2005.12872},
+  timestamp    = {Thu, 28 May 2020 17:38:09 +0200},
+  biburl       = {https://dblp.org/rec/journals/corr/abs-2005-12872.bib},
+  bibsource    = {dblp computer science bibliography, https://dblp.org}
+}
 
 
 @Article{GAN_artificial_data,
@@ -47,4 +74,111 @@ URL = {https://www.mdpi.com/2076-3417/14/14/6352},
 ISSN = {2076-3417},
 ABSTRACT = {This paper introduces an anchorless deep learning model designed for efficient analysis and processing of large-scale 3D synthetic traffic sign board datasets. With an ever-increasing emphasis on autonomous driving systems and their reliance on precise environmental perception, the ability to accurately interpret traffic sign information is crucial. Our model seamlessly integrates object detection, depth estimation, deformable parts, and text character extraction functionalities, facilitating a comprehensive understanding of road signs in simulated environments that mimic the real world. The dataset used has a large number of artificially generated traffic signs for 183 different classes. The signs include place names in Japanese and English, expressway names in Japanese and English, distances and motorway numbers, and direction arrow marks with different lighting, occlusion, viewing angles, camera distortion, day and night cycles, and bad weather like rain, snow, and fog. This was done so that the model could be tested thoroughly in a wide range of difficult conditions. We developed a convolutional neural network with a modified lightweight hourglass backbone using depthwise spatial and pointwise convolutions, along with spatial and channel attention modules that produce resilient feature maps. We conducted experiments to benchmark our model against the baseline model, showing improved accuracy and efficiency in both depth estimation and text extraction tasks, crucial for real-time applications in autonomous navigation systems. With its model efficiency and partwise decoded predictions, along with Optical Character Recognition (OCR), our approach suggests its potential as a valuable tool for developers of Advanced Driver-Assistance Systems (ADAS), Autonomous Vehicle (AV) technologies, and transportation safety applications, ensuring reliable navigation solutions.},
 DOI = {10.3390/app14146352}
+}
+
+
+@inproceedings{Dosovitskiy17,
+  title = {{CARLA}: {An} Open Urban Driving Simulator},
+  author = {Alexey Dosovitskiy and German Ros and Felipe Codevilla and Antonio Lopez and Vladlen Koltun},
+  booktitle = {Proceedings of the 1st Annual Conference on Robot Learning},
+  pages = {1--16},
+  year = {2017}
+}
+
+@software{glenn_jocher_2022_7347926,
+  author       = {Glenn Jocher and
+                  Ayush Chaurasia and
+                  Alex Stoken and
+                  Jirka Borovec and
+                  NanoCode012 and
+                  Yonghye Kwon and
+                  Kalen Michael and
+                  TaoXie and
+                  Jiacong Fang and
+                  imyhxy and
+                  Lorna and
+                  曾逸夫(Zeng Yifu) and
+                  Colin Wong and
+                  Abhiram V and
+                  Diego Montes and
+                  Zhiqiang Wang and
+                  Cristi Fati and
+                  Jebastin Nadar and
+                  Laughing and
+                  UnglvKitDe and
+                  Victor Sonck and
+                  tkianai and
+                  yxNONG and
+                  Piotr Skalski and
+                  Adam Hogan and
+                  Dhruv Nair and
+                  Max Strobel and
+                  Mrinal Jain},
+  title        = {ultralytics/yolov5: v7.0 - YOLOv5 SOTA Realtime
+                   Instance Segmentation
+                  },
+  month        = nov,
+  year         = 2022,
+  publisher    = {Zenodo},
+  version      = {v7.0},
+  doi          = {10.5281/zenodo.7347926},
+  url          = {https://doi.org/10.5281/zenodo.7347926},
+}
+
+
+@manual{blender,
+  title        = {Blender - a 3D modelling and rendering package},
+  author       = {{Blender Online Community}},
+  organization = {Blender Foundation},
+  year         = 2023,
+  note         = {Version 4.3},
+  url          = {https://www.blender.org}
+}
+
+
+@misc{blenderkit_platform,
+  author       = {{BlenderKit Contributors}},
+  title        = {BlenderKit: Free and royalty-free Blender 3D assets},
+  year         = {2025},
+  howpublished = {\url{https://www.blenderkit.com}},
+  note         = {Assets used under BlenderKit royalty-free and CC0 licenses},
+}
+
+@misc{sapling_blender_addon,
+  author       = {{Blender Foundation}},
+  title        = {Sapling Tree Gen Add-on},
+  howpublished = {\url{https://docs.blender.org/manual/en/latest/addons/add_curve/sapling.html}},
+  year         = {2025}
+}
+
+
+@misc{polyhaven,
+  author       = {{Poly Haven Contributors}},
+  title        = {Poly Haven: Free high-quality 3D assets},
+  year         = {2025},
+  howpublished = {\url{https://polyhaven.com}},
+  note         = { Licensed under CC0.}
+}
+
+@InProceedings{COCO,
+author="Lin, Tsung-Yi
+and Maire, Michael
+and Belongie, Serge
+and Hays, James
+and Perona, Pietro
+and Ramanan, Deva
+and Doll{\'a}r, Piotr
+and Zitnick, C. Lawrence",
+editor="Fleet, David
+and Pajdla, Tomas
+and Schiele, Bernt
+and Tuytelaars, Tinne",
+title="Microsoft COCO: Common Objects in Context",
+booktitle="Computer Vision -- ECCV 2014",
+year="2014",
+publisher="Springer International Publishing",
+address="Cham",
+pages="740--755",
+abstract="We present a new dataset with the goal of advancing the state-of-the-art in object recognition by placing the question of object recognition in the context of the broader question of scene understanding. This is achieved by gathering images of complex everyday scenes containing common objects in their natural context. Objects are labeled using per-instance segmentations to aid in precise object localization. Our dataset contains photos of 91 objects types that would be easily recognizable by a 4 year old. With a total of 2.5 million labeled instances in 328k images, the creation of our dataset drew upon extensive crowd worker involvement via novel user interfaces for category detection, instance spotting and instance segmentation. We present a detailed statistical analysis of the dataset in comparison to PASCAL, ImageNet, and SUN. Finally, we provide baseline performance analysis for bounding box and segmentation detection results using a Deformable Parts Model.",
+isbn="978-3-319-10602-1"
 }
